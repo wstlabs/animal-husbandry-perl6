@@ -34,8 +34,7 @@ role Farm::AI::Bag::Stringy[@x]  {
 
 role Farm::AI::Bag::Worthy {
     method worth {
-        666 
-        # self · %weights
+        self ∙ %weights;
     }
 }
 
