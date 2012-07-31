@@ -6,7 +6,9 @@ use KeyBag::Deco;
 # in some 'stable' configuration -- that is, without bloodshed immediately 
 # ensuing (so we exclude wolves and foxes.)
 #
-# Player / Stock state, as well as components of proposed trades (valid
+# In other words, any meaningful configuration of animals that we might
+# find together in between 'atomic' actions can be represented as a Posse. 
+# So Player / Stock state, as well as components of proposed trades (valid
 # or otherwise) can be represented as Posse objects.
 #
 
