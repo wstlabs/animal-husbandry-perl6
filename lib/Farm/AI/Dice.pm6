@@ -11,6 +11,9 @@ class Farm::AI::Dice  {
         $!f = 'foo';
         $!w = 'bar';
     }
+    # debug 
+    method f() { $!f };
+    method w() { $!w };
 }
 
 1;
