@@ -36,7 +36,13 @@ role Farm::Sim::Bag::Worthy {
 class Farm::Sim::Posse 
 is    KeyBag::Deco 
 does  Farm::Sim::Bag::Stringy
-does  Farm::Sim::Bag::Worthy  {}
+does  Farm::Sim::Bag::Worthy  {
+    #
+    # XXX we'd like to override these, but something's not quite working.
+    #
+    # multi method gist(Any:D $ : --> Str) { "posse({ self.pairs>>.gist.join(', ') })" }
+    # multi method perl(Any:D $ : --> Str) { 'Farm::Sim::Posse.new(' ~ self.hash.perl ~ ')' }
+}
 
 # a convenient 'quasi-constructor', analagous to set(), keybag(), etc. 
 # note however that we tweak the signatures somewhat -- in order to allow Str
@@ -56,6 +62,9 @@ multi sub posse($arg) is export {
         default                                      { die "signature not supported"      } 
     }
 }
+
+
+
 
 =begin END
 
