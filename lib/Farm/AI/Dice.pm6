@@ -7,12 +7,14 @@ constant %w = {r => 6, s => 3, p => 1, c => 1, w => 1};
 class Farm::AI::Dice  {
     has $!f; 
     has $!w; 
-    my $inst = Farm::AI::Dice.bless(*);
+    has $!H; 
     method new  {!!!}
-    method inst { $inst }
+    my $singleton = Farm::AI::Dice.bless(*);
+    method instance { $singleton}
     submethod BUILD  { 
         $!f = keybag(%f); 
         $!w = keybag(%w);
+        $!H = $!f × $!w;
     }
 
     # returns a two-character string, e.g. 'rs' representing an ordered pair of
@@ -22,11 +24,10 @@ class Farm::AI::Dice  {
     # (hackishly) derives the resultant probability distribution of (f,w) die rolls, 
     # using the 2-char representation provided by the roll() method above.  
     method dist()  {
-        my $p = $!f × $!w;
-        my $n = $p.elems;
+        my $n = $!H.elems;
         hash map -> $k,$v {
             $k => ($v / $n) 
-        }, crunch-keys($p.hash).kv
+        }, crunch-keys($!H.hash).kv
     }
 
     # in which we "crunch" the comma-separated pairs in our fake 2-dimensional hash,
