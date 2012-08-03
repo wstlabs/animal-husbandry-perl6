@@ -1,5 +1,6 @@
 use v6;
 BEGIN { @*INC.unshift: './lib'; }
+use Farm::AI::Posse;
 use Farm::AI::Util;
 use Test;
 plan *;
@@ -7,10 +8,23 @@ plan *;
 sub test_bij($s, %h)  {
     ok  hashify($s)   eqv %h, "$s --> Hash";
     ok  stringify(%h) eq  $s, "$s <-- Hash";
+
+    my ($x,$y);
+    lives_ok { $x = posse($s) },  "$s --> Obj";
+    is "$x", $s,                  "$s <-- Obj";
+    lives_ok { $y = posse(%h) },  "%h --> Obj";
+    is "$y", $s,                  "$s <-- Obj";
+    ok $y.hash eqv %h,            "%h <-- Obj";
 }
 
 sub test_surj($s, %h)  {
-    ok  hashify($s) eqv %h, $s;
+    my $x;
+    ok  hashify($s) eqv %h,       "$s --> Hash eqv Hash";
+    lives_ok { $x = posse($s) },  "$s --> Obj";
+    ok  $x.hash eqv %h,           "$s --> Obj eqv Hash";
+    # say "x      = ", $x;
+    # say "x.hash = ", $x.hash;
+    # say "h      = ", %h;
 }
 
 #

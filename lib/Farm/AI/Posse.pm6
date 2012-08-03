@@ -36,20 +36,33 @@ role Farm::AI::Bag::Worthy {
 class Farm::AI::Posse 
 is    KeyBag::Deco 
 does  Farm::AI::Bag::Stringy
-does  Farm::AI::Bag::Worthy  {
-    method new-broken-for-now(Str $s)  {
-        say "new: s = [$s]";
-        self.new(
-            hashify($s)
-        )
+does  Farm::AI::Bag::Worthy  {}
+
+# a convenient 'quasi-constructor', analagous to set(), keybag(), etc. 
+# note however that we tweak the signatures somewhat -- in order to allow Str
+# arguments, it seems we need to disallow tuple-like contexts (and we'd rather
+# just tweak those here, than redo the whole contstructor).  so in any case, 
+# constructions like 
+#
+#    posse( r => 1 ) 
+#
+# are now forbidden; just use posse({ r => 1 }) instead.
+# XXX make an exception for the default case to throw (instead of just having it die). 
+multi sub posse()     is export { Farm::AI::Posse.new() } 
+multi sub posse($arg) is export {
+    given $arg {
+        when Str                                     { Farm::AI::Posse.new(hashify($arg)) }
+        when Set | KeySet | Associative | Positional { Farm::AI::Posse.new($arg)          }
+        default                                      { die "signature not supported"      } 
     }
 }
+
+=begin END
 
 sub posse(*@a) is export {
     Farm::AI::Posse.new(|@a);
 }
 
-=begin END
 
 
 does  Farm::AI::Bag::Stringy[ BEGIN { 'r','s','p','c','h','d','D' } ] 
