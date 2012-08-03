@@ -5,7 +5,8 @@ use Test;
 plan *;
 
 sub test_bij($s, %h)  {
-    ok  hashify($s) eqv %h, $s;
+    ok  hashify($s)   eqv %h, "$s --> Hash";
+    ok  stringify(%h) eq  $s, "$s <-- Hash";
 }
 
 sub test_surj($s, %h)  {

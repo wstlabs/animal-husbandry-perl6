@@ -1,5 +1,6 @@
 use v6;
 use KeyBag::Deco;
+use Farm::AI::Util;
 
 #
 # A 'Posse' is any collection of animals that we might find together 
@@ -12,11 +13,42 @@ use KeyBag::Deco;
 # or otherwise) can be represented as Posse objects.
 #
 
-constant $emptyset = '∅'; # U+2205;
 constant %weights = { 
     r => 1, s => 6, p => 12, c => 30, h => 72,
     d => 6, D => 12 
 };
+
+# note that stringify() will blow up if we've managed
+# to stuff invalid animal syms into our keybag somehow. 
+role Farm::AI::Bag::Stringy  {
+    method Str()  {
+        stringify(self.hash)
+    }
+}
+
+role Farm::AI::Bag::Worthy {
+    method worth {
+        self ∙ %weights;
+    }
+}
+
+
+class Farm::AI::Posse 
+is    KeyBag::Deco 
+does  Farm::AI::Bag::Stringy
+does  Farm::AI::Bag::Worthy  {
+    method new-broken-for-now(Str $s)  {
+        say "new: s = [$s]";
+        self.new(
+            hashify($s)
+        )
+    }
+}
+
+=begin END
+
+
+does  Farm::AI::Bag::Stringy[ BEGIN { 'r','s','p','c','h','d','D' } ] 
 
 role Farm::AI::Bag::Stringy[@x]  {
     my %x is ro = map -> $k { $k => 1 }, @x;
@@ -32,19 +64,5 @@ role Farm::AI::Bag::Stringy[@x]  {
     }
 }
 
-role Farm::AI::Bag::Worthy {
-    method worth {
-        self ∙ %weights;
-    }
-}
-
-
-class Farm::AI::Posse 
-is    KeyBag::Deco 
-does  Farm::AI::Bag::Stringy[ BEGIN { 'r','s','p','c','h','d','D' } ] 
-does  Farm::AI::Bag::Worthy {}
-
-=begin END
-
-
+constant $emptyset = '∅'; # U+2205;
 

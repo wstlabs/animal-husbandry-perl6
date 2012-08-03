@@ -14,6 +14,7 @@ plan *;
     #
     my $y;
     lives_ok { $y = Farm::AI::Posse.new },            "new (empty)";
+    say "y = ", $y.WHICH;
     is "$y", '∅',                                     "eq '∅'";
     is $y.worth(), 0,                                 "worthless";
     say "y = $y = ", $y.WHICH; 

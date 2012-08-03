@@ -48,6 +48,15 @@ sub hashify(Str $s) is export {
     return %h
 }
 
+sub stringify(%h) is export  {
+    my @t = map -> $x,$k {
+        $k > 0 ??
+            $k > 1 ?? "$x$k" !! $x
+        !! ()
+    }, %h.kv; 
+    return @t ?? @t.join('') !! '∅'
+}
+
 =begin END
 
 #
@@ -55,4 +64,5 @@ sub hashify(Str $s) is export {
 #
 
 #    say "tup2pair($t) => $x ^ $n <= $k"; 
+
 
