@@ -1,7 +1,7 @@
 use v6;
 BEGIN { @*INC.unshift: './lib'; }
-use Farm::AI::Posse;
-use Farm::AI::Util;
+use Farm::Sim::Posse;
+use Farm::Sim::Util;
 use Test;
 plan *;
 

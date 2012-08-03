@@ -4,12 +4,12 @@ use KeyBag::Deco;
 constant %f = {r => 6, s => 2, p => 2, h => 1, f => 1};
 constant %w = {r => 6, s => 3, p => 1, c => 1, w => 1};
 
-class Farm::AI::Dice  {
+class Farm::Sim::Dice  {
     has $!f; 
     has $!w; 
     has $!H; 
     method new  {!!!}
-    my $singleton = Farm::AI::Dice.bless(*);
+    my $singleton = Farm::Sim::Dice.bless(*);
     method instance { $singleton}
     submethod BUILD  { 
         $!f = keybag(%f); 

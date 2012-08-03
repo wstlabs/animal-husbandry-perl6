@@ -1,5 +1,5 @@
 use v6;
-use Farm::AI::Containers;
+use Farm::Sim::Containers;
 
 # the stock 
 constant %S = {
@@ -7,5 +7,5 @@ constant %S = {
     'd' => 4,  'D' => 2
 };
 
-class Farm::AI::Sim {}
+class Farm::Sim::Game {}
 

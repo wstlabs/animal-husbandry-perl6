@@ -1,6 +1,6 @@
 use v6;
 use KeyBag::Deco;
-use Farm::AI::Util;
+use Farm::Sim::Util;
 
 #
 # A 'Posse' is any collection of animals that we might find together 
@@ -20,23 +20,23 @@ constant %weights = {
 
 # note that stringify() will blow up if we've managed
 # to stuff invalid animal syms into our keybag somehow. 
-role Farm::AI::Bag::Stringy  {
+role Farm::Sim::Bag::Stringy  {
     method Str()  {
         stringify(self.hash)
     }
 }
 
-role Farm::AI::Bag::Worthy {
+role Farm::Sim::Bag::Worthy {
     method worth {
         self ∙ %weights;
     }
 }
 
 
-class Farm::AI::Posse 
+class Farm::Sim::Posse 
 is    KeyBag::Deco 
-does  Farm::AI::Bag::Stringy
-does  Farm::AI::Bag::Worthy  {}
+does  Farm::Sim::Bag::Stringy
+does  Farm::Sim::Bag::Worthy  {}
 
 # a convenient 'quasi-constructor', analagous to set(), keybag(), etc. 
 # note however that we tweak the signatures somewhat -- in order to allow Str
@@ -48,11 +48,11 @@ does  Farm::AI::Bag::Worthy  {}
 #
 # are now forbidden; just use posse({ r => 1 }) instead.
 # XXX make an exception for the default case to throw (instead of just having it die). 
-multi sub posse()     is export { Farm::AI::Posse.new() } 
+multi sub posse()     is export { Farm::Sim::Posse.new() } 
 multi sub posse($arg) is export {
     given $arg {
-        when Str                                     { Farm::AI::Posse.new(hashify($arg)) }
-        when Set | KeySet | Associative | Positional { Farm::AI::Posse.new($arg)          }
+        when Str                                     { Farm::Sim::Posse.new(hashify($arg)) }
+        when Set | KeySet | Associative | Positional { Farm::Sim::Posse.new($arg)          }
         default                                      { die "signature not supported"      } 
     }
 }
@@ -60,14 +60,14 @@ multi sub posse($arg) is export {
 =begin END
 
 sub posse(*@a) is export {
-    Farm::AI::Posse.new(|@a);
+    Farm::Sim::Posse.new(|@a);
 }
 
 
 
-does  Farm::AI::Bag::Stringy[ BEGIN { 'r','s','p','c','h','d','D' } ] 
+does  Farm::Sim::Bag::Stringy[ BEGIN { 'r','s','p','c','h','d','D' } ] 
 
-role Farm::AI::Bag::Stringy[@x]  {
+role Farm::Sim::Bag::Stringy[@x]  {
     my %x is ro = map -> $k { $k => 1 }, @x;
     method stringy-symbols { @x }
     method Str()  {

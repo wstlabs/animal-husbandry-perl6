@@ -1,6 +1,6 @@
 use v6;
 BEGIN { @*INC.unshift: './lib'; }
-use Farm::AI::Posse;
+use Farm::Sim::Posse;
 use Test;
 plan *;
 
@@ -13,7 +13,7 @@ plan *;
 #
 {
     my $y;
-    lives_ok { $y = Farm::AI::Posse.new },            "new (empty)";
+    lives_ok { $y = Farm::Sim::Posse.new },            "new (empty)";
     # say "y = ", $y.WHICH;
     is "$y", '∅',                                     "eq '∅'";
     is $y.worth(), 0,                                 "worthless";
