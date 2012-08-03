@@ -20,7 +20,7 @@ plan *;
     # say "y = $y = ", $y.WHICH; 
     lives_ok { $y.sum-in-place({ r => 2, s => 1 }) }, "valid sum r2s";
     lives_ok { $y.sum-in-place({ p => 1 }) },         "valid sum p";
-    say "y = $y => ", $y;
+    # say "y = $y => ", $y;
     is "$y", 'r2sp',                                  "stringy";
     is $y.worth(), 20,                                "worthy";
     lives_ok { $y.sum-in-place({}) },                 "empty sum (canon)"; 
@@ -34,37 +34,39 @@ plan *;
 #
 {
 
-    my ($y, $z);
+    my ($x, $y);
     lives_ok { 
-        $y = Farm::AI::Posse.new({ r => 2, s => 1 })
-    },      "new (hash)";
-    is "$y", 'r2s', "stringy";
-    lives_ok { $z = $y.copy() }, "copy (explicit)";
-    say "y = $y = ", $y.WHICH; 
-    say "z = $z = ", $z.WHICH; 
-    ok { $z eqv $y },     "z eqv y";
-    ok { $y eqv $z },     "y eqv z";
-    ok { $z eq $y },      "z eq y";
-    ok { $y eq $z },      "z eq y";
-    # nok { $z == $y },     "z == y" 
-    # say "y = ", $y;
-    # say "z = ", $z;
-    lives_ok { $z.sum-in-place({ c => 1 }) },   "sum z";
-    # say "y = ", $y;
-    # say "z = ", $z;
-    # XXX eqv not inheriting from Set::Bag?
-    nok { $z eqv $y },     "z !eqv y";
-    nok { $z eq $y },      "z !eq y";
+        $x = Farm::AI::Posse.new({ r => 2, s => 1 })
+    },                            "new (non-empty)";
+    is "$x", 'r2s', "stringy";
+    lives_ok { $y = $x.clone() }, "clone (deep)";
+    # say "x = $x = ", $x.WHICH; 
+    # say "y = $y = ", $y.WHICH; 
+    isnt $x.WHICH, $y.WHICH,      "distinct";
+    ok { $y eqv $x },             "y eqv x";
+    ok { $x eqv $y },             "x eqv y";
+    ok { $y eq $x },              "y eq x";
+    ok { $x eq $y },              "x eq y";
+    lives_ok { $y{'p'} = 3 },     "munge y";
+    is "$y", 'r2sp3',             "stringy";
+    nok $y eqv $x,                "y !eqv x";
+    nok $x eqv $y,                "y !eqv x";
 }
 
 #
-# failing cases
+# failing (NYI) cases
+# as in, we note these as fails because they represent bugs to fix.
 #
 {
-    my $y = Farm::AI::Posse.new({ r =>  1});
-    dies_ok { $y.sum-in-place({ f => 1 }) },           "invalid sum";
+    my $y = Farm::AI::Posse.new({});
+    dies_ok { $y.sum-in-place({ f => 1 }) },       "X sum-in-place";
 }
 
+{
+    my $y = Farm::AI::Posse.new({});  
+    dies_ok { $y{'f'} = 1 },                       "X assignment";
+    # dies_ok { $y{'f'}++ },                       "X incr";
+}
 
 =begin END
 
