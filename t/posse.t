@@ -5,19 +5,19 @@ use Test;
 plan *;
 
 #
-# currently rather broken.
+# still a few broken cases, here and there. 
 #
 
+# 
+# basics
+#
 {
-    # 
-    # basic inst 
-    #
     my $y;
     lives_ok { $y = Farm::AI::Posse.new },            "new (empty)";
-    say "y = ", $y.WHICH;
+    # say "y = ", $y.WHICH;
     is "$y", '∅',                                     "eq '∅'";
     is $y.worth(), 0,                                 "worthless";
-    say "y = $y = ", $y.WHICH; 
+    # say "y = $y = ", $y.WHICH; 
     lives_ok { $y.sum-in-place({ r => 2, s => 1 }) }, "valid sum r2s";
     lives_ok { $y.sum-in-place({ p => 1 }) },         "valid sum p";
     say "y = $y => ", $y;
@@ -26,15 +26,14 @@ plan *;
     lives_ok { $y.sum-in-place({}) },                 "empty sum (canon)"; 
     lives_ok { $y.sum-in-place({ p => 0 }) },         "empty sum (degenerate)";
     is "$y", 'r2sp',                                  "verify empty sums";
-    dies_ok { $y.sum-in-place({ f => 1 }) },          "invalid sum => fail"
 }
 
 
+# 
+# cloning & (dis)entanglement
+#
 {
 
-    # 
-    # cloning & entanglement
-    #
     my ($y, $z);
     lives_ok { 
         $y = Farm::AI::Posse.new({ r => 2, s => 1 })
@@ -42,6 +41,7 @@ plan *;
     is "$y", 'r2s', "stringy";
     lives_ok { $z = $y.copy() }, "copy (explicit)";
     say "y = $y = ", $y.WHICH; 
+    say "z = $z = ", $z.WHICH; 
     ok { $z eqv $y },     "z eqv y";
     ok { $y eqv $z },     "y eqv z";
     ok { $z eq $y },      "z eq y";
@@ -55,11 +55,16 @@ plan *;
     # XXX eqv not inheriting from Set::Bag?
     nok { $z eqv $y },     "z !eqv y";
     nok { $z eq $y },      "z !eq y";
-
 }
 
-# my $z = $y;
-# say "z = $z";
+#
+# failing cases
+#
+{
+    my $y = Farm::AI::Posse.new({ r =>  1});
+    dies_ok { $y.sum-in-place({ f => 1 }) },           "invalid sum";
+}
+
 
 =begin END
 
