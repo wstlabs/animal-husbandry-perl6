@@ -51,3 +51,26 @@ class Farm::AI::Dice  {
 
 =begin END
 
+
+
+For clarification, the hash eventually returned from the dist() method above ends up
+looking like this:
+
+    { 
+        rr => 1/4,  rs => 1/8,  rp => 1/24,  rc => 1/24,  rw => 1/24, 
+        sr => 1/12, ss => 1/24, sp => 1/72,  sc => 1/72,  sw => 1/72, 
+        pr => 1/12, ps => 1/24, pp => 1/72,  pc => 1/72,  pw => 1/72, 
+        hr => 1/24, hs => 1/48, hp => 1/144, hc => 1/144, hw => 1/144, 
+        fr => 1/24, fs => 1/48, fp => 1/144, fc => 1/144, fw => 1/144
+    } 
+
+Which we could have cranked out and typed in by hand, but given the likeliehood
+of making some kind of a mistake, it seems prudent to generate this dist explicitly.
+
+Note that there are some (functional) redundancies in the above table;
+e.g. the pairs 'rs' and 'sr' have the same effect on the player rolling them, 
+but for the sake of simplicity we make no attempt (at this step) to merge 
+them into canonical entries. 
+
+
+
