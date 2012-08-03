@@ -35,9 +35,7 @@ plan *;
 {
 
     my ($x, $y);
-    lives_ok { 
-        $x = Farm::AI::Posse.new({ r => 2, s => 1 })
-    },                            "new (non-empty)";
+    lives_ok { $x = posse({ r => 2, s => 1 }) },   "new (non-empty)";
     is "$x", 'r2s', "stringy";
     lives_ok { $y = $x.clone() }, "clone (deep)";
     # say "x = $x = ", $x.WHICH; 
@@ -55,18 +53,14 @@ plan *;
 
 #
 # failing (NYI) cases
-# as in, we note these as fails because they represent bugs to fix.
 #
-{
-    my $y = Farm::AI::Posse.new({});
-    dies_ok { $y.sum-in-place({ f => 1 }) },       "X sum-in-place";
-}
-
-{
-    my $y = Farm::AI::Posse.new({});  
-    dies_ok { $y{'f'} = 1 },                       "X assignment";
-    # dies_ok { $y{'f'}++ },                       "X incr";
-}
+# as in, we note these as fails because they represent bugs to fix.   which is difficult
+# in the moment because it involves fixing the underlying KeyBag class. 
+#
+{  my $y = posse({});          dies_ok { $y.sum-in-place({ f => 1 }) },  "bad sum-in-place"  }
+{  my $y = posse({});          dies_ok { $y{'f'} = 1 },                  "bad assignment"    }
+{  my $y = posse({});          dies_ok { $y{'f'}++   },                  "bad increment"     }
+{  my $y = posse({ r => 1 });  dies_ok { $y{'r'} -= 2  },                "underflow"         }
 
 =begin END
 

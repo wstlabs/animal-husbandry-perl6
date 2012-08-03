@@ -45,6 +45,10 @@ does  Farm::AI::Bag::Worthy  {
     }
 }
 
+sub posse(*@a) is export {
+    Farm::AI::Posse.new(|@a);
+}
+
 =begin END
 
 
