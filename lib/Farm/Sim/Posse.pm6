@@ -32,11 +32,20 @@ role Farm::Sim::Bag::Worthy {
     }
 }
 
+role Farm::Sim::Bag::Frisky {
+    multi method spawn (Any $x) {
+        self.spawn( self.new($x) )
+    }
+    multi method spawn (KeyBag $b) {
+        return Nil
+    }
+}
 
 class Farm::Sim::Posse 
 is    KeyBag::Deco 
 does  Farm::Sim::Bag::Stringy
-does  Farm::Sim::Bag::Worthy  {
+does  Farm::Sim::Bag::Worthy  
+does  Farm::Sim::Bag::Frisky  {
     #
     # XXX we'd like to override these, but something's not quite working.
     #
@@ -59,14 +68,19 @@ multi sub posse($arg) is export {
     given $arg {
         when Str                                     { Farm::Sim::Posse.new(hashify($arg)) }
         when Set | KeySet | Associative | Positional { Farm::Sim::Posse.new($arg)          }
-        default                                      { die "signature not supported"      } 
+        default                                      { die "signature not supported"       } 
     }
 }
 
-
+# go forth and multiply
+multi sub infix:<⚤ >(Farm::Sim::Posse $x,Any $y --> KeyBag) is export {  $x.spawn($y) }
 
 
 =begin END
+
+    multi method spawn (Str $s) {
+        self.spawn( self.new($s) )
+    }
 
 sub posse(*@a) is export {
     Farm::Sim::Posse.new(|@a);
