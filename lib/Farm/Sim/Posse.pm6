@@ -72,7 +72,7 @@ multi sub posse($arg) is export {
 }
 
 # go forth and multiply
-multi sub infix:<⚤ >(Farm::Sim::Posse $x,Any $y --> KeyBag) is export {  $x.spawn($y) }
+multi sub infix:<⚤>(Farm::Sim::Posse $x,Any $y --> KeyBag) is export {  $x.spawn($y) }
 
 
 =begin END
