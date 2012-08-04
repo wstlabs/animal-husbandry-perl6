@@ -33,9 +33,7 @@ role Farm::Sim::Bag::Worthy {
 }
 
 role Farm::Sim::Bag::Frisky {
-    # multi method spawn (Any $x) { self.spawn( self.new($x) ) }
     multi method spawn (Any $x) {
-        # ( self ⊎ $x ) / 2 
         self.sum($x) / 2 
     }
 }
@@ -77,31 +75,19 @@ multi sub infix:<⚤>(Farm::Sim::Posse $x,Any $y --> KeyBag) is export {  $x.spa
 
 =begin END
 
+    #
+    # XXX we'd like to represent the operation up in .spawn() as
+    #
+    #    ( self ⊎ $x ) / 2 
+    #
+    # but doing so yields
+    #
+    #     Calling 'infix:<⊎>' will never work with argument types (Farm::Sim::Bag::Frisky, Any) 
+    #
+
     multi method spawn (Str $s) {
         self.spawn( self.new($s) )
     }
 
-sub posse(*@a) is export {
-    Farm::Sim::Posse.new(|@a);
-}
 
-
-
-does  Farm::Sim::Bag::Stringy[ BEGIN { 'r','s','p','c','h','d','D' } ] 
-
-role Farm::Sim::Bag::Stringy[@x]  {
-    my %x is ro = map -> $k { $k => 1 }, @x;
-    method stringy-symbols { @x }
-    method Str()  {
-        my @t = map -> $k {
-            my $n = self.at_key($k);
-            $n > 0 ?? 
-                $n > 1 ?? "$k$n" !! $k 
-            !! ()
-        }, @x; 
-        return @t ?? @t.join('') !! $emptyset
-    }
-}
-
-constant $emptyset = '∅'; # U+2205;
 

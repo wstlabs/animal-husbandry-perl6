@@ -4,25 +4,28 @@ use Farm::Sim::Posse;
 use Test;
 plan *;
 
-sub lets_spawn ($x,$y,$z)  {
-    # ok posse($x).spawn($y) eqv posse($z), "$x ⚤ $y => $z";
-    my $px = posse($x);
-    my $py = posse($y);
-    my $pz = posse($z);
-    my $r = $px.spawn($py);
-    ok $px.spawn($py) eqv $pz, "$x ⚤ $y => $z";
-    ok $r eqv $pz, "$r eqv $pz"; 
-    say "spawn: = $px ++ $py ==> $pz";  
-    say "r  = ", $r.WHICH,  " = ", $r;
-    say "pz = ", $pz.WHICH, " = ", $pz;
+sub lets-spawn ($xx, $yy, $zz)  {
+    my $x  = posse($xx);
+    my $y  = posse($yy);
+    my $z  = posse($zz);
+    my $s  = $x.spawn($y);
+    my $ss = $x.spawn($yy);
+    ok $s eq  $z,  "$x ⚤  $y => $s eq  $z";
+    ok $s eqv $z,  "$x ⚤  $y => $s eqv $z";
+    say "s = ", $s.WHICH, " = ", $s;
+    say "z = ", $z.WHICH, " = ", $z;
 } 
 
+
 {
-    lets_spawn 'r', 'rs', 'r';
+    lets-spawn 'r', 'rr', 'r';
 }
+
 
 =begin END
 
-    # ok posse($x).spawn(posse($y)) eqv posse($z), "$x ⚤ $y => $z";
-    say "spawn = ", posse($x).spawn($y), " => ", posse($z);
+breed('r', 'rr');
+breed('r', 'rs');
+breed('rr', 'rs');
+breed('rr', 'rr');
 
