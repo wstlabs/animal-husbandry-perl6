@@ -2,6 +2,7 @@ use v6;
 BEGIN { @*INC.unshift: './lib'; }
 use Farm::Sim::Posse;
 use Farm::Sim::Util;
+use KeyBag::Ops;
 use Test;
 plan *;
 
