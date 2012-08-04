@@ -33,11 +33,10 @@ role Farm::Sim::Bag::Worthy {
 }
 
 role Farm::Sim::Bag::Frisky {
+    # multi method spawn (Any $x) { self.spawn( self.new($x) ) }
     multi method spawn (Any $x) {
-        self.spawn( self.new($x) )
-    }
-    multi method spawn (KeyBag $b) {
-        return Nil
+        # ( self ⊎ $x ) / 2 
+        self.sum($x) / 2 
     }
 }
 
