@@ -10,7 +10,7 @@ plan *;
 # various things that can go wrong with the eqv and eq ops,
 # independent of the .spawn op itself
 #
-sub exhaust-op ($xx, $yy, $zz)  {
+sub op-exhaust-infix ($xx, $yy, $zz)  {
     my $x  = posse($xx);
     my $y  = posse($yy);
     my $z  = posse($zz);
@@ -22,7 +22,7 @@ sub exhaust-op ($xx, $yy, $zz)  {
     ok $z  eq  $ss,  "$x ⚤ $yy => $z eq  $ss";
 } 
 
-sub exhaust-method ($xx, $yy, $zz)  {
+sub op-exhaust-method ($xx, $yy, $zz)  {
     my $x  = posse($xx);
     my $y  = posse($yy);
     my $z  = posse($zz);
@@ -35,15 +35,15 @@ sub exhaust-method ($xx, $yy, $zz)  {
 } 
 
 {
-    exhaust-method 'r', 'r2', 'r';
-    exhaust-op     'r', 'r2', 'r';
+    op-exhaust-infix    'r', 'r2', 'r';
+    op-exhaust-method   'r', 'r2', 'r';
 }
 
 
 #
 # a more lightweight eqv test
 #
-sub check-op ($xx, $yy, $zz)  {
+multi sub op-ok (Str $xx, Str $yy, Str $zz)  {
     my $x  = posse($xx);
     my $y  = posse($yy);
     my $z  = posse($zz);
@@ -53,44 +53,64 @@ sub check-op ($xx, $yy, $zz)  {
     is "$ss", "$z",   "str $x ⚤ $yy => $z";
 } 
 
+multi sub op-ok (Str $xx, Str $yy, Nil $z)  {
+    my $x  = posse($xx);
+    my $y  = posse($yy);
+    my $s   = $x ⚤ $y;
+    ok $s eqv Nil, "obj $x ⚤ $y => Nil";
+    # my $ss  = $x ⚤ $yy;
+    # ok $ss eqv Nil, "str $x ⚤ $yy => Nil";
+    # say "z  = ", $z.WHICH, " = ", $z;
+    # say "s  = ", $s.WHICH, " = ", $s;
+    # say "ss = ", $ss.WHICH, " = ", $ss;
+} 
+
+sub op-dies-ok (Str $xx, Str $yy)  {
+    dies_ok {
+        my $x  = posse($xx);
+        my $y  = posse($yy);
+        my $s  = $x ⚤ $y;
+    },"$xx ⚤ $yy => throws";
+}
+
 #
 # homogenous cases 
 #
 {
-    check-op       'r',  'rp', 'r'  ;
-    check-op       'r',  'rr', 'r'  ;
-    check-op       'r2', 'rp', 'r'  ;
-    check-op       'r3', 'rr', 'r2' ;
-    check-op       '∅',  'rr', 'r'  ;
-    check-op       '∅',  'rs', '∅'  ;
+    op-ok       'r',  'rp', 'r'  ;
+    op-ok       'r',  'rr', 'r'  ;
+    op-ok       'r2', 'rp', 'r'  ;
+    op-ok       'r3', 'rr', 'r2' ;
+    op-ok       '∅',  'rr', 'r'  ;
+    op-ok       '∅',  'rs', '∅'  ;
 }
 
 #
 # small mixed cases 
 #
 {
-    check-op       'r',    'sp', '∅'   ;
-    check-op       'rs',   'sp', 's'   ;
-    check-op       's',    'rs', 's'   ;
-    check-op       'rs',   'rp', 'r'   ;
-    check-op       'r',    'rs', 'r'   ;
-    check-op       'r',    'ss', 's'   ;
-    check-op       'r2',   'rs', 'r'   ;
-    check-op       'r2',   'rr', 'r2'  ;
-    check-op       'rs2',  'rs', 'rs'  ;
-    check-op       'rs2',  'ss', 's2'  ;
-    check-op       'rs',   'rs', 'rs'  ;
-    check-op       'rs',   'rr', 'r'   ;
-    check-op       'rs',   'ss', 's'   ;
-    check-op       'rs',   'rr', 'r'   ;
-    check-op       's2',   'rr', 'r'   ;
-    check-op       'rs',   'pp', 'p'   ;
-    check-op       'r2s2', 'rs', 'rs'  ;
-    check-op       'r3s3', 'rs', 'r2s2'  ;
-    check-op       'r4s3', 'rs', 'r2s2'  ;
-    check-op       'r3s4', 'rs', 'r2s2'  ;
-    check-op       'r4s4', 'rs', 'r2s2'  ;
-    check-op       'r5s5', 'rs', 'r3s3'  ;
+    op-ok       'r',    'sp', '∅'   ;
+    op-ok       'rs',   'sp', 's'   ;
+    op-ok       's',    'rs', 's'   ;
+    op-ok       'rs',   'rp', 'r'   ;
+    op-ok       'r',    'rs', 'r'   ;
+    op-ok       'r',    'ss', 's'   ;
+    op-ok       'r2',   'rs', 'r'   ;
+    op-ok       'r2',   'rr', 'r2'  ;
+    op-ok       'rs2',  'rs', 'rs'  ;
+    op-ok       'rs2',  'ss', 's2'  ;
+    op-ok       'rs',   'rs', 'rs'  ;
+    op-ok       'rs',   'rr', 'r'   ;
+    op-ok       'rs',   'ss', 's'   ;
+    op-ok       'rs',   'rr', 'r'   ;
+    op-ok       's2',   'rr', 'r'   ;
+    op-ok       'rs',   'pp', 'p'   ;
+    op-ok       'r2s2', 'rs', 'rs'  ;
+    op-ok       'r3s3', 'rs', 'r2s2'  ;
+    op-ok       'r4s3', 'rs', 'r2s2'  ;
+    op-ok       'r3s4', 'rs', 'r2s2'  ;
+    op-ok       'r4s4', 'rs', 'r2s2'  ;
+    op-ok       'r5s5', 'rs', 'r3s3'  ;
 }
 
 
@@ -98,13 +118,32 @@ sub check-op ($xx, $yy, $zz)  {
 # XXX failing mixed cases 
 #
 {
-    check-op       'r2',   'sp', '∅'  ;
-    check-op       's2',   'rp', '∅'  ;
-    check-op       'rs2',  'rp', 'r'  ;
-    check-op       'rs2',  'rr', 'r'  ;
-    check-op       'r3s2', 'ss', 's2' ;
-    check-op       'r3s2', 'rp', 'r2' ;
-    check-op       'r3s2', 'sp', 's'  ;
+    op-ok       'r2',   'sp', '∅'  ;
+    op-ok       's2',   'rp', '∅'  ;
+    op-ok       'rs2',  'rp', 'r'  ;
+    op-ok       'rs2',  'rr', 'r'  ;
+    op-ok       'r3s2', 'ss', 's2' ;
+    op-ok       'r3s2', 'rp', 'r2' ;
+    op-ok       'r3s2', 'sp', 's'  ;
+}
+
+{
+    op-ok       'r',  'rw',  Nil  ;
+    op-ok       'r',  'fs',  Nil  ;
+    op-ok       'r',  'fw',  Nil  ;
+    op-ok       'rw', 'rw',  Nil  ;
+    op-ok       'rs', 'fs',  Nil  ;
+    op-ok       'w',  'rw',  Nil  ;
+    op-ok       's2', 'fs',  Nil  ;
+    op-ok       'f2', 'fs',  Nil  ;
+    op-ok       'fs', 'fs',  Nil  ;
+    op-ok       'fw', 'fw',  Nil  ;
+}
+
+{
+    op-dies-ok  'r',  'rd' ;
+    op-dies-ok  'r',  'rD' ;
+    op-dies-ok  'r',  'rx' ;
 }
 
 
@@ -114,4 +153,10 @@ sub check-op ($xx, $yy, $zz)  {
     # say "s  = ", $s.WHICH, " = ", $s;
     # say "ss = ", $ss.WHICH, " = ", $ss;
     # ok $s eqv $z,  "$x ⚤ $y => $s eqv $z (exp)";
+
+    dies_ok {
+        my $x  = posse($xx);
+        my $y  = posse($yy);
+        my $s  = $x.spawn($y);
+    },"$x.spawn($y) => die";
 
