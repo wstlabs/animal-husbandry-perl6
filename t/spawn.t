@@ -102,13 +102,19 @@ sub op-dies-ok (Str $xx, Str $yy)  {
 
 #
 # throw if we're given anything invalid, i.e. which can't possibly
-# represent a valid pair of die rolls (including strings with big / small 
-# dog symbols).
+# represent a valid pair of die rolls (including strings with big or 
+# small dog symbols).
+#
+# XXX none of these are expected to work, currently.  that is, 
+# some will fail to throw, others will throw but for reasons we
+# weren't expecting them to, but haven't diagnosed yet. 
 #
 {
     op-dies-ok  'r',  'rd'  ;
     op-dies-ok  'r',  'rD'  ;
     op-dies-ok  'r',  'rx'  ;
+    op-dies-ok  'r',  '  '  ; 
+    op-dies-ok  'r',  ' r'  ; 
     op-dies-ok  'r',  ''    ; 
     op-dies-ok  'r',  '∅'   ;
     op-dies-ok  'r',  'abc' ;

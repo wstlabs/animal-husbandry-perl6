@@ -57,10 +57,10 @@ role Farm::Sim::Bag::Worthy {
 #
 role Farm::Sim::Bag::Frisky {
     multi method spawn (Any $x) {
-        my $p = posse($x);
-        return Nil if any('f','w') ∈ $p;
-        my $s = KeySet.new($p);
-        self.inter($s).sum($p) / 2
+        my $r = posse($x);
+        return Nil if any('f','w') ∈ $r;
+        my $s = KeySet.new($r);
+        self.inter($s).sum($r) / 2
     }
 }
 
@@ -100,6 +100,9 @@ multi sub infix:<⚤>(Farm::Sim::Posse $x,Any $y --> Farm::Sim::Posse) is export
 
 
 =begin END
+
+# use X::Farm::Sim;
+# X::Farm::Sim::Dice::Invalid::Roll.new( r => $r);
 
     #
     # XXX we'd like to represent the operation up in .spawn() as
