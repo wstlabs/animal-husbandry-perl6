@@ -9,8 +9,7 @@ use KeyBag::Ops;
 
 constant @forsale = <r s p c h>;
 constant @animals = <r s p c h d D f w>;
-my %animalish is ro = 
-     hash @animals Z=> ( True xx @animals );    
+my %ANIMAL is ro  = hash @animals Z=> ( True xx @animals );    
 
 sub tupify (Str $s) is export { 
     $s ~~ m/^ (<alpha>\d*)+ $/ ?? 
@@ -45,7 +44,7 @@ sub hashify(Str $s) is export {
             $n > 0   ?? $n !! 
         0;
         die "malformed string representation:  invalid symbol '$x'" 
-            unless %animalish{$x};
+            unless %ANIMAL{$x};
         %h{$x} += $k if $k > 0 
     };
     return %h
@@ -60,10 +59,13 @@ sub stringify(%h) is export  {
     return @t ?? @t.join('') !! '∅'
 }
 
-#
 # breed 'strictly', that is, politely declining requests to breed with 
 # foxes and wolves (by returning Nil), but rejecting outright any KeyBag
 # containing anything but valid, "for-sale" animal chars.
+#
+# note that although the signatures ask for both inputs to be KeyBags,
+# the eventual type that's returned is whatever type $x happens to really
+# be (so if it's a Posse, we'll get a Posse object as a result).
 #
 # XXX has a bug around the fact that '∅' ∈ any(Bag), apparently!
 # also, the KeyBag should be a KeySet; but the ∈ op isn't implemented 
@@ -72,11 +74,13 @@ sub stringify(%h) is export  {
 multi sub breed-strict (KeyBag $x, KeyBag $r) is export {
     return Nil         if any('f','w') ∈ $r;
     die "invalid!" unless all($r.keys) ∈ KeyBag.new(@forsale);
-    breed-naive($x,$r);
+    breed-naive($x,$r)
 }
 
 #
-# a pure set-theoretic breeding operation, with no input constraints. 
+# a purely set-theoretic breeding operation, with no input constraints. 
+# kept as a separate (private) function simply to represent the basic
+# breeding operation as simply as possible. 
 #
 multi sub breed-naive (KeyBag $x, KeyBag $r)  {
     my $s = KeySet.new($r);
@@ -85,7 +89,16 @@ multi sub breed-naive (KeyBag $x, KeyBag $r)  {
     ) / 2 
 }
 
+
+
+
 =begin END
+
+
+
+
+
+
 
 # constant @forsale = <r s p c h>;
 # my $FORSALE is ro = keybag(@forsale);
