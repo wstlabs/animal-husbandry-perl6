@@ -35,7 +35,7 @@ role Farm::Sim::Bag::Worthy {
 
 role Farm::Sim::Bag::Frisky {
     multi method spawn (Any $x) {
-        self.sum($x) / 2 
+        self.sum( posse($x) ) / 2 
     }
 }
 
@@ -70,8 +70,8 @@ multi sub posse($arg) is export {
     }
 }
 
-# go forth and multiply
-multi sub infix:<⚤>(Farm::Sim::Posse $x,Any $y --> KeyBag) is export {  $x.spawn($y) }
+# go forth and multiply!
+multi sub infix:<⚤>(Farm::Sim::Posse $x,Any $y --> Farm::Sim::Posse) is export {  $x.spawn($y) }
 
 
 =begin END
@@ -91,4 +91,27 @@ multi sub infix:<⚤>(Farm::Sim::Posse $x,Any $y --> KeyBag) is export {  $x.spa
     }
 
 
+    multi method spawn (Any $x) {
+        say ".spawn self        = ", self.WHICH, " => ", self.Str(), " = ", self;
+        say ".spawn x           = ", $x.WHICH,   " => $x = ", $x;
+        my $s = self.sum($x);
+        my $y = $s / 2; 
+        say ".spawn self+x      = ", $s.WHICH,   " => $s = ", $s;
+        say ".spawn (self+x)/2  = ", $y.WHICH,   " => $y = ", $y;
+        return $y;
+        # self.sum($x) / 2 
+    }
+
+    multi method spawn (Any $x) {
+        say ".spawn self        = ", self.WHICH, " => ", self.Str(), " = ", self;
+        say ".spawn x           = ", $x.WHICH,   " => $x = ", $x;
+        my $z = posse($x);
+        say ".spawn z           = ", $z.WHICH,   " => $z = ", $z;
+        my $s = self.sum($z);
+        my $y = $s / 2; 
+        say ".spawn self+z      = ", $s.WHICH,   " => $s = ", $s;
+        say ".spawn (self+z)/2  = ", $y.WHICH,   " => $y = ", $y;
+        return $y;
+        # self.sum($x) / 2 
+    }
 
