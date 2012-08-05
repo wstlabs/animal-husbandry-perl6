@@ -5,44 +5,6 @@ use KeyBag::Ops;
 use Test;
 plan *;
 
-#
-# a couple of overly exhaustive eqv checks, to control for the 
-# various things that can go wrong with the eqv and eq ops,
-# independent of the .spawn op itself
-#
-sub op-exhaust-infix ($xx, $yy, $zz)  {
-    my $x  = posse($xx);
-    my $y  = posse($yy);
-    my $z  = posse($zz);
-    my $s  = $x ⚤  $y;
-    my $ss = $x ⚤  $yy;
-    ok $z  eqv $s,   "$x ⚤ $y => $z eqv $s";
-    ok $z  eqv $ss,  "$x ⚤ $y => $z eqv $ss";
-    ok $z  eq  $s,   "$x ⚤ $yy => $z eq  $s";
-    ok $z  eq  $ss,  "$x ⚤ $yy => $z eq  $ss";
-} 
-
-sub op-exhaust-method ($xx, $yy, $zz)  {
-    my $x  = posse($xx);
-    my $y  = posse($yy);
-    my $z  = posse($zz);
-    my $s  = $x.spawn($y);
-    my $ss = $x.spawn($yy);
-    ok $z  eqv $s,   "$x.spawn($y) => $z eqv $s";
-    ok $z  eqv $ss,  "$x.spawn($y) => $z eqv $ss";
-    ok $z  eq  $s,   "$x.spawn($yy) => $z eq  $s";
-    ok $z  eq  $ss,  "$x.spawn($yy) => $z eq  $ss";
-} 
-
-{
-    op-exhaust-infix    'r', 'r2', 'r';
-    op-exhaust-method   'r', 'r2', 'r';
-}
-
-
-#
-# a more lightweight eqv test
-#
 multi sub op-ok (Str $xx, Str $yy, Str $zz)  {
     my $x  = posse($xx);
     my $y  = posse($yy);
@@ -58,11 +20,6 @@ multi sub op-ok (Str $xx, Str $yy, Nil $z)  {
     my $y  = posse($yy);
     my $s   = $x ⚤ $y;
     ok $s eqv Nil, "obj $x ⚤ $y => Nil";
-    # my $ss  = $x ⚤ $yy;
-    # ok $ss eqv Nil, "str $x ⚤ $yy => Nil";
-    # say "z  = ", $z.WHICH, " = ", $z;
-    # say "s  = ", $s.WHICH, " = ", $s;
-    # say "ss = ", $ss.WHICH, " = ", $ss;
 } 
 
 sub op-dies-ok (Str $xx, Str $yy)  {
@@ -127,6 +84,9 @@ sub op-dies-ok (Str $xx, Str $yy)  {
     op-ok       'r3s2', 'sp', 's'  ;
 }
 
+#
+# politely decline breeding resuests from foxes and wolves
+#
 {
     op-ok       'r',  'rw',  Nil  ;
     op-ok       'r',  'fs',  Nil  ;
@@ -140,23 +100,26 @@ sub op-dies-ok (Str $xx, Str $yy)  {
     op-ok       'fw', 'fw',  Nil  ;
 }
 
+#
+# throw if we're given anything invalid, i.e. which can't possibly
+# represent a valid pair of die rolls (including strings with big / small 
+# dog symbols).
+#
 {
-    op-dies-ok  'r',  'rd' ;
-    op-dies-ok  'r',  'rD' ;
-    op-dies-ok  'r',  'rx' ;
+    op-dies-ok  'r',  'rd'  ;
+    op-dies-ok  'r',  'rD'  ;
+    op-dies-ok  'r',  'rx'  ;
+    op-dies-ok  'r',  ''    ; 
+    op-dies-ok  'r',  '∅'   ;
+    op-dies-ok  'r',  'abc' ;
 }
 
 
 =begin END
 
+    # my $ss  = $x ⚤ $yy;
+    # ok $ss eqv Nil, "str $x ⚤ $yy => Nil";
     # say "z  = ", $z.WHICH, " = ", $z;
     # say "s  = ", $s.WHICH, " = ", $s;
     # say "ss = ", $ss.WHICH, " = ", $ss;
-    # ok $s eqv $z,  "$x ⚤ $y => $s eqv $z (exp)";
-
-    dies_ok {
-        my $x  = posse($xx);
-        my $y  = posse($yy);
-        my $s  = $x.spawn($y);
-    },"$x.spawn($y) => die";
 
