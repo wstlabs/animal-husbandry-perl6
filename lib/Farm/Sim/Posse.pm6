@@ -19,62 +19,69 @@ constant %weights = {
     d => 6, D => 12 
 };
 
-# note that stringify() will blow up if we've managed
-# to stuff invalid animal syms into our keybag somehow. 
-role Farm::Sim::Bag::Stringy  {
+
+#
+# a simple stringify role, which we keep contained in a Role so
+# we can say ".does(Stringy)", at some point.
+#
+# note that by design stringify() will throw if we've managed to 
+# stuff invalid animal syms into our KeyBag somehow (which can happen
+# due to the fact that there's no easy way to provide key constraints
+# in early versions of the KeyBag class).
+#
+role Farm::Sim::Posse::Role::Stringy  {
     method Str()  {
         stringify(self.hash)
     }
 }
 
-role Farm::Sim::Bag::Worthy {
-    method worth {
-        self ∙ %weights;
-    }
-}
-
-#
-# Provides the magical 'spawn' method, determining how many
-# animals could (in principle) be provided when a posse 'breeds' 
-# with the animals contained in a f/w die roll -- but NOT yet
-# subject to the constraints of what's available in the stock,
-# and equivalent to the infix <⚤> operator defined below.
-#
-# ... (XXX finish) ..
-# So a typical usage might go like this:  if $X represents
-#
-#   my $animals_successfully_bred = ( $X.posse ⚤ $roll) ∩ $S.animals
-#
-# Or,
-#
-#   $P ⊎= ( $P ⚤ $roll) ∩ $S
-#
-# Note: ideally, we'd just like to do:
-#
-#   ( (self ∩ $x.keys) ⊎ $x ) / 2 
-#
-# but certain planets don't quite seem aligned for that yet. 
-#
-role Farm::Sim::Bag::Frisky {
-    multi method spawn (Any $x) {
-        my $r = posse($x);
-        return Nil if any('f','w') ∈ $r;
-        my $s = KeySet.new($r);
-        self.inter($s).sum($r) / 2
-    }
-}
 
 class Farm::Sim::Posse 
 is    KeyBag::Deco 
-does  Farm::Sim::Bag::Stringy
-does  Farm::Sim::Bag::Worthy  
-does  Farm::Sim::Bag::Frisky  {
+does  Farm::Sim::Posse::Role::Stringy  {
     #
-    # XXX we'd like to override these, but something's not quite working.
+    # The magical .breed() method, in which we determine the "desired" number 
+    # of animals that could (in principle) be provided when a Posse "mates" with 
+    # the animals represented in a valid roll of a fox/wolf die pair -- but NOT,
+    # at this stage, checking to make sure those animals are actually available 
+    # in the Stock.
     #
-    # multi method gist(Any:D $ : --> Str) { "posse({ self.pairs>>.gist.join(', ') })" }
-    # multi method perl(Any:D $ : --> Str) { 'Farm::Sim::Posse.new(' ~ self.hash.perl ~ ')' }
+    # Note that the .breed() method can also be accessed via infix <⚤> operator
+    # defined below.  So a typical transation between a player agent $X and a 
+    # stock agent $S might go like this:
+    #
+    #    my $roll = $Dice.roll;
+    #    if (! $roll ~~ / [fw] / ) {
+    #        my $desired = $X.posse ⚤ $roll;
+    #        my $allowed = $desired ∩ $S.posse;
+    #        if ($allowed)  {
+    #            $X.posse ⊎= $allowed; 
+    #            $S.posse ∖= $allowed; 
+    #        }
+    #    }
+    #
+    multi method breed (Str $r) {
+        # die "invalid dice roll '$r'" unless
+        #    $r ~~ m/^ [rspchfwdD] ** 2 $/;
+        breed-strict self, posse($r) 
+    }
+    multi method breed (KeyBag $r) {
+        breed-strict self, $r
+    }
+
+    #
+    # a posse's nominal trading value
+    #
+    method worth { self ∙ %weights }
+
 }
+
+#
+# XXX we'd also like to provide overrides for .gist and .perl, but something's 
+# not quite working.
+#
+# multi method gist(Any:D $ : --> Str) { "posse({ self.pairs>>.gist.join(', ') })" }
+# multi method perl(Any:D $ : --> Str) { 'Farm::Sim::Posse.new(' ~ self.hash.perl ~ ')' }
 
 # a convenient 'quasi-constructor', analagous to set(), keybag(), etc. 
 # note however that we tweak the signatures somewhat -- in order to allow Str
@@ -85,62 +92,19 @@ does  Farm::Sim::Bag::Frisky  {
 #    posse( r => 1 ) 
 #
 # are now forbidden; just use posse({ r => 1 }) instead.
-# XXX make an exception for the default case to throw (instead of just having it die). 
 multi sub posse()     is export { Farm::Sim::Posse.new() } 
 multi sub posse($arg) is export {
     given $arg {
         when Str                                     { Farm::Sim::Posse.new(hashify($arg)) }
         when Set | KeySet | Associative | Positional { Farm::Sim::Posse.new($arg)          }
-        default                                      { die "signature not supported"       } 
     }
 }
 
 # go forth and multiply!
-multi sub infix:<⚤>(Farm::Sim::Posse $x,Any $y --> Farm::Sim::Posse) is export {  $x.spawn($y) }
+multi sub infix:<⚤>(Farm::Sim::Posse $x, Any $r --> Farm::Sim::Posse) is export {  $x.breed($r) }
 
 
 =begin END
 
 # use X::Farm::Sim;
 # X::Farm::Sim::Dice::Invalid::Roll.new( r => $r);
-
-    #
-    # XXX we'd like to represent the operation up in .spawn() as
-    #
-    #    ( self ⊎ $x ) / 2 
-    #
-    # but doing so yields
-    #
-    #     Calling 'infix:<⊎>' will never work with argument types (Farm::Sim::Bag::Frisky, Any) 
-    #
-
-    multi method spawn (Str $s) {
-        self.spawn( self.new($s) )
-    }
-
-
-    multi method spawn (Any $x) {
-        say ".spawn self        = ", self.WHICH, " => ", self.Str(), " = ", self;
-        say ".spawn x           = ", $x.WHICH,   " => $x = ", $x;
-        my $s = self.sum($x);
-        my $y = $s / 2; 
-        say ".spawn self+x      = ", $s.WHICH,   " => $s = ", $s;
-        say ".spawn (self+x)/2  = ", $y.WHICH,   " => $y = ", $y;
-        return $y;
-        # self.sum($x) / 2 
-    }
-
-    multi method spawn (Any $x) {
-        say ".spawn self        = ", self.WHICH, " => ", self.Str(), " = ", self;
-        say ".spawn x           = ", $x.WHICH,   " => $x = ", $x;
-        my $z = posse($x);
-        say ".spawn z           = ", $z.WHICH,   " => $z = ", $z;
-        my $s = self.sum($z);
-        my $y = $s / 2; 
-        say ".spawn self+z      = ", $s.WHICH,   " => $s = ", $s;
-        say ".spawn (self+z)/2  = ", $y.WHICH,   " => $y = ", $y;
-        return $y;
-        # self.sum($x) / 2 
-    }
-
-

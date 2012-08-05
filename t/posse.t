@@ -58,10 +58,11 @@ plan *;
 # as in, we note these as fails because they represent bugs to fix.   which is difficult
 # in the moment because it involves fixing the underlying KeyBag class. 
 #
-{  my $y = posse({});          dies_ok { $y.sum-in-place({ f => 1 }) },  "bad sum-in-place"  }
-{  my $y = posse({});          dies_ok { $y{'f'} = 1 },                  "bad assignment"    }
-{  my $y = posse({});          dies_ok { $y{'f'}++   },                  "bad increment"     }
-{  my $y = posse({ r => 1 });  dies_ok { $y{'r'} -= 2  },                "underflow"         }
+{  my $y = posse({});          dies_ok { $y.sum-in-place({ f => 1 }) },  "invalid sum-in-place"  }
+{  my $y = posse({});          dies_ok { $y{'f'} = 1 },                  "invalid assignment"    }
+{  my $y = posse({});          dies_ok { $y{'f'}++   },                  "invalid increment"     }
+{  my $y = posse({ r => 1 });  dies_ok { $y{'r'} -= 2  },                "underflow"             }
+{  my $y = posse({ r => 1 });  dies_ok { $y{'r'} /= 0  },                "divide-by-zero"        }
 
 =begin END
 

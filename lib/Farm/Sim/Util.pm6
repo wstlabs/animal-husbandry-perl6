@@ -1,13 +1,16 @@
 use v6;
+use KeyBag::Deco;
+use KeyBag::Ops;
 
 #
 # some general-purpose utilities, with a current focused on 
 # string <=> hash conversion.
 #
 
+constant @forsale = <r s p c h>;
 constant @animals = <r s p c h d D f w>;
 my %animalish is ro = 
-     hash @animals Z=> ( True xx @animals.Int );    
+     hash @animals Z=> ( True xx @animals );    
 
 sub tupify (Str $s) is export { 
     $s ~~ m/^ (<alpha>\d*)+ $/ ?? 
@@ -57,12 +60,68 @@ sub stringify(%h) is export  {
     return @t ?? @t.join('') !! '∅'
 }
 
+#
+# breed 'strictly', that is, politely declining requests to breed with 
+# foxes and wolves (by returning Nil), but rejecting outright any KeyBag
+# containing anything but valid, "for-sale" animal chars.
+#
+# XXX has a bug around the fact that '∅' ∈ any(Bag), apparently!
+# also, the KeyBag should be a KeySet; but the ∈ op isn't implemented 
+# for pure Sets yet.
+#
+multi sub breed-strict (KeyBag $x, KeyBag $r) is export {
+    return Nil         if any('f','w') ∈ $r;
+    die "invalid!" unless all($r.keys) ∈ KeyBag.new(@forsale);
+    breed-naive($x,$r);
+}
+
+#
+# a pure set-theoretic breeding operation, with no input constraints. 
+#
+multi sub breed-naive (KeyBag $x, KeyBag $r)  {
+    my $s = KeySet.new($r);
+    return ( 
+        ($x ∩ $s) ⊎ $r
+    ) / 2 
+}
+
 =begin END
+
+# constant @forsale = <r s p c h>;
+# my $FORSALE is ro = keybag(@forsale);
 
 #
 #    hash map @animals -> $a { $a => True }; 
 #
 
-#    say "tup2pair($t) => $x ^ $n <= $k"; 
-
+#
+# Provides the magical 'spawn' method, determining how many
+# animals could (in principle) be provided when a posse 'breeds' 
+# with the animals contained in a f/w die roll -- but NOT yet
+# subject to the constraints of what's available in the stock,
+# and equivalent to the infix <⚤> operator defined below.
+#
+# ... (XXX finish) ..
+# So a typical usage might go like this:  if $X represents
+#
+#   my $animals_successfully_bred = ( $X.posse ⚤ $roll) ∩ $S.animals
+#
+# Or,
+#
+#   $P ⊎= ( $P ⚤ $roll) ∩ $S
+#
+# Note: ideally, we'd just like to do:
+#
+#   ( (self ∩ $x.keys) ⊎ $x ) / 2 
+#
+# but certain planets don't quite seem aligned for that yet. 
+#
+role Farm::Sim::Bag::Frisky {
+    multi method spawn (Any $x) {
+        my $r = posse($x);
+        return Nil if any('f','w') ∈ $r;
+        my $s = KeySet.new($r);
+        self.inter($s).sum($r) / 2
+    }
+}
 
