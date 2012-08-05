@@ -58,6 +58,7 @@ role Farm::Sim::Bag::Worthy {
 role Farm::Sim::Bag::Frisky {
     multi method spawn (Any $x) {
         my $p = posse($x);
+        return Nil if any('f','w') ∈ $p;
         my $s = KeySet.new($p);
         self.inter($s).sum($p) / 2
     }
@@ -138,4 +139,5 @@ multi sub infix:<⚤>(Farm::Sim::Posse $x,Any $y --> Farm::Sim::Posse) is export
         return $y;
         # self.sum($x) / 2 
     }
+
 
