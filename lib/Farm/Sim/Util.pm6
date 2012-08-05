@@ -84,10 +84,18 @@ sub hashify(Str $s) is export {
     my @t = tupify($s); 
     for @t -> $t {
         my ($x,$k) = tup2pair($t);
-        die "malformed string representation:  invalid symbol '$x'" 
-            unless %ANIMAL{$x};
         %h{$x} += $k if $k > 0 
     };
+    return %h
+}
+
+# like hashify, but restricted that keys are valid animals.
+sub hashify-valid(Str $s) is export { 
+    my %h = hashify($s);
+    for %h.kv -> $k,$v {
+        die "malformed posse representation:  invalid animal symbol '$k'" 
+            unless %ANIMAL{$k};
+    }
     return %h
 }
 

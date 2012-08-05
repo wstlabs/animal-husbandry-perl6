@@ -7,7 +7,7 @@ use Test;
 plan *;
 
 sub test_bij($s, %h)  {
-    ok  hashify($s)   eqv %h, "$s --> Hash";
+    ok  hashify-valid($s)   eqv %h, "$s --> Hash";
     ok  stringify(%h) eq  $s, "$s <-- Hash";
 
     my ($x,$y);
@@ -20,7 +20,7 @@ sub test_bij($s, %h)  {
 
 sub test_surj($s, %h)  {
     my $x;
-    ok  hashify($s) eqv %h,       "$s --> Hash eqv Hash";
+    ok  hashify-valid($s) eqv %h,       "$s --> Hash eqv Hash";
     lives_ok { $x = posse($s) },  "$s --> Obj";
     ok  $x.hash eqv %h,           "$s --> Obj eqv Hash";
     # say "x      = ", $x;
@@ -76,7 +76,7 @@ sub test_surj($s, %h)  {
     );
 
     for @broken -> $s {
-        dies_ok { my %h = hashify($s) }, $s 
+        dies_ok { my %h = hashify-valid($s) }, "invalid: $s"
     }
 
 }

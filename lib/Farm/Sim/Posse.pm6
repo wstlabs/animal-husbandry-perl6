@@ -92,7 +92,7 @@ does  Farm::Sim::Posse::Role::Stringy  {
 multi sub posse()     is export { Farm::Sim::Posse.new() } 
 multi sub posse($arg) is export {
     given $arg {
-        when Str                                     { Farm::Sim::Posse.new(hashify($arg)) }
+        when Str                                     { Farm::Sim::Posse.new(hashify-valid($arg)) }
         when Set | KeySet | Associative | Positional { Farm::Sim::Posse.new($arg)          }
     }
 }
