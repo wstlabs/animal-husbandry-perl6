@@ -148,14 +148,15 @@ sub prev-forsale (Str $x)  {  my $n = animal-rank($x); %iRANK{ --$n } }
 sub exchange     (Str $x)  {  %EXCHANGE{$x}  }
 
 sub combify (Str $x) is export {
-    say "combify($x) ..";
+    say "combify('$x') ..";
     die "can't combify '$x' - not for sale!"    
         unless is-forsale($x);
 
     return %T{$x}.clone if %T.exists($x); 
-    my $y = exchange($x);
-    if ($y)  {
-        return [ "spin($x => $y)" ];
+    my $t = exchange($x);
+    if ($t)  {
+        my ($y,$k) = tup2pair($t);
+        return [ "spin($x => $y^$k)" ];
     }
     else {
         return Nil
