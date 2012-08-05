@@ -89,12 +89,22 @@ multi sub breed-naive (KeyBag $x, KeyBag $r)  {
     ) / 2 
 }
 
+
+#
+# some simple structures and access functions to determine
+# which animals are (in principle) available for for mutual 
+# exchange, without considering what's available in the 
+# stock (or in another player's posse) at the moment.
+#
+
 my %T = (
     'r' => []
 );
 
 sub combify (Str $s) is export {
+    return %T{$s} // []
 }
+
 sub combi (Str $s) is export {
     return [<NYI>]
 }
