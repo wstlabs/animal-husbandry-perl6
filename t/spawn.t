@@ -80,6 +80,11 @@ sub check-op ($xx, $yy, $zz)  {
     check-op       'rs2',  'rs', 'rs'  ;
     check-op       'rs2',  'ss', 's2'  ;
     check-op       'rs',   'rs', 'rs'  ;
+    check-op       'rs',   'rr', 'r'   ;
+    check-op       'rs',   'ss', 's'   ;
+    check-op       'rs',   'rr', 'r'   ;
+    check-op       's2',   'rr', 'r'   ;
+    check-op       'rs',   'pp', 'p'   ;
     check-op       'r2s2', 'rs', 'rs'  ;
     check-op       'r3s3', 'rs', 'r2s2'  ;
     check-op       'r4s3', 'rs', 'r2s2'  ;
@@ -97,7 +102,6 @@ sub check-op ($xx, $yy, $zz)  {
     check-op       's2',   'rp', '∅'  ;
     check-op       'rs2',  'rp', 'r'  ;
     check-op       'rs2',  'rr', 'r'  ;
-    check-op       'rs',   'pp', '∅'  ;
     check-op       'r3s2', 'ss', 's2' ;
     check-op       'r3s2', 'rp', 'r2' ;
     check-op       'r3s2', 'sp', 's'  ;

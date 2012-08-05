@@ -33,10 +33,33 @@ role Farm::Sim::Bag::Worthy {
     }
 }
 
+#
+# Provides the magical 'spawn' method, determining how many
+# animals could (in principle) be provided when a posse 'breeds' 
+# with the animals contained in a f/w die roll -- but NOT yet
+# subject to the constraints of what's available in the stock,
+# and equivalent to the infix <⚤> operator defined below.
+#
+# ... (XXX finish) ..
+# So a typical usage might go like this:  if $X represents
+#
+#   my $animals_successfully_bred = ( $X.posse ⚤ $roll) ∩ $S.animals
+#
+# Or,
+#
+#   $P ⊎= ( $P ⚤ $roll) ∩ $S
+#
+# Note: ideally, we'd just like to do:
+#
+#   ( (self ∩ $x.keys) ⊎ $x ) / 2 
+#
+# but certain planets don't quite seem aligned for that yet. 
+#
 role Farm::Sim::Bag::Frisky {
     multi method spawn (Any $x) {
         my $p = posse($x);
-        self.sum( $p ) / 2
+        my $s = KeySet.new($p);
+        self.inter($s).sum($p) / 2
     }
 }
 
