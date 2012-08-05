@@ -16,10 +16,9 @@ sub exhaust-op ($xx, $yy, $zz)  {
     my $z  = posse($zz);
     my $s  = $x ⚤  $y;
     my $ss = $x ⚤  $yy;
-    ok $s  eq  $z,  "$x ⚤ $y => $s eq  $z";
-    ok $s  eqv $z,  "$x ⚤ $y => $s eqv $z";
-    ok $ss eq  $z,  "$x ⚤ $y => $ss eqv $z";
-    ok $ss eqv $z,  "$x ⚤ $y => $ss eqv $z";
+    ok $z  eq  $s,   "$x ⚤ $y => $z eq  $s";
+    ok $z  eqv $s,   "$x ⚤ $y => $z eqv $s";
+    ok $zz eq  $ss,  "$x ⚤ $y => $z eqv $ss";
 } 
 
 sub exhaust-method ($xx, $yy, $zz)  {
@@ -28,10 +27,10 @@ sub exhaust-method ($xx, $yy, $zz)  {
     my $z  = posse($zz);
     my $s  = $x.spawn($y);
     my $ss = $x.spawn($yy);
-    ok $s  eq  $z,  "$x ⚤ $y => $s eq  $z";
-    ok $s  eqv $z,  "$x ⚤ $y => $s eqv $z";
-    ok $ss eq  $z,  "$x ⚤ $y => $ss eqv $z";
-    ok $ss eqv $z,  "$x ⚤ $y => $ss eqv $z";
+    ok $z  eq  $s,   "$x ⚤ $y => $z eq  $s";
+    ok $z  eqv $s,   "$x ⚤ $y => $z eqv $s";
+    ok $zz eq  $ss,  "$x ⚤ $y => $z eqv $ss";
+    ok $zz eqv $ss,  "$x ⚤ $y => $z eqv $ss";
 } 
 
 {
@@ -47,9 +46,10 @@ sub check-op ($xx, $yy, $zz)  {
     my $x  = posse($xx);
     my $y  = posse($yy);
     my $z  = posse($zz);
-    my $s  = $x ⚤ $y;
-    # ok $s eqv $z,  "$x ⚤ $y => $s eqv $z (exp)";
-    is "$s", "$z",   "$x ⚤ $y => $s"
+    my $s   = $x ⚤ $y;
+    my $ss  = $x ⚤ $yy;
+    is "$s",  "$z",   "obj $x ⚤ $y => $z";
+    is "$ss", "$z",   "str $x ⚤ $yy => $z";
 } 
 
 #
@@ -108,4 +108,5 @@ sub check-op ($xx, $yy, $zz)  {
     # say "z  = ", $z.WHICH, " = ", $z;
     # say "s  = ", $s.WHICH, " = ", $s;
     # say "ss = ", $ss.WHICH, " = ", $ss;
+    # ok $s eqv $z,  "$x ⚤ $y => $s eqv $z (exp)";
 
