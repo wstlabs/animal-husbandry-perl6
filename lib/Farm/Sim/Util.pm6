@@ -15,6 +15,11 @@ my %ANIMAL   is ro  = hash @animals Z=> True xx @animals;
 my %RANK     is ro  = hash @forsale Z=> 1..5;
 my %iRANK    is ro  = %RANK.invert; 
 
+constant %STOCK = {
+    r => 60,  s => 24,  p => 20,  c => 12,  h => 6,
+              d =>  4,            D =>  2
+};
+
 
 #
 # XXX obviously the next two hashes are related - we'd rather skip
