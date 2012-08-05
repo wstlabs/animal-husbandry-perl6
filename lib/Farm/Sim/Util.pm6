@@ -15,18 +15,30 @@ my %ANIMAL   is ro  = hash @animals Z=> True xx @animals;
 my %RANK     is ro  = hash @forsale Z=> 1..5;
 my %iRANK    is ro  = %RANK.invert; 
 
+
+#
 # XXX obviously the next two hashes are related - we'd rather skip
 # the task of deriving one from the other, but it might be a good idea 
-# to do some QA to verify that they're in step with each other.
+# to do some QA to verify that they're mutually in synch. 
+#
+# Until then, it's pretty easy to check the numbers by visually aligning
+# their respective columns, for which purpose we've tweaked the spacing
+# somewhat.
+#
 constant %EXCHANGE = { 
-    s => 'r6', p => 's2', c => 'p3', h => 'c2', d => 's', D => 'c' 
+    s => 'r6', p => 's2', c => 'p3', h => 'c2', 
+    d => 's',             D => 'c' 
 };
 constant %WORTH = {
-    r => 1, s => 6, p => 12, c => 30, h => 72,
-            d => 6, D => 12
+    r => 1,
+    s => 6,    p => 12,   c => 36,   h => 72,
+    d => 6,               D => 36
 };
 
-my %T is rw = ( r => [], s => ['r6'] );
+my %T is rw = ( 
+    r => [],
+    s => ['r6']
+);
 
 sub tupify (Str $s) is export { 
     $s ~~ m/^ (<alpha>\d*)+ $/ ?? 
