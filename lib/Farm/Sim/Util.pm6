@@ -7,9 +7,26 @@ use KeyBag::Ops;
 # string <=> hash conversion.
 #
 
-constant @forsale = <r s p c h>;
-constant @animals = <r s p c h d D f w>;
-my %ANIMAL is ro  = hash @animals Z=> ( True xx @animals );    
+constant @forsale  = <r s p c h>;          # sometimes,
+constant @domestic = <r s p c h d D>;      # it's actually OK
+constant @animals  = <r s p c h d D f w>;  # to repeat yourself.
+
+my %ANIMAL   is ro  = hash @animals Z=> True xx @animals;
+my %RANK     is ro  = hash @forsale Z=> 1..5;
+my %iRANK    is ro  = %RANK.invert; 
+
+# XXX obviously the next two hashes are related - we'd rather skip
+# the task of deriving one from the other, but it might be a good idea 
+# to do some QA to verify that they're in step with each other.
+constant %EXCHANGE = { 
+    s => 'r6', p => 's2', c => 'p3', h => 'c2', d => 's', D => 'c' 
+};
+constant %WORTH = {
+    r => 1, s => 6, p => 12, c => 30, h => 72,
+            d => 6, D => 12
+};
+
+my %T is rw = ( r => [], s => ['r6'] );
 
 sub tupify (Str $s) is export { 
     $s ~~ m/^ (<alpha>\d*)+ $/ ?? 
@@ -17,10 +34,26 @@ sub tupify (Str $s) is export {
     !! die "malformed string representation [$s]"
 }
 
-sub tup2pair(Str $s) {
+# returns a "raw" pair of split tuple components, e.g.:
+#
+#   r2 => ("r","2"), r1 => ("r","")
+#
+sub tup2raw(Str $s) {
     $s ~~ m/(<alpha>)(\d*)/ ??  (
         $0.Str, $1.Str
     ) !! die "malformed tuple element [$s]"
+}  
+
+sub tup2pair(Str $s) {
+    my ($x,$n) = tup2raw($s);
+    my Int $k = 
+        $n eq '' ?? 1      !! 
+        $n >= 0  ?? $n.Int !! 
+        # umm, should never happen theoretically, 
+        # given the regex in tup2raw, but:
+        die "invalid tuple exponent '$n'"
+    ;
+    ($x,$k)
 }  
 
 
@@ -38,11 +71,7 @@ sub hashify(Str $s) is export {
     my Int %h;
     my @t = tupify($s); 
     for @t -> $t {
-        my ($x,$n) = tup2pair($t);
-        my $k = 
-            $n eq '' ?? 1  !! 
-            $n > 0   ?? $n !! 
-        0;
+        my ($x,$k) = tup2pair($t);
         die "malformed string representation:  invalid symbol '$x'" 
             unless %ANIMAL{$x};
         %h{$x} += $k if $k > 0 
@@ -90,6 +119,19 @@ multi sub breed-naive (KeyBag $x, KeyBag $r)  {
 }
 
 
+
+#
+# A Posse's nominal trading value (in rabbits), based on standard
+# conversion rates.  Note that the input arg doesn't need to be an
+# actual Posse object; it can also be just a plain old KeyBag,
+# and the trading measure will be computed in the natural way. 
+#
+sub worth-in-trade (KeyBag $x --> Int) is export { $x ∙ %WORTH }
+
+
+
+
+
 #
 # some simple structures and access functions to determine
 # which animals are (in principle) available for for mutual 
@@ -97,16 +139,41 @@ multi sub breed-naive (KeyBag $x, KeyBag $r)  {
 # stock (or in another player's posse) at the moment.
 #
 
-my %T = (
-    'r' => []
-);
 
-sub combify (Str $s) is export {
-    return %T{$s} // []
+sub is-forsale  (Str $x)   {  %RANK.exists($x)  }
+sub animal-rank (Str $x)   {  %RANK{$x}         }
+
+sub next-forsale (Str $x)  {  my $n = animal-rank($x); %iRANK{ ++$n } }
+sub prev-forsale (Str $x)  {  my $n = animal-rank($x); %iRANK{ --$n } }
+sub exchange     (Str $x)  {  %EXCHANGE{$x}  }
+
+sub combify (Str $x) is export {
+    say "combify($x) ..";
+    die "can't combify '$x' - not for sale!"    
+        unless is-forsale($x);
+
+    return %T{$x}.clone if %T.exists($x); 
+    my $y = exchange($x);
+    if ($y)  {
+        return [ "spin($x => $y)" ];
+    }
+    else {
+        return Nil
+    }
 }
 
 sub combi (Str $s) is export {
-    return [<NYI>]
+    return %T{$s} // combify($s) 
+}
+
+sub show-secret-structs is export {
+    say "T = ", %T;
+    say "RANK  = ", %RANK;
+    say "iRANK = ", %iRANK;
+    say "animal-rank  = ", hash map -> $k { $k => animal-rank($k)  }, @forsale;
+    say "next-forsale = ", hash map -> $k { $k => next-forsale($k) }, @forsale;
+    say "prev-forsale = ", hash map -> $k { $k => prev-forsale($k) }, @forsale;
+    say "exchange     = ", hash map -> $k { $k => exchange($k)     }, @animals;
 }
 
 
@@ -114,47 +181,18 @@ sub combi (Str $s) is export {
 
 =begin END
 
+hmm:
+
+    say "exchange     = ", hash @animals Z=> exchange($_);
+
+yields:
+
+    Nominal type check failed for parameter '$a'; expected Str but got Any instead
 
 
+            $k => "boo [$k]" 
 
 
-
-
-# constant @forsale = <r s p c h>;
-# my $FORSALE is ro = keybag(@forsale);
-
-#
-#    hash map @animals -> $a { $a => True }; 
-#
-
-#
-# Provides the magical 'spawn' method, determining how many
-# animals could (in principle) be provided when a posse 'breeds' 
-# with the animals contained in a f/w die roll -- but NOT yet
-# subject to the constraints of what's available in the stock,
-# and equivalent to the infix <⚤> operator defined below.
-#
-# ... (XXX finish) ..
-# So a typical usage might go like this:  if $X represents
-#
-#   my $animals_successfully_bred = ( $X.posse ⚤ $roll) ∩ $S.animals
-#
-# Or,
-#
-#   $P ⊎= ( $P ⚤ $roll) ∩ $S
-#
-# Note: ideally, we'd just like to do:
-#
-#   ( (self ∩ $x.keys) ⊎ $x ) / 2 
-#
-# but certain planets don't quite seem aligned for that yet. 
-#
-role Farm::Sim::Bag::Frisky {
-    multi method spawn (Any $x) {
-        my $r = posse($x);
-        return Nil if any('f','w') ∈ $r;
-        my $s = KeySet.new($r);
-        self.inter($s).sum($r) / 2
-    }
-}
+    $x eq 'd' ?? animal-rank('p') !! 
+    $x eq 'D' ?? animal-rank('c') !!  $RANK{$x}
 

@@ -14,11 +14,6 @@ use Farm::Sim::Util;
 # or otherwise) can be represented as Posse objects.
 #
 
-constant %weights = { 
-    r => 1, s => 6, p => 12, c => 30, h => 72,
-    d => 6, D => 12 
-};
-
 
 #
 # a simple stringify role, which we keep contained in a Role so
@@ -70,9 +65,9 @@ does  Farm::Sim::Posse::Role::Stringy  {
     }
 
     #
-    # a posse's nominal trading value
+    # A Posse's nominal trading value, expressed in terms of rabbits.
     #
-    method worth { self ∙ %weights }
+    method worth { worth-in-trade(self) }
 
 }
 
@@ -83,15 +78,17 @@ does  Farm::Sim::Posse::Role::Stringy  {
 # multi method gist(Any:D $ : --> Str) { "posse({ self.pairs>>.gist.join(', ') })" }
 # multi method perl(Any:D $ : --> Str) { 'Farm::Sim::Posse.new(' ~ self.hash.perl ~ ')' }
 
-# a convenient 'quasi-constructor', analagous to set(), keybag(), etc. 
-# note however that we tweak the signatures somewhat -- in order to allow Str
+#
+# A convenient 'quasi-constructor', analagous to set(), keybag(), etc. 
+# Note however that we tweak the signatures somewhat -- in order to allow Str
 # arguments, it seems we need to disallow tuple-like contexts (and we'd rather
-# just tweak those here, than redo the whole contstructor).  so in any case, 
+# just tweak those here, than redo the whole contstructor).  So at any rate, 
 # constructions like 
 #
 #    posse( r => 1 ) 
 #
-# are now forbidden; just use posse({ r => 1 }) instead.
+# aren't allowed; so just use posse({ r => 1 }) instead.
+#
 multi sub posse()     is export { Farm::Sim::Posse.new() } 
 multi sub posse($arg) is export {
     given $arg {
@@ -106,5 +103,12 @@ multi sub infix:<⚤>(Farm::Sim::Posse $x, Any $r --> Farm::Sim::Posse) is expor
 
 =begin END
 
+constant %weights = { 
+    r => 1, s => 6, p => 12, c => 30, h => 72,
+    d => 6, D => 12 
+};
+
+
 # use X::Farm::Sim;
 # X::Farm::Sim::Dice::Invalid::Roll.new( r => $r);
+
