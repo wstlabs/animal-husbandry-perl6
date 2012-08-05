@@ -11,7 +11,7 @@ multi sub op-ok (Str $xx, Str $yy, Str $zz)  {
     my $z  = posse($zz);
     my $s   = $x ⚤ $y;
     my $ss  = $x ⚤ $yy;
-    is "$s",  "$z",   "obj $x ⚤ $y => $z";
+    is "$s",  "$z",   "obj $x ⚤ $yy => $z";
     is "$ss", "$z",   "str $x ⚤ $yy => $z";
 } 
 
@@ -19,7 +19,7 @@ multi sub op-ok (Str $xx, Str $yy, Nil $z)  {
     my $x  = posse($xx);
     my $y  = posse($yy);
     my $s   = $x ⚤ $y;
-    ok $s eqv Nil, "obj $x ⚤ $y => Nil";
+    ok $s eqv Nil, "obj $x ⚤ $yy => Nil";
 } 
 
 sub op-dies-ok (Str $xx, Str $yy)  {
