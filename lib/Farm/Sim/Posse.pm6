@@ -35,7 +35,8 @@ role Farm::Sim::Bag::Worthy {
 
 role Farm::Sim::Bag::Frisky {
     multi method spawn (Any $x) {
-        self.sum( posse($x) ) / 2 
+        my $p = posse($x);
+        self.sum( $p ) / 2
     }
 }
 

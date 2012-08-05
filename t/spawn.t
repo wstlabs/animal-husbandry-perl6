@@ -16,9 +16,10 @@ sub exhaust-op ($xx, $yy, $zz)  {
     my $z  = posse($zz);
     my $s  = $x ⚤  $y;
     my $ss = $x ⚤  $yy;
-    ok $z  eq  $s,   "$x ⚤ $y => $z eq  $s";
     ok $z  eqv $s,   "$x ⚤ $y => $z eqv $s";
-    ok $zz eq  $ss,  "$x ⚤ $y => $z eqv $ss";
+    ok $z  eqv $ss,  "$x ⚤ $y => $z eqv $ss";
+    ok $z  eq  $s,   "$x ⚤ $yy => $z eq  $s";
+    ok $z  eq  $ss,  "$x ⚤ $yy => $z eq  $ss";
 } 
 
 sub exhaust-method ($xx, $yy, $zz)  {
@@ -27,10 +28,10 @@ sub exhaust-method ($xx, $yy, $zz)  {
     my $z  = posse($zz);
     my $s  = $x.spawn($y);
     my $ss = $x.spawn($yy);
-    ok $z  eq  $s,   "$x ⚤ $y => $z eq  $s";
-    ok $z  eqv $s,   "$x ⚤ $y => $z eqv $s";
-    ok $zz eq  $ss,  "$x ⚤ $y => $z eqv $ss";
-    ok $zz eqv $ss,  "$x ⚤ $y => $z eqv $ss";
+    ok $z  eqv $s,   "$x.spawn($y) => $z eqv $s";
+    ok $z  eqv $ss,  "$x.spawn($y) => $z eqv $ss";
+    ok $z  eq  $s,   "$x.spawn($yy) => $z eq  $s";
+    ok $z  eq  $ss,  "$x.spawn($yy) => $z eq  $ss";
 } 
 
 {
