@@ -1,14 +1,14 @@
 use v6;
 BEGIN { @*INC.unshift: './lib'; }
-use Farm::Sim::Posse;
-use KeyBag::Ops;
+use Farm::Sim::Util;
 use Test;
 plan *;
 
-sub ok-gen  (Str $x, List $a)  {
+sub ok-gen  (Str $x, List $exp)  {
     # say "x = $x";
-    # say "a = $a.WHICH = ", $a; 
-    ok $x, "$x - gen";
+    # say "a = $exp.WHICH = ", $exp; 
+    my $got = combi($x);
+    is_deeply $got, $exp, "$x - get";
 }
 
 ok-gen 'r', [];

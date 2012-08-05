@@ -89,6 +89,16 @@ multi sub breed-naive (KeyBag $x, KeyBag $r)  {
     ) / 2 
 }
 
+my %T = (
+    'r' => []
+);
+
+sub combify (Str $s) is export {
+}
+sub combi (Str $s) is export {
+    return [<NYI>]
+}
+
 
 
 
