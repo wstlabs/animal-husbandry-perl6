@@ -12,15 +12,23 @@ constant %K = {
 };
 
 my %E = { 
-     6 => [< s d r6 >]
+     6 => [<  s d r6  >],
+    12 => [<  ss sd dd sr6 dr6 r12  >]
 };
 
+# XXX make this a trait
 sub is-kosher(Int $j) { $j > 0 && $j % 6 == 0 } 
+
+sub kombi(Int $j) is export {
+    return %E{$j}.clone if %E{$j};
+}
 
 sub kombify(Int $j) is export {
     die "invalid height '$j'" unless is-kosher($j);
     say "kombify($j) ..";
     return %E{$j}.clone if %E{$j};
+    my @avail = grep { $_ < $j }, %E.keys;
+    say "avail = ", @avail;
 }
 
 sub dump-kombi() is export  {
