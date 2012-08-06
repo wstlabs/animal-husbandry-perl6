@@ -44,8 +44,6 @@ sub tup2pair(Str $s) {
     my Int $k = 
         $n eq '' ?? 1      !! 
         $n >= 0  ?? $n.Int !! 
-        # umm, should never happen theoretically, 
-        # given the regex in tup2raw, but:
         die "invalid tuple exponent '$n'"
     ;
     ($x,$k)
@@ -81,7 +79,6 @@ multi sub hashify(Str $s, %v) is export {
 }
 
 multi sub stringify(%h) is export  {
-    # say "::stringify(1): h = ", %h;
     my @t = map -> $x, Int $k {
         $k > 0 ??
             $k > 1 ?? "$x$k" !! $x
@@ -89,6 +86,20 @@ multi sub stringify(%h) is export  {
     }, %h.kv;
     return @t ?? @t.join('') !! '∅'
 }
+
+multi sub stringify(%h, @s) is export  {
+    my @t = map -> $x {
+        my $k = %h{$x};
+        next unless %h.exists($x);
+        $k > 0 ??
+            $k > 1 ?? "$x$k" !! $x
+        !! ()
+    }, @s;
+    return @t ?? @t.join('') !! '∅'
+}
+
+
+=begin END
 
 multi sub stringify(%h, @s) is export  {
     # say "::stringify(2): h = ", %h;
@@ -108,4 +119,3 @@ multi sub stringify(%h, @s) is export  {
     # say "::stringify(2): t = ", @t; 
     return @t ?? @t.join('') !! '∅'
 }
-

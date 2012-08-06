@@ -48,15 +48,9 @@ sub hashify-animals(Str $s) is export {
 }
 
 sub stringify-animals(%h) is export  {
-    # say "::stringify-animals:  h = ", %h;
-    # say "::stringify-animals:  domestic = ", @domestic; 
-    my $s = stringify(%h,@domestic);
-    # my @wtf = ('r','s','f');
-    # my @wtf = ('r','s','f');
-    # my $s = stringify(%h, @wtf); 
-    # say "::stringify-animals:  s = ", $s; 
-    return $s
+    stringify(%h,@domestic)
 }
+
 
 
 # breed 'strictly', that is, politely declining requests to breed with 
@@ -177,61 +171,14 @@ constant %K = {
     72 => [<  h    >],
 };
 
-sub tupify (Str $s) is export { 
-    $s ~~ m/^ (<alpha>\d*)+ $/ ?? 
-        return map -> $t { $t.Str}, $0
-    !! die "malformed string representation [$s]"
+sub stringify-animals(%h) is export  {
+    # say "::stringify-animals:  h = ", %h;
+    # say "::stringify-animals:  domestic = ", @domestic; 
+    # my @wtf = ('r','s','f');
+    # my @wtf = ('r','s','f');
+    # my $s = stringify(%h, @wtf); 
+    # say "::stringify-animals:  s = ", $s; 
+    stringify(%h,@domestic)
 }
 
-# returns a "raw" pair of split tuple components, e.g.:
-#
-#   r2 => ("r","2"), r1 => ("r","")
-#
-sub tup2raw(Str $s) {
-    $s ~~ m/(<alpha>)(\d*)/ ??  (
-        $0.Str, $1.Str
-    ) !! die "malformed tuple element [$s]"
-}  
-
-sub tup2pair(Str $s) {
-    my ($x,$n) = tup2raw($s);
-    my Int $k = 
-        $n eq '' ?? 1      !! 
-        $n >= 0  ?? $n.Int !! 
-        # umm, should never happen theoretically, 
-        # given the regex in tup2raw, but:
-        die "invalid tuple exponent '$n'"
-    ;
-    ($x,$k)
-}  
-
-
-# straightfoward string-to-hash conversion, converting e.g. "rs" to 
-# the hash { r => 1, s => 1 }, and handling corner cases such as the
-# empty symbol, and accepting non-canonical strings such as "rr"
-# as well as degenerate cases like "r0" and "r01".
-#
-# note that we'll throw at the tupify() step if we're given structurally 
-# invalid input, i.e. not matching the regex up in that sub.  that leaves 
-# structurally valid strings containing invalid (non-animal) chars, which
-# we choose to catch in a separate step, down in the for loop below.
-sub hashify(Str $s) is export { 
-    return {} if $s eq '∅';
-    my Int %h;
-    my @t = tupify($s); 
-    for @t -> $t {
-        my ($x,$k) = tup2pair($t);
-        %h{$x} += $k if $k > 0 
-    };
-    return %h
-}
-
-sub stringify(%h) is export  {
-    my @t = map -> $x,$k {
-        $k > 0 ??
-            $k > 1 ?? "$x$k" !! $x
-        !! ()
-    }, %h.kv; 
-    return @t ?? @t.join('') !! '∅'
-}
 
