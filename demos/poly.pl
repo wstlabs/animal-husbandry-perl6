@@ -16,6 +16,10 @@ say mul-poly <d r6 s>, <d r6 s>;
 
 say <x y> ∘ <x y>;
 
+say pow-poly <x y>, 3;
+say <x y> ∘∘ 4;
+say <a b> ∘∘ 5;
+
 =begin END
 
 say <x y> ‹*› <x y>;

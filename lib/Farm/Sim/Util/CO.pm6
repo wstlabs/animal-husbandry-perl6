@@ -117,10 +117,24 @@ sub mul-poly (@p, @q) is export {
     )
 }
 
-# we hijack U+2218, aka the function composition operator: 
-multi sub infix:<∘>(@p,@q) is export { mul-poly @p,@q }
+#
+# iterative form of the mul-poly op
+#
+sub pow-poly (@p is copy, Int $k where { $k > 0 }) is export  {
+    $k < 2 ?? 
+        @p 
+    !!  
+        mul-poly( @p, pow-poly(@p, $k-1) )
+}
+
+# we unimaginatively hijack U+2218, aka the function composition operator: 
+multi sub infix:<∘> ( @p, @q ) is export { mul-poly @p, @q }
+multi sub infix:<∘∘>( @p, $k ) is export { pow-poly @p, $k }
+
 
 =begin END
+
+
 
 # U+2039, U+203A
 multi sub infix:<‹*›>(@p,@q) is export { mul-poly @p,@q }
