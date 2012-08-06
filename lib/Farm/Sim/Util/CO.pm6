@@ -1,8 +1,11 @@
 use v6;
+use Farm::Sim::Util::HashTup;
+use KeyBag::Deco; 
+use KeyBag::Ops; 
 
-# straightforward "inverse" of the %WORTH table, above;
-# used for determining combinations of animals whose sums 
-# are equal to a given value.
+# straightforward "inverse" of the %WORTH table, up in F::S::Util; 
+# used for determining combinations of animals whose sums are equal 
+# to a given value.
 constant %K = {
      1 => [<  r    >],
      6 => [<  s d  >],
@@ -47,6 +50,16 @@ sub dump-kombi() is export  {
 # 
 
 
+
+multi sub stringify(KeyBag $x) {
+    # my @t = map -> $t, $k {
+    #    ($k > 1) ?? "$t$k" !! $t
+    # }, $x.hash.kv.sort;
+    # @t.join('')
+    hashify($x.hash)
+}
+
+
 #
 # given CMs multinomials @x, @y, and an exponent $k,
 # generates the CM representing the expansion of <x,y>^k, 
@@ -58,4 +71,23 @@ sub spinify(@x, @y, Int $k where $k > 1) is export {
     say "sp y = ", @y; 
     return () 
 }
+
+sub inflate (@p)  {
+    map { keybag(hashify($_)) }, @p
+}
+
+sub mul-poly (@x, @y) is export {
+    # say "sp x = ", @x; 
+    # say "sp y = ", @y; 
+    # my @X = map -> $x { hashify($x) }, @x;
+    # my @Y = map -> $y { hashify($y) }, @y;
+    # my @X = map { keybag(hashify($_)) }, @x;
+    # my @Y = map { keybag(hashify($_)) }, @y;
+    my @X = inflate(@x); 
+    my @Y = inflate(@y); 
+    say "sp x = @x => {@X.perl}";
+    say "sp y = @y => {@Y.perl}";
+    return ()
+}
+
 
