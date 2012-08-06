@@ -11,6 +11,8 @@ for @j -> $j {
 }
 
 say mul-poly <a b>, <x y>;
+say mul-poly <x y>, <x y>;
+say mul-poly <d r6 s>, <d r6 s>;
 
 
 

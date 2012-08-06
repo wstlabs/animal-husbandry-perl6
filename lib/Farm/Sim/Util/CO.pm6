@@ -53,10 +53,14 @@ sub dump-kombi() is export  {
 
 multi sub stringify(KeyBag $x) {
     # my @t = map -> $t, $k {
-    #    ($k > 1) ?? "$t$k" !! $t
-    # }, $x.hash.kv.sort;
+    #   ($k > 1) ?? "$t$k" !! $t
+    #}, $x.hash.kv.sort;
     # @t.join('')
-    hashify($x.hash)
+    stringify($x.hash)
+}
+
+multi sub stringify(@P)  {
+    map { stringify($_) }, @P
 }
 
 
@@ -72,22 +76,35 @@ sub spinify(@x, @y, Int $k where $k > 1) is export {
     return () 
 }
 
-sub inflate (@p)  {
-    map { keybag(hashify($_)) }, @p
+sub inflate (@p)  { map { keybag(hashify($_)) }, @p }
+sub deflate (@P)  { 
+    my @p = stringify(@P);
+    my %h;
+    for @p -> $p {
+        %h{$p}++
+    } 
+    %h.keys.sort
 }
 
-sub mul-poly (@x, @y) is export {
+sub mul-poly (@p, @q) is export {
+    my @P = inflate(@p); 
+    my @Q = inflate(@q); 
+    # say "mul-poly p = @p => {@P.perl}";
+    # say "mul-poly q = @q => {@Q.perl}";
+    say "mul-poly p => ", stringify(@P); 
+    say "mul-qoly q => ", stringify(@Q); 
+    my @S = @P X⊎ @Q;
+    say "mul-poly s => ", stringify(@S);
+    my @s = deflate(@S);
+    return @s; 
+}
+
+=begin END
+
     # say "sp x = ", @x; 
     # say "sp y = ", @y; 
     # my @X = map -> $x { hashify($x) }, @x;
     # my @Y = map -> $y { hashify($y) }, @y;
     # my @X = map { keybag(hashify($_)) }, @x;
     # my @Y = map { keybag(hashify($_)) }, @y;
-    my @X = inflate(@x); 
-    my @Y = inflate(@y); 
-    say "sp x = @x => {@X.perl}";
-    say "sp y = @y => {@Y.perl}";
-    return ()
-}
-
 
