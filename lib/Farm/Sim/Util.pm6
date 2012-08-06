@@ -40,6 +40,8 @@ constant %WORTH = {
     d => 6,               D => 36
 };
 
+
+
 my %T is rw = ( 
     r => [],
     s => ['r6']
@@ -221,4 +223,15 @@ yields:
 
     $x eq 'd' ?? animal-rank('p') !! 
     $x eq 'D' ?? animal-rank('c') !!  $RANK{$x}
+
+# straightforward "inverse" of the %WORTH table, above;
+# used for determining combinations of animals whose sums 
+# are equal to a given value.
+constant %K = {
+     1 => [<  r    >],
+     6 => [<  s d  >],
+    12 => [<  p    >],
+    36 => [<  c D  >],
+    72 => [<  h    >],
+};
 
