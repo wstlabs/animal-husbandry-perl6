@@ -38,4 +38,24 @@ sub dump-kombi() is export  {
     }
 }
 
+#
+# CM = "combinatorial multinomial" = a polynomial over
+# some set of single-character symbols whose exponents may
+# vary, but whose coefficients are all = 1.  Examples:
+# 
+#  < x y >, < x2 xy y2 > ... (finish this blurb)
+# 
+
+
+#
+# given CMs multinomials @x, @y, and an exponent $k,
+# generates the CM representing the expansion of <x,y>^k, 
+# grouped by unique terms.
+#
+sub spinify(@x, @y, Int $k where $k > 1) is export {
+    say "sp k = $k";
+    say "sp x = ", @x; 
+    say "sp y = ", @y; 
+    return () 
+}
 
