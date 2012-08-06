@@ -14,6 +14,9 @@ say mul-poly <a b>, <x y>;
 say mul-poly <x y>, <x y>;
 say mul-poly <d r6 s>, <d r6 s>;
 
+say <x y> ∘ <x y>;
 
+=begin END
 
+say <x y> ‹*› <x y>;
 

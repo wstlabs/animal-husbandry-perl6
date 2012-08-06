@@ -90,13 +90,13 @@ sub deflate (@P)  {
 }
 
 #
-# performs a pseudo-multiplication op on valid characteristic 
-# polynomials @p, @q, whereby we add the exponents on all like terms, 
-# but we don't bother to keep track of the arithmetic multiplicative 
-# coefficients -- we only care whether a given combinatorial term 
-# exists or not, not is multiplicity.
+# in which we perform a pseudo-multiplication op on valid characteristic 
+# polynomials @p, @q, whereby we add the exponents on all like terms, but we 
+# don't bother to keep track of the arithmetic multiplicative coefficients -- 
+# all we care whether a given combinatorial term exists or not in our 
+# sequence of interest, not is multiplicity.
 #
-# So e.g. we get: 
+# So we get, e.g.:
 #
 #   mul-poly <a b>, <x y> =>  ax ay bx by
 #   mul-poly <x y>, <x y> =>  x2 xy y2
@@ -117,9 +117,27 @@ sub mul-poly (@p, @q) is export {
     )
 }
 
+# we hijack U+2218, aka the function composition operator: 
+multi sub infix:<∘>(@p,@q) is export { mul-poly @p,@q }
+
+=begin END
+
+# U+2039, U+203A
+multi sub infix:<‹*›>(@p,@q) is export { mul-poly @p,@q }
+
+E2 : 226 = 
+‹∙∙›
+‹*›
+‹**›
+
+∘
+∘∘
+
 #
 # long-winded form of mul-poly, for debugging. 
 #
+
+
 sub mul-poly-long (@p, @q) is export {
     my @P = inflate(@p); 
     my @Q = inflate(@q); 
@@ -130,8 +148,6 @@ sub mul-poly-long (@p, @q) is export {
     my @s = deflate(@S);
     return @s; 
 }
-
-=begin END
 
 sub mul-poly (@p, @q) is export {
     my @P = inflate(@p); 
