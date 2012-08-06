@@ -2,6 +2,7 @@ use v6;
 use KeyBag::Deco;
 use KeyBag::Ops;
 use Farm::Sim::Util;
+use Farm::Sim::Util::HashTup;
 
 #
 # A 'Posse' is any collection of animals that we might find together 
@@ -26,7 +27,7 @@ use Farm::Sim::Util;
 #
 role Farm::Sim::Posse::Role::Stringy  {
     method Str()  {
-        stringify(self.hash)
+        stringify-animals(self.hash)
     }
 }
 
@@ -58,7 +59,7 @@ does  Farm::Sim::Posse::Role::Stringy  {
     multi method breed (Str $r) {
         # die "invalid dice roll '$r'" unless
         #    $r ~~ m/^ [rspchfwdD] ** 2 $/;
-        breed-strict self, posse($r) 
+        breed-strict self, keybag(hashify($r)) 
     }
     multi method breed (KeyBag $r) {
         breed-strict self, $r
@@ -92,7 +93,7 @@ does  Farm::Sim::Posse::Role::Stringy  {
 multi sub posse()     is export { Farm::Sim::Posse.new() } 
 multi sub posse($arg) is export {
     given $arg {
-        when Str                                     { Farm::Sim::Posse.new(hashify-valid($arg)) }
+        when Str                                     { Farm::Sim::Posse.new(hashify-animals($arg)) }
         when Set | KeySet | Associative | Positional { Farm::Sim::Posse.new($arg)          }
     }
 }

@@ -7,8 +7,8 @@ use Test;
 plan *;
 
 sub test_bij($s, %h)  {
-    ok  hashify-valid($s)   eqv %h, "$s --> Hash";
-    ok  stringify(%h) eq  $s, "$s <-- Hash";
+    ok  hashify-animals($s)   eqv %h, "$s --> Hash";
+    ok  stringify-animals(%h) eq  $s, "$s <-- Hash";
 
     my ($x,$y);
     lives_ok { $x = posse($s) },  "$s --> Obj";
@@ -20,7 +20,7 @@ sub test_bij($s, %h)  {
 
 sub test_surj($s, %h)  {
     my $x;
-    ok  hashify-valid($s) eqv %h,       "$s --> Hash eqv Hash";
+    ok  hashify-animals($s) eqv %h,       "$s --> Hash eqv Hash";
     lives_ok { $x = posse($s) },  "$s --> Obj";
     ok  $x.hash eqv %h,           "$s --> Obj eqv Hash";
     # say "x      = ", $x;
@@ -66,22 +66,20 @@ sub test_surj($s, %h)  {
 # failing cases
 #
 {
-    constant @broken = ( 
+    constant @malformed = ( 
         '',
-        'x', 'x2', 'xr', 'rx', 
-        '∅∅', 'r∅', '∅r',
+        ' ',' r','r0 ';
+        '2r', '3r2', 
+        '∅∅', 'a∅', '∅b', 
+        '∅0', '∅1', '∅2', 
+        '∅2r', 'r∅2', 'r0∅', 'r1∅',
         'r-1', 'r1/2', 'r1.0',
-        0, 1, 2, '2',
-        '0r', '1r', '2r3'
+        '0r', '1r', '2r3',
+         0, 1, 2, '2'
     );
 
-    for @broken -> $s {
-        dies_ok { my %h = hashify-valid($s) }, "invalid: $s"
+    for @malformed -> $s {
+        dies_ok { my %h = hashify-animals($s) }, "malformed: $s"
     }
 
 }
-
-
-
-
-

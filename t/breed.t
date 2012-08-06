@@ -1,6 +1,8 @@
 use v6;
 BEGIN { @*INC.unshift: './lib'; }
 use Farm::Sim::Posse;
+use Farm::Sim::Util::HashTup;
+use KeyBag::Deco;
 use KeyBag::Ops;
 use Test;
 plan *;
@@ -17,7 +19,7 @@ multi sub op-ok (Str $xx, Str $yy, Str $zz)  {
 
 multi sub op-ok (Str $xx, Str $yy, Nil $z)  {
     my $x  = posse($xx);
-    my $y  = posse($yy);
+    my $y  = keybag(hashify($yy));
     my $s   = $x ⚤ $y;
     ok $s eqv Nil, "obj $x ⚤ $yy => Nil";
 } 
@@ -85,19 +87,14 @@ sub op-dies-ok (Str $xx, Str $yy)  {
 }
 
 #
-# politely decline breeding resuests from foxes and wolves
+# politely decline breeding requests from foxes and wolves
 #
 {
     op-ok       'r',  'rw',  Nil  ;
-    op-ok       'r',  'fs',  Nil  ;
+    op-ok       'r',  'rf',  Nil  ;
     op-ok       'r',  'fw',  Nil  ;
-    op-ok       'rw', 'rw',  Nil  ;
     op-ok       'rs', 'fs',  Nil  ;
-    op-ok       'w',  'rw',  Nil  ;
     op-ok       's2', 'fs',  Nil  ;
-    op-ok       'f2', 'fs',  Nil  ;
-    op-ok       'fs', 'fs',  Nil  ;
-    op-ok       'fw', 'fw',  Nil  ;
 }
 
 #
