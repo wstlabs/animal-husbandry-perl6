@@ -24,7 +24,7 @@ sub test_surj($s, %h)  {
     test_bij 'x666', { x => 666 }        ;
     test_bij 'xy',   { x => 1, y => 1 }  ;
     test_bij 
-        'x2y3zw', { 
+        'wx2y3z', { 
             x => 2, y => 3, z => 1, w => 1 
         }
     
@@ -37,6 +37,7 @@ sub test_surj($s, %h)  {
 #
 {
     test_surj( 'xx',   { x => 2 } );
+    test_surj( 'yx',   { x => 1, y => 1 } );
     test_surj( 'x3x2', { x => 5 } );
     test_surj( 'x0',   {}          );
     test_surj( 'x01',  { x => 1 }  );

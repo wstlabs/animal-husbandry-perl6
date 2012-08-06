@@ -83,7 +83,7 @@ multi sub stringify(%h) is export  {
         $k > 0 ??
             $k > 1 ?? "$x$k" !! $x
         !! ()
-    }, %h.kv;
+    }, %h.kv.sort;
     return @t ?? @t.join('') !! '∅'
 }
 
