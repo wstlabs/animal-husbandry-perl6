@@ -36,9 +36,9 @@ sub test_surj($s, %h)  {
     test_bij( 'r',    { r => 1 }          );
     test_bij( 'r2',   { r => 2 }          );
     test_bij( 'r666', { r => 666 }        );
-    test_bij( 'rs',   { r => 1, s => 1 }  );
+    test_bij( 'sr',   { r => 1, s => 1 }  );
     test_bij( 
-        'r2p3ch', { 
+        'hcp3r2', { 
             r => 2, p => 3, c => 1, h => 1 
         }
     )

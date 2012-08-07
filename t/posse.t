@@ -22,11 +22,11 @@ plan *;
     lives_ok { $y.sum-in-place({ r => 2, s => 1 }) }, "valid sum r2s";
     lives_ok { $y.sum-in-place({ p => 1 }) },         "valid sum p";
     # say "y = $y => ", $y;
-    is "$y", 'r2sp',                                  "stringy";
+    is "$y", 'psr2',                                  "stringy";
     is $y.worth(), 20,                                "worthy";
     lives_ok { $y.sum-in-place({}) },                 "empty sum (canon)"; 
     lives_ok { $y.sum-in-place({ p => 0 }) },         "empty sum (degenerate)";
-    is "$y", 'r2sp',                                  "verify empty sums";
+    is "$y", 'psr2',                                  "verify empty sums";
 }
 
 
@@ -37,7 +37,7 @@ plan *;
 
     my ($x, $y);
     lives_ok { $x = posse({ r => 2, s => 1 }) },   "new (non-empty)";
-    is "$x", 'r2s', "stringy";
+    is "$x", 'sr2', "stringy";
     lives_ok { $y = $x.clone() }, "clone (deep)";
     # say "x = $x = ", $x.WHICH; 
     # say "y = $y = ", $y.WHICH; 
@@ -47,7 +47,7 @@ plan *;
     ok { $y eq $x },              "y eq x";
     ok { $x eq $y },              "x eq y";
     lives_ok { $y{'p'} = 3 },     "munge y";
-    is "$y", 'r2sp3',             "stringy";
+    is "$y", 'p3sr2',             "stringy";
     nok $y eqv $x,                "y !eqv x";
     nok $x eqv $y,                "y !eqv x";
 }

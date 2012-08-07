@@ -49,27 +49,27 @@ sub op-dies-ok (Str $xx, Str $yy)  {
 #
 {
     op-ok       'r',    'sp', '∅'   ;
-    op-ok       'rs',   'sp', 's'   ;
+    op-ok       'sr',   'sp', 's'   ;
     op-ok       's',    'rs', 's'   ;
-    op-ok       'rs',   'rp', 'r'   ;
+    op-ok       'sr',   'rp', 'r'   ;
     op-ok       'r',    'rs', 'r'   ;
     op-ok       'r',    'ss', 's'   ;
     op-ok       'r2',   'rs', 'r'   ;
     op-ok       'r2',   'rr', 'r2'  ;
-    op-ok       'rs2',  'rs', 'rs'  ;
-    op-ok       'rs2',  'ss', 's2'  ;
+    op-ok       's2r',  'rs', 'rs'  ;
+    op-ok       's2r',  'ss', 's2'  ;
     op-ok       'rs',   'rs', 'rs'  ;
     op-ok       'rs',   'rr', 'r'   ;
     op-ok       'rs',   'ss', 's'   ;
     op-ok       'rs',   'rr', 'r'   ;
     op-ok       's2',   'rr', 'r'   ;
     op-ok       'rs',   'pp', 'p'   ;
-    op-ok       'r2s2', 'rs', 'rs'  ;
-    op-ok       'r3s3', 'rs', 'r2s2'  ;
-    op-ok       'r4s3', 'rs', 'r2s2'  ;
-    op-ok       'r3s4', 'rs', 'r2s2'  ;
-    op-ok       'r4s4', 'rs', 'r2s2'  ;
-    op-ok       'r5s5', 'rs', 'r3s3'  ;
+    op-ok       's2r2', 'sr', 'sr'  ;
+    op-ok       's3r3', 'sr', 's2r2'  ;
+    op-ok       's4r3', 'sr', 's2r2'  ;
+    op-ok       's3r4', 'sr', 's2r2'  ;
+    op-ok       's4r4', 'sr', 's2r2'  ;
+    op-ok       's5r5', 'sr', 's3r3'  ;
 }
 
 
@@ -79,11 +79,11 @@ sub op-dies-ok (Str $xx, Str $yy)  {
 {
     op-ok       'r2',   'sp', '∅'  ;
     op-ok       's2',   'rp', '∅'  ;
-    op-ok       'rs2',  'rp', 'r'  ;
-    op-ok       'rs2',  'rr', 'r'  ;
-    op-ok       'r3s2', 'ss', 's2' ;
-    op-ok       'r3s2', 'rp', 'r2' ;
-    op-ok       'r3s2', 'sp', 's'  ;
+    op-ok       's2r',  'rp', 'r'  ;
+    op-ok       's2r',  'rr', 'r'  ;
+    op-ok       's2r3', 'ss', 's2' ;
+    op-ok       's2r3', 'rp', 'r2' ;
+    op-ok       's2r3', 'sp', 's'  ;
 }
 
 #
@@ -93,7 +93,7 @@ sub op-dies-ok (Str $xx, Str $yy)  {
     op-ok       'r',  'rw',  Nil  ;
     op-ok       'r',  'rf',  Nil  ;
     op-ok       'r',  'fw',  Nil  ;
-    op-ok       'rs', 'fs',  Nil  ;
+    op-ok       'sr', 'fs',  Nil  ;
     op-ok       's2', 'fs',  Nil  ;
 }
 

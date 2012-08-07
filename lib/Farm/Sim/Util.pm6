@@ -49,8 +49,11 @@ sub hashify-animals(Str $s) is export {
     hashify($s,%DOMESTIC)
 }
 
+# print a posse string as a tuple, MSA (most significant animal) first, 
+# e.g.:  'sr3', 'Dcp3s4r6', etc.  empty posses are printed as the empty 
+# set sign '∅'.
 sub stringify-animals(%h) is export  {
-    stringify(%h,@domestic)
+    stringify(%h,reverse @domestic)
 }
 
 
