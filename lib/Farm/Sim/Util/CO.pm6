@@ -41,6 +41,8 @@ sub dump-kombi() is export  {
     }
 }
 
+=begin END
+
 #
 # CM = "combinatorial multinomial" = a polynomial over
 # some set of single-character symbols whose exponents may
