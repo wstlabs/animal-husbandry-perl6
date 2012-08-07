@@ -4,58 +4,59 @@ use Farm::Sim::Util::Poly;
 use Farm::Sim::Posse; 
 use KeyBag::Ops; 
 
+
 sub kombify() is export  { 
     my @s = [<r>]           ∘∘ 6; say @s;  #   1 sheep-equivalent tuple  -> r6
     my @p = ( <d s>, @s)    ∘∘ 2; say @p;  #   5   pig-equivalent tuples -> <d s r6>
     my @c = ('p', @p)       ∘∘ 3; say @c;  #  50   cow-equivalent tuples; takes 10s to gen
-    # my @h = ('D', 'c', @c)  ∘∘ 2; say @h;  # 355 horse-equivalent tuples; takes 157s! 
-    my $S = posse( stock-hash() );
-    say "S = ", $S;
+#   my @h = ('D', 'c', @c)  ∘∘ 2; say @h;  # 355 horse-equivalent tuples; takes 157s! 
+
+    my $stock = posse( stock-hash() );
+    say "stock = ", $stock;
+
+    my @S = sort map { posse($_) }, @s;
+    my @P = sort map { posse($_) }, @p;
+    my @C = sort map { posse($_) }, @c;
+
+    say "S = ", @S;
+    say "P = ", @P;
+    say "C = ", @C;
+
 }
 
+sub kombify-slow() is export  { 
+    my @s = [<r>]           ∘∘ 6; say @s;  #   1 sheep-equivalent tuple  -> r6
+    my @p = ( <d s>, @s)    ∘∘ 2; say @p;  #   5   pig-equivalent tuples -> <d s r6>
+    my @c = ('p', @p)       ∘∘ 3; say @c;  #  50   cow-equivalent tuples; takes 10s to gen
+    my @h = ('D', 'c', @c)  ∘∘ 2; say @h;  # 355 horse-equivalent tuples; takes 157s! 
+}
 
 
 =begin END
-use KeyBag::Deco; 
-use KeyBag::Ops; 
 
-# straightforward "inverse" of the %WORTH table, up in F::S::Util; 
-# used for determining combinations of animals whose sums are equal 
-# to a given value.
-constant %K = {
-     1 => [<  r    >],
-     6 => [<  s d  >],
-    12 => [<  p    >],
-    36 => [<  c D  >],
-    72 => [<  h    >],
-};
+  <r s d p c D h>
 
-my %E = { 
-     6 => [<  s d r6  >],
-    12 => [<  ss sd dd sr6 dr6 r12  >]
-};
+  r36 
+  r30s r30d
+  r24s2 r24sd r24d2                     r24p
+  r18s3 r18s2d r18sd2 r18d3             r18sp r18dp
+  r12s4 r12s3d r12s2d2 r12sd3 r12d4     r12s2p r12sdp r12d2p    r12p2 
 
-# XXX make this a trait
-sub is-kosher(Int $j) { $j > 0 && $j % 6 == 0 } 
+  r6s5 r6s4d r6s3d2 r6s2d3 r6sd4 r6d5 
+  r6s3p r6s2dp r6sd2p r6d3p
+  r6sp2 r6dp2
 
-sub kombi(Int $j) is export {
-    return %E{$j}.clone if %E{$j};
-}
+  s6 s5d s4d2 s3d3 s2d4 sd5 d6 
 
-sub kombify(Int $j) is export {
-    die "invalid height '$j'" unless is-kosher($j);
-    say "kombify($j) ..";
-    return %E{$j}.clone if %E{$j};
-    my @avail = grep { $_ < $j }, %E.keys;
-    say "avail = ", @avail;
-}
+  s4p s3dp s2d2p sd3p d4p 
 
-sub dump-kombi() is export  {
-    for %K.keys -> $j  {
-        next if $j < 6;
-        say "E($j) = ", %E{$j}
-    }
-}
+  s2p2 sdp2 d2p2
 
-=begin END
+  p3 
+
+
+  C = d6 p2d2 p3 pd4 r12d4 r12p2 r12pd2 r12s2d2 r12s2p r12s3d r12s4 r12sd3 r12spd r18d3 r18pd r18s2d r18s3 r18sd2 r18sp r24d2 r24p r24s2 r24sd r30d r30s r36 r6d5 r6p2d r6pd3 r6s2d3 r6s2pd r6s3d2 r6s3p r6s4d r6s5 r6sd4 r6sp2 r6spd2 s2d4 s2p2 s2pd2 s3d3 s3pd s4d2 s4p s5d s6 sd5 sp2d spd3
+
+
+
 
