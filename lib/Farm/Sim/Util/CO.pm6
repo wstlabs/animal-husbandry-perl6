@@ -9,7 +9,15 @@ sub kombify() is export  {
     my @s = [<r>]           ∘∘ 6; say @s;  #   1 sheep-equivalent tuple  -> r6
     my @p = ( <d s>, @s)    ∘∘ 2; say @p;  #   5   pig-equivalent tuples -> <d s r6>
     my @c = ('p', @p)       ∘∘ 3; say @c;  #  50   cow-equivalent tuples; takes 10s to gen
-#   my @h = ('D', 'c', @c)  ∘∘ 2; say @h;  # 355 horse-equivalent tuples; takes 157s! 
+    my @h = ('D', 'c', @c)  ∘∘ 2; say @h;  # 355 horse-equivalent tuples; takes 157s! 
+
+    my %N = (
+        's' => @s.Int,
+        'p' => @p.Int,
+        'c' => @c.Int,
+        'h' => @h.Int
+   );
+    say "N = ", %N;
 
     my $stock = posse( stock-hash() );
     say "stock = ", $stock;
@@ -21,6 +29,17 @@ sub kombify() is export  {
     say "S = ", @S;
     say "P = ", @P;
     say "C = ", @C;
+
+    say "grep ..";
+    my @X = grep { $_ ⊂ $stock }, @C;
+    say "C => ", @X.Int;
+    say "C = ", @X;
+
+    say "horses.."; 
+    my @H = sort map { posse($_) }, @h;
+    my @Y = grep { $_ ⊂ $stock }, @H;
+    say "H => ", @Y.Int;
+    say "H = ", @Y;
 
 }
 
@@ -56,6 +75,11 @@ sub kombify-slow() is export  {
 
 
   C = d6 p2d2 p3 pd4 r12d4 r12p2 r12pd2 r12s2d2 r12s2p r12s3d r12s4 r12sd3 r12spd r18d3 r18pd r18s2d r18s3 r18sd2 r18sp r24d2 r24p r24s2 r24sd r30d r30s r36 r6d5 r6p2d r6pd3 r6s2d3 r6s2pd r6s3d2 r6s3p r6s4d r6s5 r6sd4 r6sp2 r6spd2 s2d4 s2p2 s2pd2 s3d3 s3pd s4d2 s4p s5d s6 sd5 sp2d spd3
+
+
+# restricting for stock membership:
+#C \= d5, d6
+C = p2d2 p3 pd4 r12d4 r12p2 r12pd2 r12s2d2 r12s2p r12s3d r12s4 r12sd3 r12spd r18d3 r18pd r18s2d r18s3 r18sd2 r18sp r24d2 r24p r24s2 r24sd r30d r30s r36 r6p2d r6pd3 r6s2d3 r6s2pd r6s3d2 r6s3p r6s4d r6s5 r6sd4 r6sp2 r6spd2 s2d4 s2p2 s2pd2 s3d3 s3pd s4d2 s4p s5d s6 sp2d spd3
 
 
 
