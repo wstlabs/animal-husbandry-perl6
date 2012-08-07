@@ -19,8 +19,12 @@ say <x y> ∘ <x y>;
 say pow-poly <x y>, 3;
 say <x y> ∘∘ 4;
 say <a b> ∘∘ 5;
+say [<r>] ∘∘ 6;
+
+my @s = [<r>]           ∘∘ 6; say @s;  #   3 sheep - equivalent tuples
+my @p = ( <d s>, @s)    ∘∘ 2; say @p;  #   5 pig   - equivalent tuples 
+my @c = ('p', @p)       ∘∘ 3; say @c;  #  50 cow   - equivalent tuples; takes 10s to gen
+# my @h = ('D', 'c', @c)  ∘∘ 2; say @h;  # 355 horse - equivalent tuples; takes 157s! 
 
 =begin END
-
-say <x y> ‹*› <x y>;
 
