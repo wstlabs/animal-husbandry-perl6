@@ -30,15 +30,17 @@ sub kombify() is export  {
     say "P = ", @P;
     say "C = ", @C;
 
-    say "grep ..";
-    my @X = grep { $_ ⊂ $stock }, @C;
-    say "C => ", @X.Int;
+    say "grep against stock:";
+
+    say "cows..";
+    my @X = grep { $_ ⊆ $stock }, @C;
+    say "C => ", @X.Int; # 47
     say "C = ", @X;
 
     say "horses.."; 
     my @H = sort map { posse($_) }, @h;
-    my @Y = grep { $_ ⊂ $stock }, @H;
-    say "H => ", @Y.Int;
+    my @Y = grep { $_ ⊆ $stock }, @H;
+    say "H => ", @Y.Int; # 276
     say "H = ", @Y;
 
 }
