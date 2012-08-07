@@ -4,13 +4,14 @@ use KeyBag::Ops;
 use Farm::Sim::Util::HashTup; 
 
 
-constant @forsale  = <r s p c h>;          # sometimes,
-constant @domestic = <r s p c h d D>;      # it's actually OK
-constant @animals  = <r s p c h d D f w>;  # to repeat yourself.
+# animals which can...
+constant @frisky    = <r s   p c   h    >;  # breed 
+constant @domestic  = <r s d p c D h    >;  # cohabitate (or be traded) 
+constant @animals   = <r s d p c D h f w>;  # all animals together 
 
 my %DOMESTIC is ro  = hash @domestic Z=> True xx @domestic;
-my %RANK     is ro  = hash @forsale Z=> 1..5;
-my %iRANK    is ro  = %RANK.invert; 
+my %FRISKY   is ro  = hash @frisky   Z=> True xx @frisky;
+my $FRISKY   is ro  = KeyBag.new(%FRISKY); 
 
 constant %STOCK = {
     r => 60,  s => 24,  p => 20,  c => 12,  h => 6,
@@ -72,7 +73,7 @@ sub stringify-animals(%h) is export  {
 #
 multi sub breed-strict (KeyBag $x, KeyBag $r) is export {
     return Nil         if any('f','w') ∈ $r;
-    die "invalid!" unless all($r.keys) ∈ KeyBag.new(@forsale);
+    die "invalid!" unless all($r.keys) ∈ $FRISKY; 
     breed-naive($x,$r)
 }
 
@@ -99,6 +100,13 @@ sub worth-in-trade (KeyBag $x --> Int) is export { $x ∙ %WORTH }
 
 
 
+
+
+=begin END
+
+my %RANK     is ro  = hash @frisky Z=> 1..5;
+my %iRANK    is ro  = %RANK.invert; 
+
 #
 # some simple structures and access functions to determine
 # which animals are (in principle) available for for mutual 
@@ -113,7 +121,6 @@ sub next-forsale (Str $x)  {  my $n = animal-rank($x); %iRANK{ ++$n } }
 sub prev-forsale (Str $x)  {  my $n = animal-rank($x); %iRANK{ --$n } }
 sub exchange     (Str $x)  {  %EXCHANGE{$x}  }
 
-=begin END
 
 sub combify (Str $x) is export {
     say "combify('$x') ..";
