@@ -52,10 +52,6 @@ sub dump-kombi() is export  {
 
 
 multi sub stringify-keybag(KeyBag $x) {
-    # my @t = map -> $t, $k {
-    #   ($k > 1) ?? "$t$k" !! $t
-    #}, $x.hash.kv.sort;
-    # @t.join('')
     stringify($x.hash)
 }
 
