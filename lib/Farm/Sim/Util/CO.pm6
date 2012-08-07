@@ -1,5 +1,21 @@
 use v6;
-use Farm::Sim::Util::HashTup;
+use Farm::Sim::Util;
+use Farm::Sim::Util::Poly;
+use Farm::Sim::Posse; 
+use KeyBag::Ops; 
+
+sub kombify() is export  { 
+    my @s = [<r>]           ∘∘ 6; say @s;  #   1 sheep-equivalent tuple  -> r6
+    my @p = ( <d s>, @s)    ∘∘ 2; say @p;  #   5   pig-equivalent tuples -> <d s r6>
+    my @c = ('p', @p)       ∘∘ 3; say @c;  #  50   cow-equivalent tuples; takes 10s to gen
+    # my @h = ('D', 'c', @c)  ∘∘ 2; say @h;  # 355 horse-equivalent tuples; takes 157s! 
+    my $S = posse( stock-hash() );
+    say "S = ", $S;
+}
+
+
+
+=begin END
 use KeyBag::Deco; 
 use KeyBag::Ops; 
 

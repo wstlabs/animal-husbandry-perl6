@@ -17,6 +17,8 @@ constant %STOCK = {
               d =>  4,            D =>  2
 };
 
+sub stock-hash() is export { %STOCK }
+
 
 #
 # XXX obviously the next two hashes are related - we'd rather skip
