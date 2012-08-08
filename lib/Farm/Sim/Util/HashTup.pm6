@@ -99,7 +99,34 @@ multi sub stringify(%h, @s) is export  {
 }
 
 
+
+sub compare-weighted-tuples( %x, %y, @t is copy ) is export  {
+    if (@t)  {
+        my $t = shift @t;
+        my $j = %x{$t}; 
+        my $k = %y{$t};
+        return
+            ( defined $j) && ( defined $k ) ?? 
+                $j <=> $k ||
+                compare-weighted-tuples(%x,%y,@t)
+            !!
+            ( defined $j ) ?? Order::Increase !!
+            ( defined $k ) ?? Order::Decrease !!
+                compare-weighted-tuples(%x,%y,@t)
+    }
+    else  {
+        return Order::Same 
+    }
+}
+
+
 =begin END
+
+                # my $stat = $j <=> $k;
+                # $stat eqv Order::Same ?? 
+                #    compare-weighted-tuples(%x,%y,@t)
+                # !! 
+                #     $stat
 
 multi sub stringify(%h, @s) is export  {
     # say "::stringify(2): h = ", %h;

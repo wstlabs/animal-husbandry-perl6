@@ -14,6 +14,16 @@ sub test_surj($s, %h)  {
     ok  hashify($s) eqv %h,       "$s --> Hash eqv Hash";
 }
 
+constant @alpha = <a b c d e>;
+sub test-cmp(Str $a, Str $b, $t)  {
+    my %a = hashify($a);
+    my %b = hashify($b);
+    my $cmp = compare-weighted-tuples %a, %b, @alpha;
+    # say "cmp = ", $cmp.WHICH, " = ", $cmp;
+    # say "t   = ", $t.WHICH, " = ", $t;
+    ok $cmp eqv $t, "$a cmp $b --> $cmp = $t" 
+}
+
 #
 # straightforward (bijective) cases
 #
@@ -64,6 +74,40 @@ sub test_surj($s, %h)  {
     for @malformed -> $s {
         dies_ok { my %h = hashify($s) }, "malformed: $s"
     }
+
+}
+
+#
+# comparison cases
+#
+{
+    test-cmp '∅',   '∅',   Same; 
+    test-cmp 'a',   'a',   Same; 
+    test-cmp 'ab',  'ab',  Same; 
+
+    test-cmp 'a',   'b',   Increase; 
+    test-cmp 'b',   'a',   Decrease; 
+
+    test-cmp 'ab',  'b',   Increase; 
+    test-cmp 'b',   'ab',  Decrease; 
+
+    test-cmp 'a',   'a2',  Increase; 
+    test-cmp 'a2',  'a',   Decrease; 
+    test-cmp 'a2',  'a2',  Same; 
+
+    test-cmp 'a2b', 'ab',  Decrease; 
+    test-cmp 'ab',  'a2b', Increase; 
+    test-cmp 'ab2', 'ab',  Decrease; 
+    test-cmp 'ab',  'ab2', Increase; 
+
+    test-cmp 'a',   'ab',  Increase; 
+    test-cmp 'ab',  'a',   Decrease; 
+
+    test-cmp 'a',   '∅',   Decrease; 
+    test-cmp '∅',   'a',   Increase; 
+
+    test-cmp 'ab',  'abc', Increase; 
+    test-cmp 'abc', 'ab',  Decrease; 
 
 }
 
