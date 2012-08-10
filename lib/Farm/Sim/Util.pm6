@@ -13,14 +13,9 @@ my %DOMESTIC is ro  = hash @domestic Z=> True xx @domestic;
 my %FRISKY   is ro  = hash @frisky   Z=> True xx @frisky;
 my $FRISKY   is ro  = KeyBag.new(%FRISKY); 
 
-constant %STOCK = {
-    r => 60,  s => 24,  p => 20,  c => 12,  h => 6,
-              d =>  4,            D =>  2
-};
 
 # XXX currently it seems difficult to export symbols other than subs.
 # so here's what we'll do as a workaround, in the meantime: 
-sub stock-hash()     is export { %STOCK }
 sub frisky-animals() is export { @frisky }
 
 
@@ -106,6 +101,12 @@ sub worth-in-trade (KeyBag $x --> Int) is export { $x ∙ %WORTH }
 
 
 =begin END
+
+sub stock-hash()     is export { %STOCK }
+constant %STOCK = {
+    r => 60,  s => 24,  p => 20,  c => 12,  h => 6,
+              d =>  4,            D =>  2
+};
 
 my %RANK     is ro  = hash @frisky Z=> 1..5;
 my %iRANK    is ro  = %RANK.invert; 

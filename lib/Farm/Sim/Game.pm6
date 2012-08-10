@@ -1,5 +1,29 @@
 use v6;
-use Farm::Sim::Containers;
+# use KeyBag::Ops;
+use Farm::Sim::Util;
+use Farm::Sim::Posse;
 
-class Farm::Sim::Game {}
+my @frisky is ro = frisky-animals();
+constant %STOCK = {
+    r => 60, s => 24, p => 20, c => 12, h => 6, 
+    d =>  4, D =>  2
+};
+
+class Farm::Sim::Game  {
+    has %!p;
+    submethod BUILD(:%!p) {
+        %!p<stock> //= posse(%STOCK); 
+    }
+
+    method posse (Str $name)  { %!p{$name}.clone }
+    method players { %!p.keys.sort }
+    method table {
+        hash map -> $k,$v {
+            $k => $v.Str
+        }, %!p.kv
+    }
+};
+
+
+=begin END
 
