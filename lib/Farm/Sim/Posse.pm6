@@ -4,6 +4,8 @@ use KeyBag::Ops;
 use Farm::Sim::Util;
 use Farm::Sim::Util::HashTup;
 
+my @frisky is ro = frisky-animals();
+
 #
 # A 'Posse' is any collection of animals that we might find together 
 # in some 'stable' configuration -- that is, without bloodshed immediately 
@@ -69,6 +71,20 @@ does  Farm::Sim::Posse::Role::Stringy  {
     # A Posse's nominal trading value, expressed in terms of rabbits.
     #
     method worth { worth-in-trade(self) }
+
+
+    #
+    # A Posse's "base" is simply a list of basic animal types in its possession 
+    # which contribute towards victory -- in other words, a Boolean slice through
+    # the set <r s p c h>, expressed as an ordered list. 
+    #
+    # While a Posse's "need" is a list of basic animal types which contribute 
+    # towards victory, but which it does not yet possess.
+    #
+    # Naturally, these two lists are complements of each other.
+    #
+    method base  { grep {  self.exists($_) }, @frisky } 
+    method need  { grep { !self.exists($_) }, @frisky }
 
 }
 

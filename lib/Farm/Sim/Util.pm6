@@ -5,7 +5,7 @@ use Farm::Sim::Util::HashTup;
 
 
 # animals which can...
-constant @frisky    = <r s   p c   h    >;  # breed 
+constant @frisky    = <r s   p c   h    >;  # breed (or count towards a win) 
 constant @domestic  = <r s d p c D h    >;  # cohabitate (or be traded) 
 constant @animals   = <r s d p c D h f w>;  # all animals together 
 
@@ -18,7 +18,10 @@ constant %STOCK = {
               d =>  4,            D =>  2
 };
 
-sub stock-hash() is export { %STOCK }
+# XXX currently it seems difficult to export symbols other than subs.
+# so here's what we'll do as a workaround, in the meantime: 
+sub stock-hash()     is export { %STOCK }
+sub frisky-animals() is export { @frisky }
 
 
 #
