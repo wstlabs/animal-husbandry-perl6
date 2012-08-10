@@ -15,6 +15,12 @@ class Farm::Sim::Game  {
         %!p<stock> //= posse(%STOCK); 
     }
 
+    # instance generator which creates an empty game on $n players 
+    method simple (Int $n)  {
+        my %p = hash map -> $k, { "T$k" => posse({}) }, 1..$n;
+        self.new(p => %p)
+    }
+
     method posse (Str $name)  { %!p{$name}.clone }
     method players { %!p.keys.sort }
     method table {
