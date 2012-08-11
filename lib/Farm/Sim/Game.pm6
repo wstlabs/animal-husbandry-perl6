@@ -34,19 +34,47 @@ class Farm::Sim::Game  {
         }, %!p.kv
     }
 
-    method broker(Farm::Sim::Posse $posse, Str $roll)  {
-        my $stock = %!p<stock>;
-        say "++ $posse => $roll";
+    method transfer($from, $to, $what) {
+        say "xx $from => $to:  $what";
+        if ($what)  {
+             %!p{$to}    ⊎= $what;
+             %!p{$from}  ∖= $what;
+        }
+        else  {
+            # say "nothing to do!";
+        }
+        # say "now: ", self.table;
+        # self.publish: { :type<transfer>, :$from, :$to, :%animals };
+    }
+
+
+    method broker(Str $player, Str $roll)  {
+        my $stock = self.posse('stock'); 
+        my $posse = self.posse($player);
+        say "++ $player: $posse => $roll";
         given $roll {
-            when /[w]/ { say "++ wolf!" }
-            when /[f]/ { say "++ fox!" }
+            when /[w]/ { 
+                if ('D' ∈ $posse)  {
+                    self.transfer( $player, 'stock', 'D' )
+                }
+                else  {
+                    self.transfer( $player, 'stock', $posse.slice([<r s p c>]) )
+                }
+            }
+            when /[f]/ { 
+                if ('d' ∈ $posse)  {
+                    self.transfer( $player, 'stock', 'd' )
+                }
+                else  {
+                    self.transfer( $player, 'stock', $posse.slice([<r>]) )
+                }
+            }
             default  {
                 my $desired = $posse ⚤ $roll;
                 my $allowed = $desired ∩ $stock;
-                if ($allowed)  {
-                    $posse ⊎= $allowed;
-                    $stock ∖= $allowed;
-                }
+                # say "allowed = ", $allowed.WHICH, " = ", $allowed;
+                say "allowed = $allowed"; 
+                self.transfer( 'stock', $player, $allowed )
             }
         }
     }
@@ -59,8 +87,9 @@ class Farm::Sim::Game  {
         say "curr: $!cp";
         say "have: $posse";
         say "need: ", @need.join('');
-        self.broker($posse,$roll);
-        say "roll: $roll » ? ";
+        say "roll: $roll";
+        self.broker($!cp,$roll);
+        say "done: ?";
         self.incr;
     }
 
@@ -79,6 +108,19 @@ class Farm::Sim::Game  {
 =begin END
 
 ⚤
+say "»» ..";
+
+
+                    self.transfer(
+                        from: $player,
+                        to:   $stock,
+                        what: 'D' 
+                    )
+
+                if ($allowed)  {
+                    $posse ⊎= $allowed;
+                    $stock ∖= $allowed;
+                }
 
         say "have: $posse « ", @need.join('');
 

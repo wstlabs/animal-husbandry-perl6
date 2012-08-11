@@ -5,9 +5,8 @@ use Farm::Sim::Posse;
 
 multi MAIN($n)  {
     say "n = $n";
-    my $N = 5; 
     my $game = Farm::Sim::Game.simple(3);
-    $game.play($N);
+    $game.play($n);
 }
 
 =begin END
