@@ -169,9 +169,13 @@ class Farm::Sim::Game  {
                 push @puts, $animals;
             }
         }
-        my $gets = @gets.join(',');
-        my $puts = @puts.join(',');
-        return { :$player, :$roll, :$gets, :$puts }; 
+        my %s;
+        %s<gets> = @gets.join(',') if @gets;
+        %s<puts> = @puts.join(',') if @puts;
+        return { :$player, :$roll, %s } 
+        # my $gets = @gets.join(',');
+        # my $puts = @puts.join(',');
+        # return { :$player, :$roll, :$gets, :$puts }; 
 
     }
 
