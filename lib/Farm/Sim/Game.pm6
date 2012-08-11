@@ -69,6 +69,7 @@ class Farm::Sim::Game  {
                 else  {
                     self.transfer( $player, 'stock', $posse.slice([<r s p c>]) )
                 }
+                proceed;
             }
             when /[f]/ { 
                 if ('d' ∈ $posse)  {
@@ -77,6 +78,7 @@ class Farm::Sim::Game  {
                 else  {
                     self.transfer( $player, 'stock', $posse.slice([<r>]) )
                 }
+                proceed;
             }
             default  {
                 my $desired = $posse ⚤ $roll;
