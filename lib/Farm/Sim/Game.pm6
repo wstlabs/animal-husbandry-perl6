@@ -116,7 +116,7 @@ class Farm::Sim::Game  {
     method inspect-recent {
         say "::inspect e = ", @!e.Int;
         my @top = self.slice-recent-events-upto("type","roll");
-        say "top = {@top.perl}";
+        say "::inspect top = {@top.perl}";
         for @top -> %e  {
             say "::inspect e = ", {%e}
         }
@@ -124,16 +124,26 @@ class Farm::Sim::Game  {
         # my (%re,%te,@xtra) = @top;
         my %re = shift @top;
         my %te = shift @top;
-        say "re = ", %re;
-        say "te = ", %te;
-        my $player = %re<player>;
-        my $roll   = %re<roll>;
-        my $gets   = %te<animals>;
-        my $from   = %te<from>;
-        say "player = ", $player;
-        say "roll   = ", $roll;
+        say "::inspect re = ", %re;
+        say "::inspect te = ", %te;
+        my $player  = %re<player>;
+        my $roll    = %re<roll>;
+        my $animals = %te<animals>;
+        my $from    = %te<from>;
+        my $to      = %te<to>;
+        say "::inspect player  = ", $player;
+        say "::inspect roll    = ", $roll;
+        say "::inspect animals = ", $animals;
+        say "::inspect from    = ", $from;
+        say "::inspect to      = ", $to;
         say "::inspect e = ", @!e.Int;
-        return { :$player, :$roll, :$gets, :$from }
+        if ($from eq 'stock') {
+            return { :$player, :$roll, gets => $animals, :$from }
+        }
+        else {
+            return { :$player, :$roll, puts => $animals, :$to }
+        }
+
     }
 
     #
