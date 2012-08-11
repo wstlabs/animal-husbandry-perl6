@@ -43,13 +43,13 @@ class Farm::Sim::Game  {
         my $roll  = $!dice.roll;
         my $posse = self.posse($!cp);
         my @need  = $posse.need;
-        say "step: $!j";
-        say "curr: $!cp";
-        say "have: $posse";
-        say "need: ", @need.join('');
-        say "roll: $roll";
+        say "::play step: $!j";
+        say "::play curr: $!cp";
+        say "::play have: $posse";
+        say "::play need: ", @need.join('');
+        say "::play roll: $roll";
         self.broker($!cp,$roll);
-        say "done: ?";
+        say "::play done: ?";
         self.incr;
     }
 
@@ -77,8 +77,7 @@ class Farm::Sim::Game  {
             default  {
                 my $desired = $posse ⚤ $roll;
                 my $allowed = $desired ∩ $stock;
-                # say "allowed = ", $allowed.WHICH, " = ", $allowed;
-                say "allowed = $allowed"; 
+                say ":: allowed = $allowed"; 
                 self.transfer( 'stock', $player, $allowed )
             }
         }
