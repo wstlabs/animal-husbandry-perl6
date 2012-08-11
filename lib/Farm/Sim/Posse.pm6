@@ -48,7 +48,7 @@ does  Farm::Sim::Posse::Role::Stringy  {
     # defined below.  So a typical transation between a player agent $X and a 
     # stock agent $S might go like this:
     #
-    #    my $roll = $Dice.roll;
+    #    my $roll = $dice.roll;
     #    if (! $roll ~~ / [fw] / ) {
     #        my $desired = $X.posse ⚤ $roll;
     #        my $allowed = $desired ∩ $S.posse;

@@ -1,5 +1,6 @@
 use v6;
 use KeyBag::Deco; 
+use KeyBag::Ops; 
 
 constant %f = {r => 6, s => 2, p => 2, h => 1, f => 1};
 constant %w = {r => 6, s => 3, p => 1, c => 1, w => 1};
