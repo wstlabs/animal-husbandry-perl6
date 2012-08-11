@@ -5,13 +5,15 @@ use Farm::Sim::Util::HashTup;
 
 
 # animals which can...
-constant @frisky    = <r s   p c   h    >;  # breed (or count towards a win) 
-constant @domestic  = <r s d p c D h    >;  # cohabitate (or be traded) 
-constant @animals   = <r s d p c D h f w>;  # all animals together 
+constant @frisky     = <r s   p c   h    >;  # breed, or count towards a win
+constant @domestic   = <r s d p c D h    >;  # cohabitate or be traded
+constant @valid-roll = <r s   p c   h f w>;  # occur on a valid die roll 
+constant @animals    = <r s d p c D h f w>;  # all animals together 
 
-my %DOMESTIC is ro  = hash @domestic Z=> True xx @domestic;
-my %FRISKY   is ro  = hash @frisky   Z=> True xx @frisky;
-my $FRISKY   is ro  = KeyBag.new(%FRISKY); 
+my %ANIMALS   is ro  = hash @animals    Z=> 1..*; 
+my %VALIDROLL is ro  = hash @valid-roll Z=> 1..*; 
+my $VALIDROLL is ro  = KeyBag.new(%VALIDROLL);
+
 
 
 # XXX currently it seems difficult to export symbols other than subs.
@@ -45,7 +47,7 @@ my %T is rw = (
 
 # like hashify, but restricted that keys are valid animals.
 sub hashify-animals(Str $s) is export { 
-    hashify($s,%DOMESTIC)
+    hashify($s,%ANIMALS)
 }
 
 # print a posse string as a tuple, MSA (most significant animal) first, 
@@ -56,29 +58,30 @@ sub stringify-animals(%h) is export  {
 }
 
 
-
-# breed 'strictly', that is, politely declining requests to breed with 
-# foxes and wolves (by returning Nil), but rejecting outright any KeyBag
-# containing anything but valid, "for-sale" animal chars.
+# paranoid version of the breeding op; rejects any symbol
+# that's not in a valid dice roll.
 #
-# note that although the signatures ask for both inputs to be KeyBags,
-# the eventual type that's returned is whatever type $x happens to really
-# be (so if it's a Posse, we'll get a Posse object as a result).
+# XXX possible bug around the fact that 
 #
-# XXX has a bug around the fact that '∅' ∈ any(Bag), apparently!
-# also, the KeyBag should be a KeySet; but the ∈ op isn't implemented 
-# for pure Sets yet.
+#    all('∅'.keys) ∈ any(Bag)?
+#
+# meaning that if you feed it the empty set string as an  
+# invalid die roll, it will slip through as a false negative!
 #
 multi sub breed-strict (KeyBag $x, KeyBag $r) is export {
-    return Nil         if any('f','w') ∈ $r;
-    die "invalid!" unless all($r.keys) ∈ $FRISKY; 
+    die "invalid roll" unless all($r.keys) ∈ $VALIDROLL; 
     breed-naive($x,$r)
 }
 
 #
-# a purely set-theoretic breeding operation, with no input constraints. 
-# kept as a separate (private) function simply to represent the basic
-# breeding operation as simply as possible. 
+# an "unsafe", purely set-theoretic breeding operation, with no input 
+# constraints.  kept as a separate (private) function simply to represent 
+# the basic breeding operation as simply as possible. 
+#
+# note that although the signatures ask for both inputs to be KeyBags,
+# the eventual type that's returned is whatever type $x happens to be 
+# (so if it's a Posse, we'll get a Posse object as a result).
+#
 #
 multi sub breed-naive (KeyBag $x, KeyBag $r)  {
     my $s = KeySet.new($r);
@@ -101,6 +104,9 @@ sub worth-in-trade (KeyBag $x --> Int) is export { $x ∙ %WORTH }
 
 
 =begin END
+
+# my %DOMESTIC  is ro  = hash @domestic Z=> True xx @domestic;
+# my $FRISKY    is ro  = KeyBag.new( hash @frisky     Z=> True xx @frisky );
 
 sub stock-hash()     is export { %STOCK }
 constant %STOCK = {

@@ -57,6 +57,17 @@ class Farm::Sim::Game  {
         self.incr;
     }
 
+    #
+    # note that we process the [w] and [f] rolls in the same order as in 
+    # carl's original version, even though this ordering was apparently not 
+    # clearly stated in the printed instructions for the game.  however, 
+    # the choice of ordering affects only the event logging, not the outcome 
+    # on the player's animals.
+    # 
+    # note also that in any case, we proceed to attempt to mate with whatever 
+    # animal was contained in the roll after the the predator has had his way 
+    # with the existing posse. 
+    #
     method broker(Str $player, Str $roll)  {
         my $stock = self.posse('stock'); 
         my $posse = self.posse($player);
@@ -81,9 +92,13 @@ class Farm::Sim::Game  {
                 proceed;
             }
             default  {
+                say "::effect posse = $posse";
+                say "::effect roll  = $roll"; 
                 my $desired = $posse ⚤ $roll;
+                say "::effect desired = $desired";
+                say "::effect stock   = $stock"; 
                 my $allowed = $desired ∩ $stock;
-                say "::broker allowed = $allowed"; 
+                say "::effect allowed = $allowed"; 
                 self.transfer( 'stock', $player, $allowed )
             }
         }

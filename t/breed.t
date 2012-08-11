@@ -17,13 +17,6 @@ multi sub op-ok (Str $xx, Str $yy, Str $zz)  {
     is "$ss", "$z",   "str $x ⚤ $yy => $z";
 } 
 
-multi sub op-ok (Str $xx, Str $yy, Nil $z)  {
-    my $x  = posse($xx);
-    my $y  = keybag(hashify($yy));
-    my $s   = $x ⚤ $y;
-    ok $s eqv Nil, "obj $x ⚤ $yy => Nil";
-} 
-
 sub op-dies-ok (Str $xx, Str $yy)  {
     dies_ok {
         my $x  = posse($xx);
@@ -87,14 +80,16 @@ sub op-dies-ok (Str $xx, Str $yy)  {
 }
 
 #
-# politely decline breeding requests from foxes and wolves
+# mixed [f] and [w] cases 
 #
 {
-    op-ok       'r',  'rw',  Nil  ;
-    op-ok       'r',  'rf',  Nil  ;
-    op-ok       'r',  'fw',  Nil  ;
-    op-ok       'sr', 'fs',  Nil  ;
-    op-ok       's2', 'fs',  Nil  ;
+    op-ok       'r',  'pw',  '∅'  ;
+    op-ok       's',  'cf',  '∅'  ;
+    op-ok       'r',  'rw',  'r'  ;
+    op-ok       'r',  'rf',  'r'  ;
+    op-ok       'sr', 'fs',  's'  ;
+    op-ok       's2', 'fs',  's'  ;
+    op-ok       's3', 'fs',  's2' ;
 }
 
 #
@@ -111,12 +106,20 @@ sub op-dies-ok (Str $xx, Str $yy)  {
     op-dies-ok  'r',  '  '  ; 
     op-dies-ok  'r',  ' r'  ; 
     op-dies-ok  'r',  ''    ; 
-    op-dies-ok  'r',  '∅'   ; # XXX fails!
     op-dies-ok  'r',  'abc' ;
+    op-dies-ok  'r',  '∅'   ; # XXX fails; see notes to breed-strict
 }
 
 
 =begin END
+
+# deprecated Nil breeding case
+multi sub op-ok (Str $xx, Str $yy, Nil $z)  {
+    my $x  = posse($xx);
+    my $y  = keybag(hashify($yy));
+    my $s   = $x ⚤ $y;
+    ok $s eqv Nil, "obj $x ⚤ $yy => Nil";
+} 
 
     # my $ss  = $x ⚤ $yy;
     # ok $ss eqv Nil, "str $x ⚤ $yy => Nil";
