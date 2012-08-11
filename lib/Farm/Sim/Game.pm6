@@ -53,6 +53,7 @@ class Farm::Sim::Game  {
         self.publish: { :type<roll>, :player($!cp), :$roll };
         self.broker($!cp,$roll);
         say "::play done: ?";
+        self.inspect;
         self.incr;
     }
 
@@ -80,7 +81,7 @@ class Farm::Sim::Game  {
             default  {
                 my $desired = $posse ⚤ $roll;
                 my $allowed = $desired ∩ $stock;
-                say ":: allowed = $allowed"; 
+                say "::broker allowed = $allowed"; 
                 self.transfer( 'stock', $player, $allowed )
             }
         }
@@ -105,6 +106,10 @@ class Farm::Sim::Game  {
     method publish(%event) {
         say "::publish ", {%event};
         push @!e, {%event}
+    }
+
+    method inspect  {
+        say "::inspect e = ", @!e.Int;
     }
 
     method incr {
