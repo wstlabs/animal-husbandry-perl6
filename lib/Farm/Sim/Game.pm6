@@ -13,9 +13,10 @@ constant %STOCK = {
 class Farm::Sim::Game  {
     has %!p;
     has $!cp;
+    has @!e;
     has $!dice;
     has $!j;
-    submethod BUILD(:%!p,:$!cp) {
+    submethod BUILD(:%!p, :@!e, :$!cp = 'P1') {
         %!p<stock> //= posse(%STOCK); 
         $!dice     //= Farm::Sim::Dice.instance;
         $!j = 0;
@@ -24,7 +25,7 @@ class Farm::Sim::Game  {
     # instance generator which creates an empty game on $n players 
     method simple (Int $n)  {
         my %p = hash map { ; "P$_" => posse({}) }, 1..$n;
-        self.new(p => %p, cp => "P1")
+        self.new(p => %p)
     }
 
     method posse (Str $name)  { %!p{$name}.clone }
@@ -49,6 +50,7 @@ class Farm::Sim::Game  {
         say "::play have: $posse";
         say "::play need: ", @need.join('');
         say "::play roll: $roll";
+        self.publish: { :type<roll>, :player($!cp), :$roll };
         self.broker($!cp,$roll);
         say "::play done: ?";
         self.incr;
@@ -57,7 +59,7 @@ class Farm::Sim::Game  {
     method broker(Str $player, Str $roll)  {
         my $stock = self.posse('stock'); 
         my $posse = self.posse($player);
-        say "++ $player: $posse => $roll";
+        say "++ $player: $posse ~ $roll";
         given $roll {
             when /[w]/ { 
                 if ('D' ∈ $posse)  {
@@ -94,7 +96,15 @@ class Farm::Sim::Game  {
             # say "nothing to do!";
         }
         # say "now: ", self.table;
-        # self.publish: { :type<transfer>, :$from, :$to, :%animals };
+        self.publish: { 
+            :type<transfer>, :$from, :$to, 
+            'animals' => "$what"
+        };
+    }
+
+    method publish(%event) {
+        say "::publish ", {%event};
+        push @!e, {%event}
     }
 
     method incr {
