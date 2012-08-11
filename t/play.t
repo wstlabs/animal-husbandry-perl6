@@ -17,23 +17,56 @@ sub test-seq($initial, @rolls, $expected)  {
     ok $result eq $expected, "$initial ~ <$rolls> -> $expected ? [$result]";
 }
 
+#
+# basic smoketest (non-deterministic)
+#
 {
     my $g;
     lives_ok { $g = Farm::Sim::Game.simple( k => 1) }; 
     lives_ok { $g.play(3) }; 
 }
 
+
+#
+# deterministic unit tests
+#
+
 {
+    # vanilla
     test-seq 'p',   [<sw>],  '∅'    ;
     test-seq 'r',   [<rs>],  'r2'   ;
     test-seq 'r2',  [<rs>],  'r3'   ;
     test-seq 'r3',  [<rs>],  'r5'   ;
     test-seq 'sr',  [<rs>],  's2r2' ;
-    test-seq 'sr2', [<sw>],  '∅'    ;
 }
+
+{
+    # predator (unguarded)
+    test-seq 'sr3', [<fr>],  '∅'    ;
+    test-seq 'sr3', [<fs>],  's2'   ;
+    test-seq 'sr3', [<fp>],  '∅'    ;
+    test-seq 'ps' , [<fs>],  'p'    ;
+    test-seq 'sr2', [<sw>],  '∅'    ;
+    test-seq 'sr3', [<fw>],  '∅'    ;
+    test-seq 'sr3', [<sw>],  '∅'    ;
+    test-seq 'pr3', [<rw>],  'p'    ;
+    test-seq 'cs' , [<sw>],  'c'    ;
+}
+
+{
+    # predator (guarded)
+    test-seq 'dr3', [<fs>],  'r3'   ;
+    test-seq 'dr3', [<fr>],  'r5'   ;
+    test-seq 'dp',  [<fp>],  'p2'   ;
+    test-seq 'Dr',  [<wr>],  'r2'   ;
+    test-seq 'Ds',  [<ws>],  's2'   ;
+    test-seq 'Dp',  [<wp>],  'p2'   ;
+}
+
 
 =begin END
 
 some tests cases:
 sr6 ~ fw
 sr2 ~ sw -> +s -sr2 » s
+
