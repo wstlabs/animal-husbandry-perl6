@@ -110,6 +110,16 @@ class Farm::Sim::Game  {
 
     method inspect  {
         say "::inspect e = ", @!e.Int;
+        my @s := gather {
+            for @!e.reverse -> %e  {
+                say "curr = ", %e; 
+                say "type = ", %e{"type"}; 
+                take {%e};
+                last if %e{'type'} eq 'roll'
+            }
+        }
+        say "s = {@s.perl}";
+        say "::inspect e = ", @!e.Int;
     }
 
     method incr {
