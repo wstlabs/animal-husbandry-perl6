@@ -125,28 +125,3 @@ class Farm::Sim::Game  {
 ⚤
 say "»» ..";
 
-
-                    self.transfer(
-                        from: $player,
-                        to:   $stock,
-                        what: 'D' 
-                    )
-
-                if ($allowed)  {
-                    $posse ⊎= $allowed;
-                    $stock ∖= $allowed;
-                }
-
-        say "have: $posse « ", @need.join('');
-
-        my $roll = $Dice.roll;
-        if (! $roll ~~ / [fw] / ) {
-            my $desired = $X.posse ⚤ $roll;
-            my $allowed = $desired ∩ $S.posse;
-            if ($allowed)  {
-                $X.posse ⊎= $allowed;
-                $S.posse ∖= $allowed;
-            }
-        }
-
-
