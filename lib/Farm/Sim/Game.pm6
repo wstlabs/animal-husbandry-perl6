@@ -14,10 +14,11 @@ class Farm::Sim::Game  {
     has %!p;
     has $!cp;
     has $!dice;
-    has $!j = 0;
+    has $!j;
     submethod BUILD(:%!p,:$!cp) {
         %!p<stock> //= posse(%STOCK); 
         $!dice     //= Farm::Sim::Dice.instance;
+        $!j = 0;
     }
 
     # instance generator which creates an empty game on $n players 
