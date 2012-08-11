@@ -3,8 +3,9 @@ use Farm::Sim::Game;
 
 multi MAIN($n)  {
     say "n = $n";
-    my $game = Farm::Sim::Game.simple(3);
-    $game.play($n);
+    Farm::Sim::Game.simple( 
+        k => 3, debug => 1
+    ).play($n)
 }
 
 =begin END

@@ -16,16 +16,22 @@ class Farm::Sim::Game  {
     has @!e;
     has $!dice;
     has $!j;
-    submethod BUILD(:%!p, :@!e, :$!cp = 'P1') {
+    has @!r, 
+    has $!debug;
+    submethod BUILD(:%!p, :@!e, :$!cp = 'P1', :@!r, :$!debug) {
         %!p<stock> //= posse(%STOCK); 
         $!dice     //= Farm::Sim::Dice.instance;
         $!j = 0;
     }
 
+    method trace(*@a)  { if ($!debug > 0)  { say @a } }
+    method debug(*@a)  { if ($!debug > 1)  { say @a } }
+
     # instance generator which creates an empty game on $n players 
-    method simple (Int $n)  {
-        my %p = hash map { ; "P$_" => posse({}) }, 1..$n;
-        self.new(p => %p)
+    # method simple ($n,$debug)  {
+    method simple (:$k,:$debug)  {
+        my %p = hash map { ; "P$_" => posse({}) }, 1..$k;
+        self.new(p => %p, :$debug)
     }
 
     method posse (Str $name)  { %!p{$name}.clone }
@@ -42,11 +48,11 @@ class Farm::Sim::Game  {
     }
     
     method play_round  {
-        my $roll  = $!dice.roll;
+        my $roll  = @!r[$!j] // $!dice.roll;
         my $posse = self.posse($!cp);
         my @need  = $posse.need;
-        say "::play step: $!j";
-        say "::play curr: $!cp";
+        self.trace("::play step: $!j");
+        self.trace("::play curr: $!cp");
         say "::play have: $posse";
         say "::play need: ", @need.join('');
         say "::play roll: $roll";
