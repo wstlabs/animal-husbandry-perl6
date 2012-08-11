@@ -110,16 +110,33 @@ class Farm::Sim::Game  {
 
     method inspect  {
         say "::inspect e = ", @!e.Int;
-        my @s := gather {
-            for @!e.reverse -> %e  {
-                say "curr = ", %e; 
-                say "type = ", %e{"type"}; 
-                take {%e};
-                last if %e{'type'} eq 'roll'
-            }
+        my @top = self.get-last-events-upto("type","roll");
+        say "top = {@top.perl}";
+        for @top -> %e  {
+            say "::inspect e = ", {%e}
         }
-        say "s = {@s.perl}";
+        my (%re,%te,@xtra) = @top;
+        say "re = ", %re;
+        say "te = ", %te;
         say "::inspect e = ", @!e.Int;
+    }
+
+    #
+    # slices from the top of the event stack (non-destructively)
+    # until a certain criterion -- here clumsily represnted by a
+    # positional $k, $v pair -- is met.
+    #
+    # Array.new(
+    #   {"type" => "roll", "player" => "P1", "roll" => "hr"}, 
+    #   {"type" => "transfer", "from" => "stock", "to" => "P1", "animals" => "r"}
+    # )
+    method get-last-events-upto(Str $k, Str $v) {
+        gather {
+            for @!e.reverse -> %e  {
+                take {%e};
+                last if %e{$k} eq $v 
+            }
+        }.reverse
     }
 
     method incr {
