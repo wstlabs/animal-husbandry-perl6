@@ -53,7 +53,7 @@ class Farm::Sim::Game  {
         self.publish: { :type<roll>, :player($!cp), :$roll };
         self.broker($!cp,$roll);
         say "::play done: ?";
-        self.inspect;
+        self.show-recent-events;
         self.incr;
     }
 
@@ -108,17 +108,32 @@ class Farm::Sim::Game  {
         push @!e, {%event}
     }
 
-    method inspect  {
+    method show-recent-events  {
+        my $meta = self.inspect-recent-events;
+        say "meta = ", $meta;
+    }
+
+    method inspect-recent-events {
         say "::inspect e = ", @!e.Int;
-        my @top = self.get-last-events-upto("type","roll");
+        my @top = self.slice-recent-events-upto("type","roll");
         say "top = {@top.perl}";
         for @top -> %e  {
             say "::inspect e = ", {%e}
         }
-        my (%re,%te,@xtra) = @top;
+        # XXX ugh. why won't this work in p6?
+        # my (%re,%te,@xtra) = @top;
+        my %re = shift @top;
+        my %te = shift @top;
         say "re = ", %re;
         say "te = ", %te;
+        my $player = %re<player>;
+        my $roll   = %re<roll>;
+        my $gets   = %te<animals>;
+        my $from   = %te<from>;
+        say "player = ", $player;
+        say "roll   = ", $roll;
         say "::inspect e = ", @!e.Int;
+        return { :$player, :$roll, :$gets, :$from }
     }
 
     #
@@ -130,7 +145,7 @@ class Farm::Sim::Game  {
     #   {"type" => "roll", "player" => "P1", "roll" => "hr"}, 
     #   {"type" => "transfer", "from" => "stock", "to" => "P1", "animals" => "r"}
     # )
-    method get-last-events-upto(Str $k, Str $v) {
+    method slice-recent-events-upto(Str $k, Str $v) {
         gather {
             for @!e.reverse -> %e  {
                 take {%e};
