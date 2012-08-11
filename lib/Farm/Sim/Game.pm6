@@ -127,45 +127,51 @@ class Farm::Sim::Game  {
     }
 
     method publish(%event) {
-        self.trace("::publish ", {%event});
+        self.trace("::publish {%event.perl}");
         push @!e, {%event}
     }
 
     method show-recent  {
-        my $meta = self.inspect-recent;
-        self.trace("meta = ", $meta);
+        my %meta = self.inspect-recent;
+        # say "meta = ", {%meta};
+        self.trace("meta = {%meta.perl}");
     }
 
     method inspect-recent {
-        self.trace("::inspect e = ", @!e.Int);
-        my @top = self.slice-recent-events-upto("type","roll");
-        self.trace("::inspect top = {@top.perl}");
-        for @top -> %e  {
-            self.trace("::inspect e = ", {%e})
+        self.debug("::inspect e = ", @!e.Int);
+        my @ev = self.slice-recent-events-upto("type","roll");
+        self.debug("::inspect e = ", @!e.Int);
+        self.trace("::inspect top = {@ev.perl}");
+        for @ev -> %e  {
+            self.debug("::inspect e = {%e.perl}")
         }
-        # XXX ugh. why won't this work in p6?
-        # my (%re,%te,@xtra) = @top;
-        my %re = shift @top;
-        my %te = shift @top;
-        self.trace("::inspect re = ", %re);
-        self.trace("::inspect te = ", %te);
-        my $player  = %re<player>;
-        my $roll    = %re<roll>;
-        my $animals = %te<animals>;
-        my $from    = %te<from>;
-        my $to      = %te<to>;
+
+        my %r = shift @ev;
+        self.trace("::inspect r = {%r.perl}");
+        my $player  = %r<player>;
+        my $roll    = %r<roll>;
         self.trace("::inspect player  = ", $player);
         self.trace("::inspect roll    = ", $roll);
-        self.trace("::inspect animals = ", $animals);
-        self.trace("::inspect from    = ", $from);
-        self.trace("::inspect to      = ", $to);
-        self.trace("::inspect e = ", @!e.Int);
-        if ($from eq 'stock') {
-            return { :$player, :$roll, gets => $animals, :$from }
+
+        my (@gets,@puts);
+        for @ev -> %e  {
+            self.trace("::inspect e = {%e.perl}");
+            my $animals = %e<animals>;
+            my $from    = %e<from>;
+            my $to      = %e<to>;
+            self.trace("::inspect animals = ", $animals);
+            self.trace("::inspect from    = ", $from);
+            self.trace("::inspect to      = ", $to);
+            if ($from eq 'stock')  {
+                push @gets, $animals;
+            }
+            if ($to   eq 'stock')  {
+                push @puts, $animals;
+            }
         }
-        else {
-            return { :$player, :$roll, puts => $animals, :$to }
-        }
+        my $gets = @gets.join(',');
+        my $puts = @puts.join(',');
+        return { :$player, :$roll, :$gets, :$puts }; 
 
     }
 
@@ -199,4 +205,7 @@ class Farm::Sim::Game  {
 
 ⚤
 "»» ..";
+
+        # XXX ugh. why won't this work in p6?
+        # my (%re,%te,@xtra) = @evens
 
