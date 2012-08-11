@@ -34,19 +34,24 @@ class Farm::Sim::Game  {
         }, %!p.kv
     }
 
-    method transfer($from, $to, $what) {
-        say "xx $from => $to:  $what";
-        if ($what)  {
-             %!p{$to}    ⊎= $what;
-             %!p{$from}  ∖= $what;
-        }
-        else  {
-            # say "nothing to do!";
-        }
-        # say "now: ", self.table;
-        # self.publish: { :type<transfer>, :$from, :$to, :%animals };
-    }
 
+    method play(Int $n where { $n > 0 })  {
+        self.play_round() for 1..$n 
+    }
+    
+    method play_round  {
+        my $roll  = $!dice.roll;
+        my $posse = self.posse($!cp);
+        my @need  = $posse.need;
+        say "step: $!j";
+        say "curr: $!cp";
+        say "have: $posse";
+        say "need: ", @need.join('');
+        say "roll: $roll";
+        self.broker($!cp,$roll);
+        say "done: ?";
+        self.incr;
+    }
 
     method broker(Str $player, Str $roll)  {
         my $stock = self.posse('stock'); 
@@ -78,19 +83,18 @@ class Farm::Sim::Game  {
             }
         }
     }
-    
-    method play_round  {
-        my $roll  = $!dice.roll;
-        my $posse = self.posse($!cp);
-        my @need  = $posse.need;
-        say "step: $!j";
-        say "curr: $!cp";
-        say "have: $posse";
-        say "need: ", @need.join('');
-        say "roll: $roll";
-        self.broker($!cp,$roll);
-        say "done: ?";
-        self.incr;
+
+    method transfer($from, $to, $what) {
+        say "xx $from => $to:  $what";
+        if ($what)  {
+             %!p{$to}    ⊎= $what;
+             %!p{$from}  ∖= $what;
+        }
+        else  {
+            # say "nothing to do!";
+        }
+        # say "now: ", self.table;
+        # self.publish: { :type<transfer>, :$from, :$to, :%animals };
     }
 
     method incr {
@@ -98,10 +102,6 @@ class Farm::Sim::Game  {
         $!j++
     }
     
-    method play(Int $n where { $n > 0 })  {
-        self.play_round() for 1..$n 
-    }
-
 };
 
 

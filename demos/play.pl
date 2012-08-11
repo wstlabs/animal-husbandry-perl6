@@ -1,7 +1,5 @@
 use v6;
 use Farm::Sim::Game;
-use Farm::Sim::Posse;
-
 
 multi MAIN($n)  {
     say "n = $n";
@@ -10,8 +8,4 @@ multi MAIN($n)  {
 }
 
 =begin END
-
-#    say "args = ", @*ARGS;
-# my $N = $ARGS[0] // 3;
-# say "first = ", $*ARGS[0];
 
