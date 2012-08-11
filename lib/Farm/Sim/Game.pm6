@@ -53,7 +53,7 @@ class Farm::Sim::Game  {
         self.publish: { :type<roll>, :player($!cp), :$roll };
         self.broker($!cp,$roll);
         say "::play done: ?";
-        self.show-recent-events;
+        self.show-recent;
         self.incr;
     }
 
@@ -108,12 +108,12 @@ class Farm::Sim::Game  {
         push @!e, {%event}
     }
 
-    method show-recent-events  {
-        my $meta = self.inspect-recent-events;
+    method show-recent  {
+        my $meta = self.inspect-recent;
         say "meta = ", $meta;
     }
 
-    method inspect-recent-events {
+    method inspect-recent {
         say "::inspect e = ", @!e.Int;
         my @top = self.slice-recent-events-upto("type","roll");
         say "top = {@top.perl}";
