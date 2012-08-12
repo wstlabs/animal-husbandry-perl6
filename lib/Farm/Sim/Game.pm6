@@ -107,10 +107,9 @@ class Farm::Sim::Game  {
     }
 
 
-
     method effect-trade  {
         if (%!tr{$!cp} // -> %, @ {;})({%!p}, @!e) -> $_ {
-            self.info("TRADE $!cp = ", $_); 
+            self.trace("::effect-trade $!cp => ", $_); 
             sub fail(%trade, $reason) { self.reject(%trade, $reason) };
             return .&fail("Wrong type")                  if !.exists("type") || .<type> ne "trade";
             return .&fail("Player doesn't exist")        if !.exists("with");
@@ -118,16 +117,17 @@ class Farm::Sim::Game  {
             my $op      = self.posse(.<with>);
             my $selling = posse-from-long(.<selling>);
             my $buying  = posse-from-long(.<buying>);
-            self.trace("cp = $cp");
-            self.trace("op = $op");
-            self.trace("buying  = $buying");
-            self.trace("selling = $selling");
-            return .&fail("Not enough animals")          if                       $cp ⊉ $selling;
-            return .&fail("Not enough animals")          if .<with> ne 'stock' && $op ⊉ $buying;
+            self.trace("::effect-trade cp = $cp");
+            self.trace("::effect-trade op = $op");
+            self.trace("::effect-trade buying  = $buying");
+            self.trace("::effect-trade selling = $selling");
+            return .&fail("Not enough animals - CP")     if                       $cp ⊉ $selling;
+            return .&fail("Not enough animals - OP")     if .<with> ne 'stock' && $op ⊉ $buying;
             return .&fail("Unequal trade")               if $selling.worth != $buying.worth;
             return .&fail("Many-to-many trade")          unless any($buying,$selling).keys == 1;
             return .&fail("Other player declined trade") unless
                 (%!ac{.<with>} // -> %,@,$ {True})(%!p,@!e,$!cp);
+            self.info("SWAP $!cp ↦ .<with> : $selling <=> $buying");
             self.transfer( $!cp, .<with>, $selling      );
             self.transfer( .<with>, $!cp, $op ∩ $buying );
         }
@@ -210,14 +210,23 @@ class Farm::Sim::Game  {
         }, %h.kv
     }
 
+    sub trade2info(%t)  {
+        my $op = %t<with>;
+        my $sell  = posse-from-long(%t<selling>);
+        my $buy   = posse-from-long(%t<buying>);
+        return { :$op, :$buy, :$sell }
+    }
+
     # the guts of &fail, aka &fail_trade in .effect-trade 
     method reject(%trade, $reason) {
-         self.publish: { 
+        my %i = trade2info(%trade);
+        self.info("FAIL $!cp ↦ %i<op> : %i<sell> <=> %i<buy> : $reason");
+        self.publish: { 
             :type<failed>, 
             :$reason, 
             :trader($!cp),
             :trade(deepclone(%trade)) 
-         }
+        }
     }
 
     method publish(%event) {
@@ -312,6 +321,8 @@ class Farm::Sim::Game  {
 
 ⚤
 "»» ..";
+
+↦ U+21A6
 
 01234567890123456789012345678901234567890123456789012345678901234567890123456789
 
