@@ -14,10 +14,10 @@ my %ANIMALS   is ro  = hash @animals    Z=> 1..*;
 my %VALIDROLL is ro  = hash @valid-roll Z=> 1..*; 
 my $VALIDROLL is ro  = KeyBag.new(%VALIDROLL);
 
-my %LONG2SHORT is ro = {
-    rabbit    => 'r', sheep   => 's', pig => 'p', cow  => 'c', horse  => 'h',
-    small_dog => 'd', big_dog => 'D', fox => 'f', wolf => 'w',
-};
+my %LONG2SHORT is ro = < 
+    rabbit    r   sheep   s   pig p   cow  c  horse h  
+    small_dog d   big_dog D   fox f   wolf w
+>;
 my %SHORT2LONG is ro = %LONG2SHORT.invert; 
 
 sub long2short (%h) is export {
@@ -124,6 +124,11 @@ sub worth-in-trade (KeyBag $x --> Int) is export { $x ∙ %WORTH }
 
 
 =begin END
+
+my %LONG2SHORT is ro = {
+    rabbit    => 'r', sheep   => 's', pig => 'p', cow  => 'c', horse  => 'h',
+    small_dog => 'd', big_dog => 'D', fox => 'f', wolf => 'w',
+};
 
 # my %DOMESTIC  is ro  = hash @domestic Z=> True xx @domestic;
 # my $FRISKY    is ro  = KeyBag.new( hash @frisky     Z=> True xx @frisky );
