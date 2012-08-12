@@ -10,6 +10,7 @@ constant %STOCK = {
     d =>  4, D =>  2
 };
 
+
 class Farm::Sim::Game  {
     has %!p;         # players (and stock): hash of hashes of animals
     has $!dice;      # combined fox-wolf die object
@@ -157,23 +158,29 @@ class Farm::Sim::Game  {
 
 
     sub shorten(%h) {
+        hash map -> $k,$v {
+        }
     }  
 
     method effect-trade  {
         if (%!tr{$!cp} // -> %, @ {;})({%!p}, @!e) -> $_ {
             say "::TRADE $!cp = ", $_; 
-            sub fail_trade(%trade, $reason) { self.reject(%trade, $reason) };
-            .&fail_trade("Wrong type")                  if !.exists("type") || .<type> ne "trade";
-            .&fail_trade("Player doesn't exist")        if !.exists("with");
-            # my $cp      = self.posse($!cp);
-            # my $op      = self.posse(.<with>);
-            # my $selling = posse(.<selling>);
-            # my $buying  = posse(.<buying>);
-            # .&fail_trade("Not enough animals")          if                       $cp ⊉ $selling;
-            # .&fail_trade("Not enough animals")          if .<with> ne 'stock' && $op ⊉ $buying;
-            # .&fail_trade("Unequal trade")               if $selling.worth != $buying.worth;
-            # .&fail_trade("Many-to-many trade")          unless any($buying,$selling).keys == 1
-            # .&fail_trade("Other player declined trade") unless
+            sub fail(%trade, $reason) { self.reject(%trade, $reason) };
+            .&fail("Wrong type")                  if !.exists("type") || .<type> ne "trade";
+            .&fail("Player doesn't exist")        if !.exists("with");
+            my $cp      = self.posse($!cp);
+            my $op      = self.posse(.<with>);
+            my $selling = posse(long2short(.<selling>));
+            my $buying  = posse(long2short(.<buying>));
+            self.trace("cp = $cp");
+            self.trace("op = $op");
+            self.trace("buying  = $buying");
+            self.trace("selling = $selling");
+            # .&fail("Not enough animals")          if                       $cp ⊉ $selling;
+            # .&fail("Not enough animals")          if .<with> ne 'stock' && $op ⊉ $buying;
+            # .&fail("Unequal trade")               if $selling.worth != $buying.worth;
+            # .&fail("Many-to-many trade")          unless any($buying,$selling).keys == 1
+            # .&fail("Other player declined trade") unless
             #     (%!at{.<with>} // -> %,@,$ {True})(%!p,@!e,$!cp);
             # self.transfer( $!cp, .<with>, $selling )
             # self.transfer( .<with>, $!cp, $op ∩ $buying )
@@ -201,7 +208,7 @@ class Farm::Sim::Game  {
         }, %h.kv
     }
 
-    # fka fail_trade()
+    # fka fail()
     method reject(%trade, $reason) {
          self.publish: { 
             :type<failed>, 
@@ -297,6 +304,11 @@ class Farm::Sim::Game  {
 
 
 =begin END
+
+constant %SHORTEN = {
+    rabbit => 'r',
+    sheep  => 's'
+};
 
             sub fail_trade(%trade, $reason) {
                 self.publish: { 

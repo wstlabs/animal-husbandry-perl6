@@ -14,6 +14,25 @@ my %ANIMALS   is ro  = hash @animals    Z=> 1..*;
 my %VALIDROLL is ro  = hash @valid-roll Z=> 1..*; 
 my $VALIDROLL is ro  = KeyBag.new(%VALIDROLL);
 
+constant %LONG2SHORT = {
+    rabbit    => 'r',
+    sheep     => 's',
+    pig       => 'p',
+    cow       => 'c',
+    horse     => 'h',
+    small_dog => 'd',
+    big_dog   => 'D',
+    fox       => 'f',
+    wolf      => 'w',
+};
+
+sub long2short (%h) is export {
+    hash map -> $k,$v {;
+        $k => %LONG2SHORT{$v}
+    }, %h.kv
+}
+#        $k => %LONG2SHORT{$v} // die "invalid long animal '$v'"
+
 
 
 # XXX currently it seems difficult to export symbols other than subs.
