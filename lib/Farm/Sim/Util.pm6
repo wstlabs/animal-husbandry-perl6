@@ -14,24 +14,25 @@ my %ANIMALS   is ro  = hash @animals    Z=> 1..*;
 my %VALIDROLL is ro  = hash @valid-roll Z=> 1..*; 
 my $VALIDROLL is ro  = KeyBag.new(%VALIDROLL);
 
-constant %LONG2SHORT = {
-    rabbit    => 'r',
-    sheep     => 's',
-    pig       => 'p',
-    cow       => 'c',
-    horse     => 'h',
-    small_dog => 'd',
-    big_dog   => 'D',
-    fox       => 'f',
-    wolf      => 'w',
+my %LONG2SHORT is ro = {
+    rabbit    => 'r', sheep   => 's', pig => 'p', cow  => 'c', horse  => 'h',
+    small_dog => 'd', big_dog => 'D', fox => 'f', wolf => 'w',
 };
+my %SHORT2LONG is ro = %LONG2SHORT.invert; 
 
 sub long2short (%h) is export {
-    hash map -> $k,$v {;
-        $k => %LONG2SHORT{$v}
+    hash map -> $long,$v {;
+        my $x = %LONG2SHORT{$long} // die "invalid long animal '$long'"; 
+        $x => $v
     }, %h.kv
 }
-#        $k => %LONG2SHORT{$v} // die "invalid long animal '$v'"
+
+sub short2long (%h) is export {
+    hash map -> $x,$v {;
+        my $long = %LONG2SHORT{$long} // die "invalid short animal '$x'"; 
+        $long => $v
+    }, %h.kv
+}
 
 
 

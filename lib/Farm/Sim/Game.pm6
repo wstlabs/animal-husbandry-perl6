@@ -176,12 +176,12 @@ class Farm::Sim::Game  {
             self.trace("op = $op");
             self.trace("buying  = $buying");
             self.trace("selling = $selling");
-            # .&fail("Not enough animals")          if                       $cp ⊉ $selling;
-            # .&fail("Not enough animals")          if .<with> ne 'stock' && $op ⊉ $buying;
-            # .&fail("Unequal trade")               if $selling.worth != $buying.worth;
-            # .&fail("Many-to-many trade")          unless any($buying,$selling).keys == 1
-            # .&fail("Other player declined trade") unless
-            #     (%!at{.<with>} // -> %,@,$ {True})(%!p,@!e,$!cp);
+            .&fail("Not enough animals")          if                       $cp ⊉ $selling;
+            .&fail("Not enough animals")          if .<with> ne 'stock' && $op ⊉ $buying;
+            .&fail("Unequal trade")               if $selling.worth != $buying.worth;
+            .&fail("Many-to-many trade")          unless any($buying,$selling).keys == 1;
+            .&fail("Other player declined trade") unless
+                (%!ac{.<with>} // -> %,@,$ {True})(%!p,@!e,$!cp);
             # self.transfer( $!cp, .<with>, $selling )
             # self.transfer( .<with>, $!cp, $op ∩ $buying )
         }
@@ -190,7 +190,7 @@ class Farm::Sim::Game  {
     # elsif not .{'selling'|'buying'}.values.reduce(&infix:<+>) == 1 {
 
     method transfer($from, $to, $what) {
-        self.trace("::transer $from => $to:  $what");
+        self.trace("::transfer $from => $to:  $what");
         if ($what)  {
              %!p{$to}    ⊎= $what;
              %!p{$from}  ∖= $what;
@@ -331,4 +331,19 @@ constant %SHORTEN = {
             last if @!r.Int > 0  && $!j >= @!r;
             say "play ..";
             self.play-round() 
+
+            {
+                self.trace("selling = ", .<selling>.WHICH );
+                self.trace("buying  = ", .<buying>.WHICH );
+                self.trace("selling = ", .<selling> );
+                self.trace("buying  = ", .<buying> );
+                my %sell = .<selling>;
+                my %buy  = .<buying>;
+                self.trace("selling (long)  = ", {%sell}); 
+                self.trace("buying  (long)  = ", {%buy});
+                self.trace("selling (short) = ", long2short(%sell));
+                self.trace("buying  (short) = ", long2short(%buy));
+                # self.trace("selling = ", long2short(.<selling>));
+                # self.trace("buying  = ", long2short(.<buying>));
+            }
 
