@@ -11,17 +11,17 @@ constant %STOCK = {
 };
 
 class Farm::Sim::Game  {
-    # class members equivalent to carl's game 
-    has %!p;
-    has $!cp;
-    has @!e;
-    # new members introduced to our game 
-    has $!dice;
-    has $!j;
-    has @!r, 
-    has $!n;
-    has $!debug = 0;
-    submethod BUILD(:%!p, :@!e, :$!cp = 'player_1', :@!r, :$!n, :$!debug) {
+    has %!p;         # players (and stock): hash of hashes of animals
+    has $!dice;      # combined fox-wolf die object
+    has @!e;         # event queue: array of hashes representing events
+    has $!cp;        # current player
+    has %!tr;        # player trading code objects
+    has %!ac;        # player accept trade code objects
+    has $!j;         # current step
+    has $!n;         # (optional) last step 
+    has @!r;         # (optional) canned roll sequence, for testing
+    has $!debug = 0; # (optional) debug flag
+    submethod BUILD(:%!p, :@!e, :$!cp = 'player_1', :%!tr, :%!ac, :$!n, :@!r, :$!debug) {
         %!p<stock> //= posse(%STOCK); 
         $!dice     //= Farm::Sim::Dice.instance;
         $!j = 0;
@@ -31,10 +31,14 @@ class Farm::Sim::Game  {
     method trace(*@a)  { if ($!debug > 0)  { say @a } }
     method debug(*@a)  { if ($!debug > 1)  { say @a } }
 
-    # instance generator which creates an empty game on $n players 
-    method simple (:$k, :$debug, :$n)  {
+    #
+    # static (factory-like) instance generators 
+    #
+
+    # creates an empty game on $n players 
+    method simple (:$k, :$n, :$debug )  {
         my %p = hash map { ; "player_$_" => posse({}) }, 1..$k;
-        self.new(p => %p, :$debug, :$n)
+        self.new(p => %p, :$n, :$debug)
     }
 
     method posse (Str $name)  { %!p{$name}.clone }
