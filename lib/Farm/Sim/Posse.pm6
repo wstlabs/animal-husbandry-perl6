@@ -86,7 +86,19 @@ does  Farm::Sim::Posse::Role::Stringy  {
     method base  { grep {  self.exists($_) }, @frisky } 
     method need  { grep { !self.exists($_) }, @frisky }
 
+    # provides the number of distinct animal types in our possession.
+    #
+    # would seem superflous, given that it's equivalent to either .keys or .base
+    # coerced to Int context.  however, it seems to behave more nicely with any()
+    # junctions, such that our test for many-to-many-ness reduces simply to 
+    #
+    #    .&fail("Many-to-many") unless any($buy,$sell).width == 1;
+    #   
+    # provided that we've verified earlier that all($buy,$sell).width > 0. 
+    method width { self.keys.Int }
+
 }
+
 
 #
 # XXX we'd also like to provide overrides for .gist and .perl, but something's 

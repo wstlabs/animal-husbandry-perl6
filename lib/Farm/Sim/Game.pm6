@@ -136,9 +136,12 @@ class Farm::Sim::Game  {
             return .&fail("Many-to-many trade")          unless any($buying,$selling).width == 1;
             return .&fail("Other player declined trade") unless
                 (%!ac{.<with>} // -> %,@,$ {True})(%!p,@!e,$!cp);
-            self.info("SWAP $!cp ↦",.<with>,": $selling <=> $buying");
-            self.transfer( $!cp, .<with>, $selling      );
-            self.transfer( .<with>, $!cp, $op ∩ $buying );
+
+            my $truncated = $op ∩ $buying;
+            my $remark = $truncated ⊂ $buying ?? "(truncated => $truncated)" !! ""; 
+            self.info("SWAP $!cp ↦",.<with>,": $selling <=> $buying" ~ $remark);
+            self.transfer( $!cp, .<with>, $selling   );
+            self.transfer( .<with>, $!cp, $truncated );
         }
     }
 
