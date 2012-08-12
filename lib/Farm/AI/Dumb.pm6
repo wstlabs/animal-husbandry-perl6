@@ -1,6 +1,6 @@
 class Farm::AI::Dumb {
     has Str $.player;
-    has $.debug = 0;
+    has $.debug = 2;
 
     has %!t = {
         type => "trade",
@@ -13,10 +13,10 @@ class Farm::AI::Dumb {
     method trace(*@a)  { if ($!debug > 1)  { say @a } }
     method debug(*@a)  { if ($!debug > 2)  { say @a } }
 
-    has Bool $.done is rw;
+    has Bool $.done is rw = False;
     method trade(%p, @e) {
         self.trace("::trade [$.player] p = ", {%p})
-            unless $.done //= True;
+            unless $.done = True;
         # my $roll = Bool.roll;
         # say "[$.player] t ? $roll; e = {@e.Int}"; 
         # my %t = $roll ?? %!t !! Nil;
