@@ -42,15 +42,19 @@ sub test-seq($initial, @rolls, $expected)  {
 
 {
     # predator (unguarded)
-    test-seq 'sr3', [<fr>],  '∅'    ;
+    test-seq 'sr3', [<fr>],  's'    ;
     test-seq 'sr3', [<fs>],  's2'   ;
-    test-seq 'sr3', [<fp>],  '∅'    ;
-    test-seq 'ps' , [<fs>],  'p'    ;
+    test-seq 'sr3', [<fp>],  's'    ;
+    test-seq 'rps', [<fs>],  'ps2'  ;
+    test-seq 'rps', [<fp>],  'p2s'  ;
+    test-seq 'pr3', [<rw>],  '∅'    ;
     test-seq 'sr2', [<sw>],  '∅'    ;
-    test-seq 'sr3', [<fw>],  '∅'    ;
     test-seq 'sr3', [<sw>],  '∅'    ;
-    test-seq 'pr3', [<rw>],  'p'    ;
     test-seq 'cs' , [<sw>],  'c'    ;
+    test-seq 'hpc', [<pw>],  'h'    ;
+    test-seq 'hp2', [<hw>],  'h2'   ;
+    test-seq 'sr3', [<fw>],  '∅'    ;
+    test-seq 'hpc', [<fw>],  '∅'    ;
 }
 
 {
