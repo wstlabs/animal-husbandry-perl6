@@ -82,19 +82,29 @@ class Farm::Sim::Game  {
     }
     
     method play-round  {
-        my $was   = self.posse($!cp);
-        self.trace("::play step: $!j");
-        self.trace("::play curr: $!cp");
-        self.trace("::play have: $was");
-        self.effect-trade();
-        my $roll  = @!r[$!j] // $!dice.roll;
-        self.trace("::play roll: $roll");
-        self.publish: { :type<roll>, :player($!cp), :$roll };
-        self.effect-roll($roll);
-        my $now    = self.posse($!cp);
-        self.show-recent( :$was, :$now );
+        self.trace("::play j = $!j, cp = $!cp");
+        self.play-trade;
+        self.play-roll;
         self.incr;
         return self
+    }
+
+    method play-trade  {
+        my $was   = self.posse($!cp);
+        self.trace("::play-trade: was $was");
+        self.effect-trade();
+        my $now   = self.posse($!cp);
+        self.trace("::play-trade: now $now");
+    }
+
+    method play-roll  {
+        my $was   = self.posse($!cp);
+        my $roll  = @!r[$!j] // $!dice.roll;
+        self.trace("::play-roll: was $was");
+        self.effect-roll($roll);
+        my $now   = self.posse($!cp);
+        self.trace("::play-roll: now $now");
+        self.show-roll( :$was, :$now );
     }
 
 
@@ -136,7 +146,8 @@ class Farm::Sim::Game  {
     # with the existing posse. 
     #
     method effect-roll(Str $roll)  {
-        self.trace("::effect ROLL $!cp ~ $roll");
+        self.trace("::effect-roll $!cp ~ $roll");
+        self.publish: { :type<roll>, :player($!cp), :$roll };
         given $roll {
             when /[w]/ { 
                 my $posse = self.posse($!cp);
@@ -219,15 +230,15 @@ class Farm::Sim::Game  {
     #
     # show what happened recently
     #
-    method show-recent( :$was, :$now )  { 
-        my %m = self.inspect-recent;
+    method show-roll( :$was, :$now )  { 
+        my %m = self.inspect-roll;
         self.trace("::meta = {%m.perl}");
         self.trace("::was = $was, now = $now");
         my $eaten = (defined %m<puts>) ?? "-%m<puts>" !! "";
         self.info("ROLL %m<player> $was ~ %m<roll> -> +%m<gets> $eaten » $now");
     }
 
-    method inspect-recent {
+    method inspect-roll {
         # self.debug("::inspect e = ", @!e.Int);
         my @ev = self.slice-recent-events-upto("type","roll");
         # self.debug("::inspect e = ", @!e.Int);
