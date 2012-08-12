@@ -159,7 +159,7 @@ class Farm::Sim::Game  {
         if (%!tr{$!cp} // -> %, @ {;})({%!p}, @!e) -> $_ {
             say "::TRADE $!cp = ", $_; 
             if !.exists("type") || .<type> ne "trade" {
-                # self.reject("Wrong type");
+                self.reject($_, "Wrong type");
             }
 
         }
