@@ -1,5 +1,7 @@
-class Farm::AI::Bogus {
-    has Str $.player;
+use Farm::AI::Strategy;
+
+class Farm::AI::Bogus 
+is    Farm::AI::Strategy  {
 
     has %!t = {
         legit => {
@@ -8,8 +10,8 @@ class Farm::AI::Bogus {
             selling => { sheep => 1 },
             buying  => { rabbit => 6 },
         },
-        bogus => {
-            type => "bogus",
+        invalid-type => {
+            type => "bogus-type",
             with => "stock",
             selling => { sheep => 1 },
             buying  => { rabbit => 6 },
@@ -18,27 +20,19 @@ class Farm::AI::Bogus {
 
     has Bool $.done is rw;
     method trade(%p, @e) {
+        self.trace("p = ", {%p}) unless $.done //= True;
         my $roll = %!t.keys.roll; 
-        unless ($.done)  { say "p = ", %p }
-        $.done //= True;
-        say "[$.player] t ? $roll; e = {@e.Int}"; 
-        my %t = $roll ne 'empty' ?? %!t{$roll} !! Nil;
-        say "[$.player] r : ",%t; 
+        my %t = %!t{$roll};
+        self.trace("$roll => ",{%t});
         return %t;
     
     }
 
     method accept(%p, @e, $who) {
         my $roll = Bool.roll;
-        say "[$.player] a $who ? e = {@e.Int}"; 
-        say "[$.player] r : $roll";
+        # say "[$.player] a $who ? e = {@e.Int}"; 
+        # say "[$.player] r : $roll";
         return $roll
     }
-
-    sub nice (@e) {
-        my $n = @e;
-        return "n = $n; {@e.perl}"
-    }
 }
-
 
