@@ -26,11 +26,12 @@ class Farm::Sim::Game  {
         %!p<stock> //= posse(%STOCK); 
         $!dice     //= Farm::Sim::Dice.instance;
         $!j = 0;
-        $!debug = 0 unless defined($!debug);
+        $!debug = 1 unless defined($!debug);
     }
 
-    method trace(*@a)  { if ($!debug > 0)  { say @a } }
-    method debug(*@a)  { if ($!debug > 1)  { say @a } }
+    method info(*@a)   { if ($!debug > 0)  { say @a } }
+    method trace(*@a)  { if ($!debug > 1)  { say @a } }
+    method debug(*@a)  { if ($!debug > 2)  { say @a } }
 
     #
     # static (factory-like) instance generators 
@@ -100,7 +101,7 @@ class Farm::Sim::Game  {
 
     method effect-trade  {
         if (%!tr{$!cp} // -> %, @ {;})({%!p}, @!e) -> $_ {
-            say "::TRADE $!cp = ", $_; 
+            self.info("TRADE $!cp = ", $_); 
             sub fail(%trade, $reason) { self.reject(%trade, $reason) };
             return .&fail("Wrong type")                  if !.exists("type") || .<type> ne "trade";
             return .&fail("Player doesn't exist")        if !.exists("with");
@@ -223,7 +224,7 @@ class Farm::Sim::Game  {
         self.trace("::meta = {%m.perl}");
         self.trace("::was = $was, now = $now");
         my $eaten = (defined %m<puts>) ?? "-%m<puts>" !! "";
-        say "roll %m<player> $was ~ %m<roll> -> +%m<gets> $eaten » $now";
+        self.info("ROLL %m<player> $was ~ %m<roll> -> +%m<gets> $eaten » $now");
     }
 
     method inspect-recent {

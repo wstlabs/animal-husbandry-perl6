@@ -10,7 +10,7 @@ multi MAIN("simple", $n)  {
     say "stats = ", $g.stats;
 }
 
-multi MAIN("ai", *@names) {
+multi MAIN("ai", $n, *@names) {
     die "Usage: $*PROGRAM_NAME ai <2..6 players>"
         unless (my $k = +@names) ~~ 2..6;
     say "::MAIN names = [{@names}]";
@@ -42,13 +42,13 @@ multi MAIN("ai", *@names) {
     ; 
     say "::MAIN ac = ", %ac;
 
-    my $debug = 1;
+    my $debug = 2;
     my $game = Farm::Sim::Game.contest(
         players => @players, :%tr, :%ac, :$debug 
     );
     say "::MAIN game    = ", $game.WHICH; 
     say "::MAIN players = ", $game.players;
-    $game.play(3);
+    $game.play($n);
 
 }
 
