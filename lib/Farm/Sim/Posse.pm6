@@ -123,13 +123,15 @@ does  Farm::Sim::Posse::Role::Stringy  {
 #
 # aren't allowed; so just use posse({ r => 1 }) instead.
 #
-multi sub posse()     is export { Farm::Sim::Posse.new() } 
-multi sub posse($arg) is export {
+multi sub posse()      is export { Farm::Sim::Posse.new() } 
+multi sub posse($arg)  is export {
     given $arg {
         when Str                                     { Farm::Sim::Posse.new(hashify-animals($arg)) }
         when Set | KeySet | Associative | Positional { Farm::Sim::Posse.new($arg)          }
     }
 }
+sub posse-from-long(%h) is export { posse(long2short(%h)) }
+
 
 # go forth and multiply!
 multi sub infix:<⚤>(Farm::Sim::Posse $x, Any $r --> Farm::Sim::Posse) is export {  $x.breed($r) }

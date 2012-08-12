@@ -213,8 +213,6 @@ class Farm::Sim::Game  {
         };
     }
 
-    sub posse-from-long(%h) { posse(long2short(%h)) }
-
     sub deepclone(%h) {
         hash map -> $k, $v {; 
             $k => ($v ~~ Hash ?? deepclone($v) !! $v ) 
@@ -319,6 +317,7 @@ class Farm::Sim::Game  {
 
 =begin END
 
+    sub posse-from-long(%h) { posse(long2short(%h)) }
 
 constant %STOCK = {
     r => 60, s => 24, p => 20, c => 12, h => 6, 
