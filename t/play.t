@@ -12,7 +12,7 @@ sub test-seq($initial, @rolls, $expected)  {
     $g = Farm::Sim::Game.new(
         p => { "P1" => $posse },
         r => @rolls, 
-        debug => 1
+        # debug => 1
     ).play;
     my $result = $g.posse("P1");
     ok $result eq $expected, "$initial ~ <$rolls> -> $expected ? [$result]";

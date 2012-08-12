@@ -103,11 +103,11 @@ class Farm::Sim::Game  {
     # with the existing posse. 
     #
     method effect(Str $player, Str $roll)  {
-        my $stock = self.posse('stock'); 
-        my $posse = self.posse($player);
-        self.trace("++ $player: $posse ~ $roll");
+        self.trace("::effect $player ~ $roll");
         given $roll {
             when /[w]/ { 
+                my $posse = self.posse($player);
+                self.trace("::effect posse = $posse");
                 if ('D' ∈ $posse)  {
                     say "LOSE ", 'D'; 
                     self.transfer( $player, 'stock', 'D' )
@@ -119,6 +119,8 @@ class Farm::Sim::Game  {
                 proceed;
             }
             when /[f]/ { 
+                my $posse = self.posse($player);
+                self.trace("::effect posse = $posse");
                 if ('d' ∈ $posse)  {
                     say "LOSE ", 'd'; 
                     self.transfer( $player, 'stock', 'd' )
@@ -130,27 +132,25 @@ class Farm::Sim::Game  {
                 proceed;
             }
             default  {
+                my $stock = self.posse('stock'); 
+                my $posse = self.posse($player);
                 self.trace("::effect posse = $posse");
-                self.trace("::effect roll  = $roll"); 
+                self.trace("::effect stock = $stock");
                 my $desired = $posse ⚤ $roll;
                 self.trace("::effect desired = $desired");
-                self.trace("::effect stock   = $stock"); 
                 my $allowed = $desired ∩ $stock;
-                say "GAIN ", ~$allowed; 
                 self.trace("::effect allowed = $allowed"); 
+                say "GAIN ", ~$allowed; 
                 self.transfer( 'stock', $player, $allowed )
             }
         }
     }
 
     method transfer($from, $to, $what) {
-        self.trace("xx $from => $to:  $what");
+        self.trace("::transer $from => $to:  $what");
         if ($what)  {
              %!p{$to}    ⊎= $what;
              %!p{$from}  ∖= $what;
-        }
-        else  {
-            # self.trace("nothing to do!");
         }
         # self.trace("now: ", self.table);
         self.publish: { 
