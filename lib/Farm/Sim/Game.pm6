@@ -4,7 +4,6 @@ use Farm::Sim::Posse;
 use Farm::Sim::Dice;
 use KeyBag::Ops;
 
-my @frisky is ro = frisky-animals();
 constant %STOCK = {
     r => 60, s => 24, p => 20, c => 12, h => 6, 
     d =>  4, D =>  2
