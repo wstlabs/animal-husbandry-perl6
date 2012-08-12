@@ -170,6 +170,22 @@ class Farm::Sim::Game  {
         };
     }
 
+    sub deepclone(%h) {
+        hash map -> $k, $v {; 
+            $k => ($v ~~ Hash ?? deepclone($v) !! $v ) 
+        }, %h.kv
+    }
+
+    # fka fail_trade()
+    method reject(%trade, $reason) {
+         self.publish: { 
+            :type<failed>, 
+            :$reason, 
+            :trader($!cp),
+            :trade(deepclone(%trade)) 
+         }
+    }
+
     method publish(%event) {
         self.trace("::publish {%event.perl}");
         push @!e, {%event}
