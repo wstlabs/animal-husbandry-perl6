@@ -13,13 +13,10 @@ multi MAIN("simple", $n)  {
 multi MAIN("ai", *@names) {
     die "Usage: $*PROGRAM_NAME ai <2..6 players>"
         unless (my $k = +@names) ~~ 2..6;
+    say "::MAIN names = [{@names}]";
     for "Farm::AI::" <<~<< @names -> $module {
         require_strict($module)
     }
-
-    say "::MAIN names = [{@names}]";
-
-
 
     my %strategy;
     my @players = map -> $i,$name  { 
@@ -30,6 +27,20 @@ multi MAIN("ai", *@names) {
     }, @names.kv;
     say "::MAIN players    = ", @players;
     say "::MAIN strategies = ", %strategy.values; 
+
+    my %trade = hash 
+        map -> $who {
+            ; $who => -> %p,@e     { %strategy{$who}.trade(%p,@e) }
+        }, @players
+    ;
+    say "::MAIN trade  = ", %trade;
+
+    my %accept = hash
+        map -> $who {
+            ; $who => -> %p,@e,$tp { %strategy{$who}.accept(%p,@e,$tp) }
+        }, @players
+    ; 
+    say "::MAIN accept = ", %accept;
 
 }
 
@@ -46,7 +57,7 @@ multi MAIN("ai", *@names) {
 
     my $game = Game.new(
         p  => hash(map {; "player_$_" => {} },                      1..$N),
-        t  => hash(
+        t => hash(
             map {
                 ;
                 "player_$_" => -> %p, @e {
@@ -70,5 +81,4 @@ multi MAIN("ai", *@names) {
         $game.play_round();
     }
     say "$game.who_won() won!";
-
 
