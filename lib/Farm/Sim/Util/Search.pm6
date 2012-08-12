@@ -1,3 +1,4 @@
+use Farm::Sim::Util;
 #
 # combinatorially generated table of trades equivalent to one
 # of the 5 core ("frisky") animals, <r s p c h>. 
@@ -79,13 +80,21 @@ my %T = {
 
 
 sub table-counts is export {
+    hash map -> $k {
+        $k => equiv-to($k).Int 
+    }, domestic-animals() 
+}
+
+sub equiv-to(Str $x) is export {
+    return %T{'s'} if $x eq 'd';
+    return %T{'c'} if $x eq 'D';
+    %T.exists($x) ?? %T{$x} !! die "invalid animal symbol '$x'"
+}
+
+=begin END
+
+sub table-counts is export {
     hash map -> $k,$v {
         $k => $v.Int 
     }, %T.kv
 }
-
-sub equiv-to(Str $x) is export {
-    %T.exists($x) ?? %T{$x} !! die "invalid animal symbol '$x'"
-}
-
-
