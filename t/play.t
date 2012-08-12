@@ -47,9 +47,7 @@ sub test-seq($initial, @rolls, $expected)  {
     test-seq 'r',    [<rr>],  'r2'   ;
     test-seq 'r2',   [<rr>],  'r4'   ;
     test-seq 'r',    [<rs>],  'r2'   ;
-    test-seq 'r',    [<rs>],  'r'    ;
-    test-seq 's',    [<rs>],  '∅'    ;
-    test-seq 'r',    [<rs>],  'r2'   ;
+    test-seq 's',    [<rs>],  's2'    ;
     test-seq 'r2',   [<rs>],  'r3'   ;
     test-seq 'r3',   [<rs>],  'r5'   ;
     test-seq 'sr',   [<rs>],  's2r2' ;
@@ -66,11 +64,12 @@ sub test-seq($initial, @rolls, $expected)  {
     test-seq 'p',    [<sw>],  '∅'    ;
     test-seq 'sr2',  [<sw>],  '∅'    ;
     test-seq 'sr3',  [<sw>],  '∅'    ;
-    test-seq 'cs' ,  [<sw>],  'c'    ;
+    test-seq 'cs',   [<sw>],  '∅'    ;
+    test-seq 'hp',   [<sw>],  'h'    ;
     test-seq 'hpc',  [<pw>],  'h'    ;
     test-seq 'hp2',  [<hw>],  'h2'   ;
-    test-seq 'sr3',  [<fw>],  '∅'    ;
-    test-seq 'hpc',  [<fw>],  '∅'    ;
+    test-seq 'pcr',  [<fw>],  '∅'    ;
+    test-seq 'hpc',  [<fw>],  'h'    ;
 }
 
 {
