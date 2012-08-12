@@ -48,7 +48,7 @@ class Farm::Sim::Game  {
         self.new(p => %p, :%tr, :%ac, :$n, :$debug)
     }
 
-    method posse (Str $name)  { %!p{$name}.clone }
+    method posse (Str $name)  { %!p{$name}.clone if %!p.exists($name) }
     method players { %!p.keys.sort }
     method table {
         hash map -> $k,$v {
@@ -162,20 +162,25 @@ class Farm::Sim::Game  {
     method effect-trade  {
         if (%!tr{$!cp} // -> %, @ {;})({%!p}, @!e) -> $_ {
             say "::TRADE $!cp = ", $_; 
-            sub fail_trade(%trade, $reason) {
-                self.reject(%trade, $reason)
-            };
-            if !.exists("type") || .<type> ne "trade" {
-                .&fail_trade("Wrong type");
-            }
-            my $selling = posse(shorten(.<selling>));
-            # elsif !enough_animals(%!p{$!cp}, .<selling>) {
-            #    .&fail_trade("Not enough animals");
-            # }
-
+            sub fail_trade(%trade, $reason) { self.reject(%trade, $reason) };
+            .&fail_trade("Wrong type")                  if !.exists("type") || .<type> ne "trade";
+            .&fail_trade("Player doesn't exist")        if !.exists("with");
+            # my $cp      = self.posse($!cp);
+            # my $op      = self.posse(.<with>);
+            # my $selling = posse(.<selling>);
+            # my $buying  = posse(.<buying>);
+            # .&fail_trade("Not enough animals")          if                       $cp ⊉ $selling;
+            # .&fail_trade("Not enough animals")          if .<with> ne 'stock' && $op ⊉ $buying;
+            # .&fail_trade("Unequal trade")               if $selling.worth != $buying.worth;
+            # .&fail_trade("Many-to-many trade")          unless any($buying,$selling).keys == 1
+            # .&fail_trade("Other player declined trade") unless
+            #     (%!at{.<with>} // -> %,@,$ {True})(%!p,@!e,$!cp);
+            # self.transfer( $!cp, .<with>, $selling )
+            # self.transfer( .<with>, $!cp, $op ∩ $buying )
         }
     }
     # if (%!t{$!cp} // -> %, @ {;})({%!p}, @.e) -> $_ {
+    # elsif not .{'selling'|'buying'}.values.reduce(&infix:<+>) == 1 {
 
     method transfer($from, $to, $what) {
         self.trace("::transer $from => $to:  $what");
