@@ -32,15 +32,15 @@ my %LONG2SHORT is ro = <
 my %SHORT2LONG is ro = %LONG2SHORT.invert; 
 
 sub long2short (%h) is export {
-    hash map -> $long,$v {;
+    hash map -> $long,$v {
         my $x    = %LONG2SHORT{$long} // die "invalid long animal '$long'"; 
         $x => $v
     }, %h.kv
 }
 
 sub short2long (%h) is export {
-    hash map -> $x,$v {;
-        my $long = %LONG2SHORT{$x}    // die "invalid short animal '$x'"; 
+    hash map -> $x,$v {
+        my $long = %SHORT2LONG{$x}    // die "invalid short animal '$x'"; 
         $long => $v
     }, %h.kv
 }

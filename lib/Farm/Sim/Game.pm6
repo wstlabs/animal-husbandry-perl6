@@ -46,11 +46,8 @@ class Farm::Sim::Game  {
 
     method posse (Str $name)  { %!p{$name}.clone if %!p.exists($name) }
     method players { %!p.keys.sort }
-    method table {
-        hash map -> $k,$v {
-            $k => $v.Str
-        }, %!p.kv
-    }
+    method table { hash map -> $k,$v { $k => $v.Str      }, %!p.kv }
+    method p     { hash map -> $k,$v { $k => $v.longhash }, %!p.kv }
     method stats { return { j => $!j } }
 
 
@@ -113,8 +110,9 @@ class Farm::Sim::Game  {
     #
     # XXX overall seems to be pretty accurate, but still some isses around 
     # warnings due to undefined values in logging statements.
+    # if (%!tr{$!cp} // -> %, @ {;})({%!p}, @!e) -> $_ {
     method effect-trade  {
-        if (%!tr{$!cp} // -> %, @ {;})({%!p}, @!e) -> $_ {
+        if (%!tr{$!cp} // -> %, @ {;})(self.p, @!e) -> $_ {
             self.trace("::effect-trade $!cp => ", $_); 
             sub fail(%trade, $reason) { self.reject(%trade, $reason) };
             self.trace("::effect-trade type = ", .<type>);
@@ -136,7 +134,7 @@ class Farm::Sim::Game  {
             return .&fail("Null trade")                  unless all($buying,$selling).width >  0;
             return .&fail("Many-to-many trade")          unless any($buying,$selling).width == 1;
             return .&fail("Other player declined trade") unless
-                (%!ac{.<with>} // -> %,@,$ {True})(%!p,@!e,$!cp);
+                (%!ac{.<with>} // -> %,@,$ {True})(self.p,@!e,$!cp);
 
             my $truncated = $op ∩ $buying;
             my $remark = $truncated ⊂ $buying ?? " (truncated => $truncated)" !! ""; 

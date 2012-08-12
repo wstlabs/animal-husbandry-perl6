@@ -15,8 +15,8 @@ class Farm::AI::Dumb {
 
     has Bool $.done is rw = False;
     method trade(%p, @e) {
-        self.trace("::trade [$.player] p = ", {%p})
-            unless $.done = True;
+        self.trace("::trade [$.player] p = ", {%p});
+        #    unless $.done = True;
         # my $roll = Bool.roll;
         # say "[$.player] t ? $roll; e = {@e.Int}"; 
         # my %t = $roll ?? %!t !! Nil;
@@ -27,6 +27,7 @@ class Farm::AI::Dumb {
     }
 
     method accept(%p, @e, $who) {
+        self.trace("::trade [$.player] p = ", {%p});
         my $roll = Bool.roll;
         # say "[$.player] a $who ? e = {@e.Int}"; 
         # say "[$.player] r : $roll";

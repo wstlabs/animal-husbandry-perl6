@@ -97,6 +97,11 @@ does  Farm::Sim::Posse::Role::Stringy  {
     # provided that we've verified earlier that all($buy,$sell).width > 0. 
     method width { self.keys.Int }
 
+
+    # returns a hash representation of our multiset, keyed by long animal names.  
+    # used for interface compatiblity with the original game.
+    method longhash { short2long(self.hash) }
+
 }
 
 
