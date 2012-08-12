@@ -3,6 +3,9 @@
 # of the 5 core ("frisky") animals, <r s p c h>. 
 #
 my %T = { 
+    'r' => [],
+    's' => [<r6>],
+    'p' => [<d2 dr6 ds r12 s2 sr6>],
     'c' => [<
         p3 
         p2d2 p2ds p2s2 p2dr6 p2r12 p2sr6 
@@ -15,8 +18,7 @@ my %T = {
         d3s3 d3s2r6 d3sr12 d3r18 
         d2s4 d2s3r6 d2s2r12 d2sr18 d2r24 
         ds5 ds4r6 ds3r12 ds2r18 dsr24 dr30 
-        s6 s5r6 s4r12 s3r18 s2r24 sr30 r36 
-     >],
+        s6 s5r6 s4r12 s3r18 s2r24 sr30 r36 >],
     'h' => [<
         D2 Dc 
         Dp3 
