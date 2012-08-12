@@ -97,6 +97,31 @@ class Farm::Sim::Game  {
         return self
     }
 
+    method effect-trade  {
+        if (%!tr{$!cp} // -> %, @ {;})({%!p}, @!e) -> $_ {
+            say "::TRADE $!cp = ", $_; 
+            sub fail(%trade, $reason) { self.reject(%trade, $reason) };
+            .&fail("Wrong type")                  if !.exists("type") || .<type> ne "trade";
+            .&fail("Player doesn't exist")        if !.exists("with");
+            my $cp      = self.posse($!cp);
+            my $op      = self.posse(.<with>);
+            my $selling = posse(long2short(.<selling>));
+            my $buying  = posse(long2short(.<buying>));
+            self.trace("cp = $cp");
+            self.trace("op = $op");
+            self.trace("buying  = $buying");
+            self.trace("selling = $selling");
+            .&fail("Not enough animals")          if                       $cp ⊉ $selling;
+            .&fail("Not enough animals")          if .<with> ne 'stock' && $op ⊉ $buying;
+            .&fail("Unequal trade")               if $selling.worth != $buying.worth;
+            .&fail("Many-to-many trade")          unless any($buying,$selling).keys == 1;
+            .&fail("Other player declined trade") unless
+                (%!ac{.<with>} // -> %,@,$ {True})(%!p,@!e,$!cp);
+            self.transfer( $!cp, .<with>, $selling      );
+            self.transfer( .<with>, $!cp, $op ∩ $buying );
+        }
+    }
+
     #
     # note that we process the [w] and [f] rolls in the same order as in 
     # carl's original version, even though this ordering was apparently not 
@@ -149,32 +174,6 @@ class Farm::Sim::Game  {
                 # say "GAIN ", ~$allowed; 
                 self.transfer( 'stock', $!cp, $allowed )
             }
-        }
-    }
-
-
-    method effect-trade  {
-        if (%!tr{$!cp} // -> %, @ {;})({%!p}, @!e) -> $_ {
-            say "::TRADE $!cp = ", $_; 
-            sub fail(%trade, $reason) { self.reject(%trade, $reason) };
-            .&fail("Wrong type")                  if !.exists("type") || .<type> ne "trade";
-            .&fail("Player doesn't exist")        if !.exists("with");
-            my $cp      = self.posse($!cp);
-            my $op      = self.posse(.<with>);
-            my $selling = posse(long2short(.<selling>));
-            my $buying  = posse(long2short(.<buying>));
-            self.trace("cp = $cp");
-            self.trace("op = $op");
-            self.trace("buying  = $buying");
-            self.trace("selling = $selling");
-            .&fail("Not enough animals")          if                       $cp ⊉ $selling;
-            .&fail("Not enough animals")          if .<with> ne 'stock' && $op ⊉ $buying;
-            .&fail("Unequal trade")               if $selling.worth != $buying.worth;
-            .&fail("Many-to-many trade")          unless any($buying,$selling).keys == 1;
-            .&fail("Other player declined trade") unless
-                (%!ac{.<with>} // -> %,@,$ {True})(%!p,@!e,$!cp);
-            self.transfer( $!cp, .<with>, $selling      );
-            self.transfer( .<with>, $!cp, $op ∩ $buying );
         }
     }
 
