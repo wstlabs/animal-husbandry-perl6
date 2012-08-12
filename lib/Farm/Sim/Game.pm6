@@ -138,7 +138,7 @@ class Farm::Sim::Game  {
                 (%!ac{.<with>} // -> %,@,$ {True})(%!p,@!e,$!cp);
 
             my $truncated = $op ∩ $buying;
-            my $remark = $truncated ⊂ $buying ?? "(truncated => $truncated)" !! ""; 
+            my $remark = $truncated ⊂ $buying ?? " (truncated => $truncated)" !! ""; 
             self.info("SWAP $!cp ↦",.<with>,": $selling <=> $buying" ~ $remark);
             self.transfer( $!cp, .<with>, $selling   );
             self.transfer( .<with>, $!cp, $truncated );
