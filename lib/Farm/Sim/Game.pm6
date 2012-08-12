@@ -83,7 +83,7 @@ class Farm::Sim::Game  {
         self.trace("::play need: ", @need.join('') );
         self.trace("::play roll: $roll");
         self.publish: { :type<roll>, :player($!cp), :$roll };
-        self.broker($!cp,$roll);
+        self.effect($!cp,$roll);
         self.trace( "::play done: ?");
         my $now    = self.posse($!cp);
         self.show-recent( :$was, :$now );
@@ -102,7 +102,7 @@ class Farm::Sim::Game  {
     # animal was contained in the roll after the the predator has had his way 
     # with the existing posse. 
     #
-    method broker(Str $player, Str $roll)  {
+    method effect(Str $player, Str $roll)  {
         my $stock = self.posse('stock'); 
         my $posse = self.posse($player);
         self.trace("++ $player: $posse ~ $roll");
