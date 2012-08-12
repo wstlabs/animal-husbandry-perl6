@@ -112,6 +112,7 @@ class Farm::Sim::Game  {
                     self.transfer( $player, 'stock', 'D' )
                 }
                 else  {
+                    say "LOSE ", ~$posse.slice([<r s p c>]);
                     self.transfer( $player, 'stock', $posse.slice([<r s p c>]) )
                 }
                 proceed;
@@ -121,6 +122,7 @@ class Farm::Sim::Game  {
                     self.transfer( $player, 'stock', 'd' )
                 }
                 else  {
+                    say "LOSE ", ~$posse.slice([<r>]);
                     self.transfer( $player, 'stock', $posse.slice([<r>]) )
                 }
                 proceed;
@@ -172,30 +174,30 @@ class Farm::Sim::Game  {
     }
 
     method inspect-recent {
-        self.debug("::inspect e = ", @!e.Int);
+        # self.debug("::inspect e = ", @!e.Int);
         my @ev = self.slice-recent-events-upto("type","roll");
-        self.debug("::inspect e = ", @!e.Int);
-        self.trace("::inspect top = {@ev.perl}");
+        # self.debug("::inspect e = ", @!e.Int);
+        self.debug("::inspect top = {@ev.perl}");
         for @ev -> %e  {
             self.debug("::inspect e = {%e.perl}")
         }
 
         my %r = shift @ev;
-        self.trace("::inspect r = {%r.perl}");
+        self.debug("::inspect r = {%r.perl}");
         my $player  = %r<player>;
         my $roll    = %r<roll>;
-        self.trace("::inspect player  = ", $player);
-        self.trace("::inspect roll    = ", $roll);
+        self.debug("::inspect player  = ", $player);
+        self.debug("::inspect roll    = ", $roll);
 
         my (@gets,@puts);
         for @ev -> %e  {
-            self.trace("::inspect e = {%e.perl}");
+            self.debug("::inspect e = {%e.perl}");
             my $animals = %e<animals>;
             my $from    = %e<from>;
             my $to      = %e<to>;
-            self.trace("::inspect animals = ", $animals);
-            self.trace("::inspect from    = ", $from);
-            self.trace("::inspect to      = ", $to);
+            self.debug("::inspect animals = ", $animals);
+            self.debug("::inspect from    = ", $from);
+            self.debug("::inspect to      = ", $to);
             if ($from eq 'stock')  {
                 push @gets, $animals;
             }
