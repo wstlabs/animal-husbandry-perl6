@@ -107,6 +107,14 @@ class Farm::Sim::Game  {
     }
 
 
+    # should be compatible with the analogous section in the original farm.pl,
+    # with the exception of the "Null trade" exemption in the middle, which (given
+    # the "Unequal trade" exemption just before it) can only be triggered if we're 
+    # asked to execute a completely degenerate, empty-for-empty trade.
+    #
+    # I put this exemption in there both because it seems sensible enough, 
+    # even though this case isn't mentioned in the spec, and because it allows
+    # us to use the simple junction-based quantifier check in the next step.
     method effect-trade  {
         if (%!tr{$!cp} // -> %, @ {;})({%!p}, @!e) -> $_ {
             self.trace("::effect-trade $!cp => ", $_); 
@@ -121,13 +129,14 @@ class Farm::Sim::Game  {
             self.trace("::effect-trade op = $op");
             self.trace("::effect-trade buying  = $buying");
             self.trace("::effect-trade selling = $selling");
-            return .&fail("Not enough animals - CP")     if                       $cp ⊉ $selling;
-            return .&fail("Not enough animals - OP")     if .<with> ne 'stock' && $op ⊉ $buying;
+            return .&fail("Not enough CP animals")       if                       $cp ⊉ $selling;
+            return .&fail("Not enough OP animals")       if .<with> ne 'stock' && $op ⊉ $buying;
             return .&fail("Unequal trade")               if $selling.worth != $buying.worth;
-            return .&fail("Many-to-many trade")          unless any($buying,$selling).keys == 1;
+            return .&fail("Null trade")                  unless all($buying,$selling).width >  0;
+            return .&fail("Many-to-many trade")          unless any($buying,$selling).width == 1;
             return .&fail("Other player declined trade") unless
                 (%!ac{.<with>} // -> %,@,$ {True})(%!p,@!e,$!cp);
-            self.info("SWAP $!cp ↦ .<with> : $selling <=> $buying");
+            self.info("SWAP $!cp ↦",.<with>,": $selling <=> $buying");
             self.transfer( $!cp, .<with>, $selling      );
             self.transfer( .<with>, $!cp, $op ∩ $buying );
         }
