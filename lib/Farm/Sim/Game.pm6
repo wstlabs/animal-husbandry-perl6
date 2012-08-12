@@ -41,6 +41,8 @@ class Farm::Sim::Game  {
         self.new(p => %p, :$n, :$debug)
     }
 
+    # creates a standard contest game on the specified player list 
+    # XXX should check integrity of tr, ac hashes 
     method contest (:@players, :%tr, :%ac, :$n, :$debug )  {
         my %p = hash map { ; $_ => posse({}) }, @players; 
         self.new(p => %p, :%tr, :%ac, :$n, :$debug)
