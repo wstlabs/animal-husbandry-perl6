@@ -56,7 +56,6 @@ class Farm::Sim::Game  {
             $k => $v.Str
         }, %!p.kv
     }
-    
     method stats { return { j => $!j } }
 
 
@@ -97,25 +96,27 @@ class Farm::Sim::Game  {
         return self
     }
 
+
+
     method effect-trade  {
         if (%!tr{$!cp} // -> %, @ {;})({%!p}, @!e) -> $_ {
             say "::TRADE $!cp = ", $_; 
             sub fail(%trade, $reason) { self.reject(%trade, $reason) };
-            .&fail("Wrong type")                  if !.exists("type") || .<type> ne "trade";
-            .&fail("Player doesn't exist")        if !.exists("with");
+            return .&fail("Wrong type")                  if !.exists("type") || .<type> ne "trade";
+            return .&fail("Player doesn't exist")        if !.exists("with");
             my $cp      = self.posse($!cp);
             my $op      = self.posse(.<with>);
-            my $selling = posse(long2short(.<selling>));
-            my $buying  = posse(long2short(.<buying>));
+            my $selling = posse-from-long(.<selling>);
+            my $buying  = posse-from-long(.<buying>);
             self.trace("cp = $cp");
             self.trace("op = $op");
             self.trace("buying  = $buying");
             self.trace("selling = $selling");
-            .&fail("Not enough animals")          if                       $cp ⊉ $selling;
-            .&fail("Not enough animals")          if .<with> ne 'stock' && $op ⊉ $buying;
-            .&fail("Unequal trade")               if $selling.worth != $buying.worth;
-            .&fail("Many-to-many trade")          unless any($buying,$selling).keys == 1;
-            .&fail("Other player declined trade") unless
+            return .&fail("Not enough animals")          if                       $cp ⊉ $selling;
+            return .&fail("Not enough animals")          if .<with> ne 'stock' && $op ⊉ $buying;
+            return .&fail("Unequal trade")               if $selling.worth != $buying.worth;
+            return .&fail("Many-to-many trade")          unless any($buying,$selling).keys == 1;
+            return .&fail("Other player declined trade") unless
                 (%!ac{.<with>} // -> %,@,$ {True})(%!p,@!e,$!cp);
             self.transfer( $!cp, .<with>, $selling      );
             self.transfer( .<with>, $!cp, $op ∩ $buying );
@@ -189,6 +190,8 @@ class Farm::Sim::Game  {
             'animals' => "$what"
         };
     }
+
+    sub posse-from-long(%h) { posse(long2short(%h)) }
 
     sub deepclone(%h) {
         hash map -> $k, $v {; 
@@ -285,6 +288,7 @@ class Farm::Sim::Game  {
 
 =begin END
 
+
     # if (%!t{$!cp} // -> %, @ {;})({%!p}, @.e) -> $_ {
     # elsif not .{'selling'|'buying'}.values.reduce(&infix:<+>) == 1 {
 
@@ -297,6 +301,8 @@ class Farm::Sim::Game  {
 
 ⚤
 "»» ..";
+
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
 
         # XXX ugh. why won't this work in p6?
         # my (%re,%te,@xtra) = @evens
