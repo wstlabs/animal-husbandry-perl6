@@ -92,7 +92,7 @@ class Farm::Sim::Game  {
         my $roll  = @!r[$!j] // $!dice.roll;
         self.trace("::play roll: $roll");
         self.publish: { :type<roll>, :player($!cp), :$roll };
-        self.effect-roll($!cp,$roll);
+        self.effect-roll($roll);
         my $now    = self.posse($!cp);
         self.show-recent( :$was, :$now );
         self.incr;
@@ -110,38 +110,38 @@ class Farm::Sim::Game  {
     # animal was contained in the roll after the the predator has had his way 
     # with the existing posse. 
     #
-    method effect-roll(Str $player, Str $roll)  {
-        self.trace("::effect ROLL $player ~ $roll");
+    method effect-roll(Str $roll)  {
+        self.trace("::effect ROLL $!cp ~ $roll");
         given $roll {
             when /[w]/ { 
-                my $posse = self.posse($player);
+                my $posse = self.posse($!cp);
                 self.trace("::effect posse = $posse");
                 if ('D' ∈ $posse)  {
                     # say "LOSE ", 'D'; 
-                    self.transfer( $player, 'stock', 'D' )
+                    self.transfer( $!cp, 'stock', 'D' )
                 }
                 else  {
                     # say "LOSE ", ~$posse.slice([<r s p c>]);
-                    self.transfer( $player, 'stock', $posse.slice([<r s p c>]) )
+                    self.transfer( $!cp, 'stock', $posse.slice([<r s p c>]) )
                 }
                 proceed;
             }
             when /[f]/ { 
-                my $posse = self.posse($player);
+                my $posse = self.posse($!cp);
                 self.trace("::effect posse = $posse");
                 if ('d' ∈ $posse)  {
                     # say "LOSE ", 'd'; 
-                    self.transfer( $player, 'stock', 'd' )
+                    self.transfer( $!cp, 'stock', 'd' )
                 }
                 else  {
                     # say "LOSE ", ~$posse.slice([<r>]);
-                    self.transfer( $player, 'stock', $posse.slice([<r>]) )
+                    self.transfer( $!cp, 'stock', $posse.slice([<r>]) )
                 }
                 proceed;
             }
             default  {
                 my $stock = self.posse('stock'); 
-                my $posse = self.posse($player);
+                my $posse = self.posse($!cp);
                 self.trace("::effect posse = $posse");
                 self.trace("::effect stock = $stock");
                 my $desired = $posse ⚤ $roll;
@@ -149,7 +149,7 @@ class Farm::Sim::Game  {
                 my $allowed = $desired ∩ $stock;
                 self.trace("::effect allowed = $allowed"); 
                 # say "GAIN ", ~$allowed; 
-                self.transfer( 'stock', $player, $allowed )
+                self.transfer( 'stock', $!cp, $allowed )
             }
         }
     }
