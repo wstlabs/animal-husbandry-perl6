@@ -18,7 +18,12 @@ constant %STOCK = {
     r => 60, s => 24, p => 20, c => 12, h => 6,
     d =>  4, D =>  2
 };
-sub stock-hash()     is export { %STOCK }
+
+# XXX some cheap workarounds for exporting data structs,
+# which don't seem to export easily like subs do.
+sub stock-hash()       is export { %STOCK }
+sub frisky-animals()   is export { @frisky }
+sub domestic-animals() is export { @domestic }
 
 my %LONG2SHORT is ro = < 
     rabbit    r   sheep   s   pig p   cow  c  horse h  
@@ -41,9 +46,6 @@ sub short2long (%h) is export {
 }
 
 
-# XXX currently it seems difficult to export symbols other than subs.
-# so here's what we'll do as a workaround, in the meantime: 
-sub frisky-animals() is export { @frisky }
 
 
 # like hashify, but restricted that keys are valid animals.

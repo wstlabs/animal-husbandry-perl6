@@ -4,11 +4,6 @@ use Farm::Sim::Posse;
 use Farm::Sim::Dice;
 use KeyBag::Ops;
 
-constant %STOCK = {
-    r => 60, s => 24, p => 20, c => 12, h => 6, 
-    d =>  4, D =>  2
-};
-
 
 class Farm::Sim::Game  {
     has %!p;         # players (and stock): hash of hashes of animals
@@ -22,7 +17,7 @@ class Farm::Sim::Game  {
     has @!r;         # (optional) canned roll sequence, for testing
     has $!debug;     # (optional) debug flag
     submethod BUILD(:%!p, :@!e, :$!cp = 'player_1', :%!tr, :%!ac, :$!n, :@!r, :$!debug = 0) {
-        %!p<stock> //= posse(%STOCK); 
+        %!p<stock> //= posse(stock-hash()); 
         $!dice     //= Farm::Sim::Dice.instance;
         $!j = 0;
         $!debug = 1 unless defined($!debug);
@@ -325,6 +320,12 @@ class Farm::Sim::Game  {
 
 
 =begin END
+
+
+constant %STOCK = {
+    r => 60, s => 24, p => 20, c => 12, h => 6, 
+    d =>  4, D =>  2
+};
 
             # self.trace("::effect-trade cp = ", $cp ?? ~$cp !! '-invalid-');
             # self.trace("::effect-trade op = ", $op ?? ~$op !! '-invalid-');
