@@ -173,8 +173,8 @@ class Farm::Sim::Game  {
             .&fail("Many-to-many trade")          unless any($buying,$selling).keys == 1;
             .&fail("Other player declined trade") unless
                 (%!ac{.<with>} // -> %,@,$ {True})(%!p,@!e,$!cp);
-            # self.transfer( $!cp, .<with>, $selling )
-            # self.transfer( .<with>, $!cp, $op ∩ $buying )
+            self.transfer( $!cp, .<with>, $selling      );
+            self.transfer( .<with>, $!cp, $op ∩ $buying );
         }
     }
 
