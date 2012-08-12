@@ -14,6 +14,12 @@ my %ANIMALS   is ro  = hash @animals    Z=> 1..*;
 my %VALIDROLL is ro  = hash @valid-roll Z=> 1..*; 
 my $VALIDROLL is ro  = KeyBag.new(%VALIDROLL);
 
+constant %STOCK = {
+    r => 60, s => 24, p => 20, c => 12, h => 6,
+    d =>  4, D =>  2
+};
+sub stock-hash()     is export { %STOCK }
+
 my %LONG2SHORT is ro = < 
     rabbit    r   sheep   s   pig p   cow  c  horse h  
     small_dog d   big_dog D   fox f   wolf w
@@ -110,7 +116,6 @@ my %LONG2SHORT is ro = {
 # my %DOMESTIC  is ro  = hash @domestic Z=> True xx @domestic;
 # my $FRISKY    is ro  = KeyBag.new( hash @frisky     Z=> True xx @frisky );
 
-sub stock-hash()     is export { %STOCK }
 constant %STOCK = {
     r => 60,  s => 24,  p => 20,  c => 12,  h => 6,
               d =>  4,            D =>  2
