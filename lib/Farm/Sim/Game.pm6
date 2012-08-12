@@ -85,17 +85,14 @@ class Farm::Sim::Game  {
     }
     
     method play-round  {
-        my $roll  = @!r[$!j] // $!dice.roll;
         my $was   = self.posse($!cp);
-        my @need  = $was.need;
         self.trace("::play step: $!j");
         self.trace("::play curr: $!cp");
         self.trace("::play have: $was");
-        self.trace("::play need: ", @need.join('') );
+        my $roll  = @!r[$!j] // $!dice.roll;
         self.trace("::play roll: $roll");
         self.publish: { :type<roll>, :player($!cp), :$roll };
-        self.effect($!cp,$roll);
-        self.trace( "::play done: ?");
+        self.effect-roll($!cp,$roll);
         my $now    = self.posse($!cp);
         self.show-recent( :$was, :$now );
         self.incr;
@@ -113,8 +110,8 @@ class Farm::Sim::Game  {
     # animal was contained in the roll after the the predator has had his way 
     # with the existing posse. 
     #
-    method effect(Str $player, Str $roll)  {
-        self.trace("::effect $player ~ $roll");
+    method effect-roll(Str $player, Str $roll)  {
+        self.trace("::effect ROLL $player ~ $roll");
         given $roll {
             when /[w]/ { 
                 my $posse = self.posse($player);
