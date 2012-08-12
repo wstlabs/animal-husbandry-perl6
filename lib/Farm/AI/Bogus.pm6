@@ -38,14 +38,13 @@ is    Farm::AI::Strategy  {
         }
     };
 
-    has Bool $.done is rw;
-    method trade(%p, @e) {
-        self.trace("p = ", {%p}) unless $.done //= True;
+    method find-trade()  {
+        self.trace("::find-trade [$.player] p = ", self.p);
+        self.trace("::find-trade [$.player] me = ", self.posse($.player)); 
         my $roll = %!t.keys.roll; 
         my %t = %!t{$roll};
-        self.trace("$roll => ",{%t});
+        self.debug("::find-trade $roll => ",{%t});
         return %t;
-    
     }
 
     method accept(%p, @e, $who) {
@@ -55,4 +54,9 @@ is    Farm::AI::Strategy  {
         return $roll
     }
 }
+
+=begin END
+    method trade(%p, @e) {
+        self.trace("p = ", {%p}) unless $.done //= True;
+    }
 
