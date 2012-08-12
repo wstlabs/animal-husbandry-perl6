@@ -109,11 +109,11 @@ class Farm::Sim::Game  {
                 my $posse = self.posse($player);
                 self.trace("::effect posse = $posse");
                 if ('D' ∈ $posse)  {
-                    say "LOSE ", 'D'; 
+                    # say "LOSE ", 'D'; 
                     self.transfer( $player, 'stock', 'D' )
                 }
                 else  {
-                    say "LOSE ", ~$posse.slice([<r s p c>]);
+                    # say "LOSE ", ~$posse.slice([<r s p c>]);
                     self.transfer( $player, 'stock', $posse.slice([<r s p c>]) )
                 }
                 proceed;
@@ -122,11 +122,11 @@ class Farm::Sim::Game  {
                 my $posse = self.posse($player);
                 self.trace("::effect posse = $posse");
                 if ('d' ∈ $posse)  {
-                    say "LOSE ", 'd'; 
+                    # say "LOSE ", 'd'; 
                     self.transfer( $player, 'stock', 'd' )
                 }
                 else  {
-                    say "LOSE ", ~$posse.slice([<r>]);
+                    # say "LOSE ", ~$posse.slice([<r>]);
                     self.transfer( $player, 'stock', $posse.slice([<r>]) )
                 }
                 proceed;
@@ -140,7 +140,7 @@ class Farm::Sim::Game  {
                 self.trace("::effect desired = $desired");
                 my $allowed = $desired ∩ $stock;
                 self.trace("::effect allowed = $allowed"); 
-                say "GAIN ", ~$allowed; 
+                # say "GAIN ", ~$allowed; 
                 self.transfer( 'stock', $player, $allowed )
             }
         }
