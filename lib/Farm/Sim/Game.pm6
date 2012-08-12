@@ -89,6 +89,7 @@ class Farm::Sim::Game  {
         self.trace("::play step: $!j");
         self.trace("::play curr: $!cp");
         self.trace("::play have: $was");
+        self.effect-trade();
         my $roll  = @!r[$!j] // $!dice.roll;
         self.trace("::play roll: $roll");
         self.publish: { :type<roll>, :player($!cp), :$roll };
@@ -152,6 +153,9 @@ class Farm::Sim::Game  {
                 self.transfer( 'stock', $!cp, $allowed )
             }
         }
+    }
+
+    method effect-trade  {
     }
 
     method transfer($from, $to, $what) {
