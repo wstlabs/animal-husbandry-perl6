@@ -115,20 +115,26 @@ class Farm::Sim::Game  {
     # I put this exemption in there both because it seems sensible enough, 
     # even though this case isn't mentioned in the spec, and because it allows
     # us to use the simple junction-based quantifier check in the next step.
+    #
+    # XXX overall seems to be pretty accurate, but still some isses around 
+    # warnings due to undefined values in logging statements.
     method effect-trade  {
         if (%!tr{$!cp} // -> %, @ {;})({%!p}, @!e) -> $_ {
             self.trace("::effect-trade $!cp => ", $_); 
             sub fail(%trade, $reason) { self.reject(%trade, $reason) };
+            self.trace("::effect-trade type = ", .<type>);
+            self.trace("::effect-trade with = ", .<with>);
             return .&fail("Wrong type")                  if !.exists("type") || .<type> ne "trade";
             return .&fail("Player doesn't exist")        if !.exists("with");
             my $cp      = self.posse($!cp);
             my $op      = self.posse(.<with>);
+            self.trace("::effect-trade cp = $cp"); 
+            self.trace("::effect-trade op = $op"); 
             my $selling = posse-from-long(.<selling>);
             my $buying  = posse-from-long(.<buying>);
-            self.trace("::effect-trade cp = $cp");
-            self.trace("::effect-trade op = $op");
             self.trace("::effect-trade buying  = $buying");
             self.trace("::effect-trade selling = $selling");
+            return .&fail("Player doesn't exist")        if !$op;
             return .&fail("Not enough CP animals")       if                       $cp ⊉ $selling;
             return .&fail("Not enough OP animals")       if .<with> ne 'stock' && $op ⊉ $buying;
             return .&fail("Unequal trade")               if $selling.worth != $buying.worth;
@@ -320,6 +326,8 @@ class Farm::Sim::Game  {
 
 =begin END
 
+            # self.trace("::effect-trade cp = ", $cp ?? ~$cp !! '-invalid-');
+            # self.trace("::effect-trade op = ", $op ?? ~$op !! '-invalid-');
 
     # if (%!t{$!cp} // -> %, @ {;})({%!p}, @.e) -> $_ {
     # elsif not .{'selling'|'buying'}.values.reduce(&infix:<+>) == 1 {
