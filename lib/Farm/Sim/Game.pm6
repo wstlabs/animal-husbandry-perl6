@@ -109,6 +109,7 @@ class Farm::Sim::Game  {
         given $roll {
             when /[w]/ { 
                 if ('D' ∈ $posse)  {
+                    say "LOSE ", 'D'; 
                     self.transfer( $player, 'stock', 'D' )
                 }
                 else  {
@@ -119,6 +120,7 @@ class Farm::Sim::Game  {
             }
             when /[f]/ { 
                 if ('d' ∈ $posse)  {
+                    say "LOSE ", 'd'; 
                     self.transfer( $player, 'stock', 'd' )
                 }
                 else  {
@@ -134,6 +136,7 @@ class Farm::Sim::Game  {
                 self.trace("::effect desired = $desired");
                 self.trace("::effect stock   = $stock"); 
                 my $allowed = $desired ∩ $stock;
+                say "GAIN ", ~$allowed; 
                 self.trace("::effect allowed = $allowed"); 
                 self.transfer( 'stock', $player, $allowed )
             }
