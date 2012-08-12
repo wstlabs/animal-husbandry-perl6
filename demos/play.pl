@@ -20,3 +20,39 @@ multi MAIN("ai", *@names) {
 
 =begin END
 
+    # say "names = [{@names}]";
+    my @players = map -> $i, $name {
+        my $player = "player_{$i+1}";
+        # say "i = $i, name = $name, player = [$player]";
+        (eval "Farm::AI::$name").new( player => "player_{$i+1}" );
+    }, @names.kv;
+    say "players = ", @players;
+
+    my $game = Game.new(
+        p  => hash(map {; "player_$_" => {} },                      1..$N),
+        t  => hash(
+            map {
+                ;
+                "player_$_" => -> %p, @e {
+                    @players[$_-1].trade(%p, @e)
+                }
+            }, 1..$N
+        ),
+        at => hash(
+            map {
+                ;
+                "player_$_" => -> %p, @e, $tp {
+                    @players[$_-1].accept(%p, @e, $tp)
+                }
+            }, 1..$N
+        ),
+    );
+
+    my $round = 0;
+    repeat until $game.e[*-1] ~~ :type<win> {
+        say "Round ", ++$round;
+        $game.play_round();
+    }
+    say "$game.who_won() won!";
+
+
