@@ -57,11 +57,7 @@ class Farm::Sim::Game  {
         }, %!p.kv
     }
     
-    method stats {
-        return { 
-            j => $!j
-        }
-    }
+    method stats { return { j => $!j } }
 
 
     #
@@ -157,11 +153,6 @@ class Farm::Sim::Game  {
     }
 
 
-    sub shorten(%h) {
-        hash map -> $k,$v {
-        }
-    }  
-
     method effect-trade  {
         if (%!tr{$!cp} // -> %, @ {;})({%!p}, @!e) -> $_ {
             say "::TRADE $!cp = ", $_; 
@@ -186,8 +177,6 @@ class Farm::Sim::Game  {
             # self.transfer( .<with>, $!cp, $op ∩ $buying )
         }
     }
-    # if (%!t{$!cp} // -> %, @ {;})({%!p}, @.e) -> $_ {
-    # elsif not .{'selling'|'buying'}.values.reduce(&infix:<+>) == 1 {
 
     method transfer($from, $to, $what) {
         self.trace("::transfer $from => $to:  $what");
@@ -208,7 +197,7 @@ class Farm::Sim::Game  {
         }, %h.kv
     }
 
-    # fka fail()
+    # the guts of &fail, aka &fail_trade in .effect-trade 
     method reject(%trade, $reason) {
          self.publish: { 
             :type<failed>, 
@@ -260,21 +249,13 @@ class Farm::Sim::Game  {
             self.debug("::inspect animals = ", $animals);
             self.debug("::inspect from    = ", $from);
             self.debug("::inspect to      = ", $to);
-            if ($from eq 'stock')  {
-                push @gets, $animals;
-            }
-            if ($to   eq 'stock')  {
-                push @puts, $animals;
-            }
+            if ($from eq 'stock')  { push @gets, $animals }
+            if ($to   eq 'stock')  { push @puts, $animals }
         }
         my %s;
         %s<gets> = @gets.join(',') if @gets;
         %s<puts> = @puts.join(',') if @puts;
         return { :$player, :$roll, %s } 
-        # my $gets = @gets.join(',');
-        # my $puts = @puts.join(',');
-        # return { :$player, :$roll, :$gets, :$puts }; 
-
     }
 
     #
@@ -305,10 +286,8 @@ class Farm::Sim::Game  {
 
 =begin END
 
-constant %SHORTEN = {
-    rabbit => 'r',
-    sheep  => 's'
-};
+    # if (%!t{$!cp} // -> %, @ {;})({%!p}, @.e) -> $_ {
+    # elsif not .{'selling'|'buying'}.values.reduce(&infix:<+>) == 1 {
 
             sub fail_trade(%trade, $reason) {
                 self.publish: { 

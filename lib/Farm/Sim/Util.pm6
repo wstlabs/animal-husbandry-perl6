@@ -22,48 +22,23 @@ my %SHORT2LONG is ro = %LONG2SHORT.invert;
 
 sub long2short (%h) is export {
     hash map -> $long,$v {;
-        my $x = %LONG2SHORT{$long} // die "invalid long animal '$long'"; 
+        my $x    = %LONG2SHORT{$long} // die "invalid long animal '$long'"; 
         $x => $v
     }, %h.kv
 }
 
 sub short2long (%h) is export {
     hash map -> $x,$v {;
-        my $long = %LONG2SHORT{$long} // die "invalid short animal '$x'"; 
+        my $long = %LONG2SHORT{$x}    // die "invalid short animal '$x'"; 
         $long => $v
     }, %h.kv
 }
-
 
 
 # XXX currently it seems difficult to export symbols other than subs.
 # so here's what we'll do as a workaround, in the meantime: 
 sub frisky-animals() is export { @frisky }
 
-
-#
-# XXX obviously the next two hashes are related - we'd rather skip
-# the task of deriving one from the other, but it might be a good idea 
-# to do some QA to verify that they're mutually in synch. 
-#
-# Until then, it's pretty easy to check the numbers by visually aligning
-# their respective columns, for which purpose we've tweaked the spacing
-# somewhat.
-#
-constant %EXCHANGE = { 
-    s => 'r6', p => 's2', c => 'p3', h => 'c2', 
-    d => 's',             D => 'c' 
-};
-constant %WORTH = {
-    r => 1,
-    s => 6,    p => 12,   c => 36,   h => 72,
-    d => 6,               D => 36
-};
-
-my %T is rw = ( 
-    r => [],
-    s => ['r6']
-);
 
 # like hashify, but restricted that keys are valid animals.
 sub hashify-animals(Str $s) is export { 
@@ -94,14 +69,13 @@ multi sub breed-strict (KeyBag $x, KeyBag $r) is export {
 }
 
 #
-# an "unsafe", purely set-theoretic breeding operation, with no input 
+# an "unsafe", purely set-theoretic breeding operation with no input 
 # constraints.  kept as a separate (private) function simply to represent 
 # the basic breeding operation as simply as possible. 
 #
 # note that although the signatures ask for both inputs to be KeyBags,
 # the eventual type that's returned is whatever type $x happens to be 
 # (so if it's a Posse, we'll get a Posse object as a result).
-#
 #
 multi sub breed-naive (KeyBag $x, KeyBag $r)  {
     my $s = KeySet.new($r);
@@ -117,8 +91,11 @@ multi sub breed-naive (KeyBag $x, KeyBag $r)  {
 # actual Posse object; it can also be just a plain old KeyBag,
 # and the trading measure will be computed in the natural way. 
 #
+constant %WORTH = {
+    r => 1, s => 6, p => 12, c => 36, h => 72,
+    d => 6,                  D => 36
+};
 sub worth-in-trade (KeyBag $x --> Int) is export { $x ∙ %WORTH }
-
 
 
 
@@ -141,6 +118,11 @@ constant %STOCK = {
 
 my %RANK     is ro  = hash @frisky Z=> 1..5;
 my %iRANK    is ro  = %RANK.invert; 
+
+constant %EXCHANGE = { 
+    s => 'r6', p => 's2', c => 'p3', h => 'c2', 
+    d => 's',             D => 'c' 
+};
 
 #
 # some simple structures and access functions to determine
