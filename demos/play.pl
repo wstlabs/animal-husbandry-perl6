@@ -28,21 +28,30 @@ multi MAIN("ai", *@names) {
     say "::MAIN players    = ", @players;
     say "::MAIN strategies = ", %strategy.values; 
 
-    my %trade = hash 
+    my %tr = hash 
         map -> $who {
             ; $who => -> %p,@e     { %strategy{$who}.trade(%p,@e) }
         }, @players
     ;
-    say "::MAIN trade  = ", %trade;
+    say "::MAIN tr = ", %tr;
 
-    my %accept = hash
+    my %ac = hash
         map -> $who {
             ; $who => -> %p,@e,$tp { %strategy{$who}.accept(%p,@e,$tp) }
         }, @players
     ; 
-    say "::MAIN accept = ", %accept;
+    say "::MAIN ac = ", %ac;
+
+    my $debug = 1;
+    my $game = Farm::Sim::Game.contest(
+        players => @players, :%tr, :%ac, :$debug 
+    );
+    say "::MAIN game    = ", $game.WHICH; 
+    say "::MAIN players = ", $game.players;
+    $game.play(3);
 
 }
+
 
 =begin END
 

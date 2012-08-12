@@ -20,8 +20,8 @@ class Farm::Sim::Game  {
     has $!j;         # current step
     has $!n;         # (optional) last step 
     has @!r;         # (optional) canned roll sequence, for testing
-    has $!debug = 0; # (optional) debug flag
-    submethod BUILD(:%!p, :@!e, :$!cp = 'player_1', :%!tr, :%!ac, :$!n, :@!r, :$!debug) {
+    has $!debug;     # (optional) debug flag
+    submethod BUILD(:%!p, :@!e, :$!cp = 'player_1', :%!tr, :%!ac, :$!n, :@!r, :$!debug = 0) {
         %!p<stock> //= posse(%STOCK); 
         $!dice     //= Farm::Sim::Dice.instance;
         $!j = 0;
@@ -39,6 +39,11 @@ class Farm::Sim::Game  {
     method simple (:$k, :$n, :$debug )  {
         my %p = hash map { ; "player_$_" => posse({}) }, 1..$k;
         self.new(p => %p, :$n, :$debug)
+    }
+
+    method contest (:@players, :%tr, :%ac, :$n, :$debug )  {
+        my %p = hash map { ; $_ => posse({}) }, @players; 
+        self.new(p => %p, :%tr, :%ac, :$n, :$debug)
     }
 
     method posse (Str $name)  { %!p{$name}.clone }
