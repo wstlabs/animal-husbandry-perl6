@@ -3,6 +3,20 @@
 # of the 5 core ("frisky") animals, <r s p c h>. 
 #
 my %T = { 
+    'c' => [<
+        p3 
+        p2d2 p2ds p2s2 p2dr6 p2r12 p2sr6 
+        pd4 
+        pd3r6 pd3s 
+        pd2r12 pd2s2 pd2sr6 
+        pdr18 pds2r6 pds3 pdsr12 
+        ps4 ps3r6 ps2r12 psr18 pr24 
+        d4s2 d4sr6 d4r12 
+        d3s3 d3s2r6 d3sr12 d3r18 
+        d2s4 d2s3r6 d2s2r12 d2sr18 d2r24 
+        ds5 ds4r6 ds3r12 ds2r18 dsr24 dr30 
+        s6 s5r6 s4r12 s3r18 s2r24 sr30 r36 
+     >],
     'h' => [<
         D2 Dc 
         Dp3 
@@ -63,7 +77,7 @@ my %T = {
 
 
 sub table-counts is export {
-    map -> $k,$v {
+    hash map -> $k,$v {
         $k => $v.Int 
     }, %T.kv
 }
