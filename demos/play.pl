@@ -21,7 +21,7 @@ multi MAIN("ai", $n, *@names) {
     my %strategy;
     my @players = map -> $i,$name  { 
         my $player = "player_{$i+1}";
-        say "name = $name, player = [$player]";
+        say ":: name = $name, player = [$player]";
         %strategy{$player} = (eval "Farm::AI::$name").new( player => $player );
         $player
     }, @names.kv;
