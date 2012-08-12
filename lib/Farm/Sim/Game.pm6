@@ -21,7 +21,7 @@ class Farm::Sim::Game  {
     has @!r, 
     has $!n;
     has $!debug = 0;
-    submethod BUILD(:%!p, :@!e, :$!cp = 'P1', :@!r, :$!n, :$!debug) {
+    submethod BUILD(:%!p, :@!e, :$!cp = 'player_1', :@!r, :$!n, :$!debug) {
         %!p<stock> //= posse(%STOCK); 
         $!dice     //= Farm::Sim::Dice.instance;
         $!j = 0;
@@ -33,7 +33,7 @@ class Farm::Sim::Game  {
 
     # instance generator which creates an empty game on $n players 
     method simple (:$k, :$debug, :$n)  {
-        my %p = hash map { ; "P$_" => posse({}) }, 1..$k;
+        my %p = hash map { ; "player_$_" => posse({}) }, 1..$k;
         self.new(p => %p, :$debug, :$n)
     }
 
@@ -237,7 +237,7 @@ class Farm::Sim::Game  {
     }
 
     method incr {
-        $!cp = "P1" unless %!p.exists(++$!cp);
+        $!cp = "player_1" unless %!p.exists(++$!cp);
         $!j++
     }
     
