@@ -11,7 +11,8 @@ sub test-seq($initial, @rolls, $expected)  {
     my $rolls = ~@rolls;
     $g = Farm::Sim::Game.new(
         p => { "P1" => $posse },
-        r => @rolls
+        r => @rolls, 
+        debug => 1
     ).play;
     my $result = $g.posse("P1");
     ok $result eq $expected, "$initial ~ <$rolls> -> $expected ? [$result]";
@@ -32,29 +33,44 @@ sub test-seq($initial, @rolls, $expected)  {
 #
 
 {
+    # from the instructions 
+    test-seq '∅',    [<rr>],  'r'    ;
+    test-seq 'r3',   [<pr>],  'r5'   ;
+    test-seq 's5r3', [<rs>],  's8r5' ;
+    test-seq 'c10',  [<rs>],  'c10'  ;
+}
+
+{
     # vanilla
-    test-seq 'p',   [<sw>],  '∅'    ;
-    test-seq 'r',   [<rs>],  'r2'   ;
-    test-seq 'r2',  [<rs>],  'r3'   ;
-    test-seq 'r3',  [<rs>],  'r5'   ;
-    test-seq 'sr',  [<rs>],  's2r2' ;
+    test-seq '∅',    [<rs>],  '∅'    ;
+    test-seq 'p',    [<rs>],  'p'    ;
+    test-seq 'r',    [<rr>],  'r2'   ;
+    test-seq 'r2',   [<rr>],  'r4'   ;
+    test-seq 'r',    [<rs>],  'r2'   ;
+    test-seq 'r',    [<rs>],  'r'    ;
+    test-seq 's',    [<rs>],  '∅'    ;
+    test-seq 'r',    [<rs>],  'r2'   ;
+    test-seq 'r2',   [<rs>],  'r3'   ;
+    test-seq 'r3',   [<rs>],  'r5'   ;
+    test-seq 'sr',   [<rs>],  's2r2' ;
 }
 
 {
     # predator (unguarded)
-    test-seq 'sr3', [<fr>],  's'    ;
-    test-seq 'sr3', [<fs>],  's2'   ;
-    test-seq 'sr3', [<fp>],  's'    ;
-    test-seq 'rps', [<fs>],  'ps2'  ;
-    test-seq 'rps', [<fp>],  'p2s'  ;
-    test-seq 'pr3', [<rw>],  '∅'    ;
-    test-seq 'sr2', [<sw>],  '∅'    ;
-    test-seq 'sr3', [<sw>],  '∅'    ;
-    test-seq 'cs' , [<sw>],  'c'    ;
-    test-seq 'hpc', [<pw>],  'h'    ;
-    test-seq 'hp2', [<hw>],  'h2'   ;
-    test-seq 'sr3', [<fw>],  '∅'    ;
-    test-seq 'hpc', [<fw>],  '∅'    ;
+    test-seq 'sr3',  [<fr>],  's'    ;
+    test-seq 'sr3',  [<fs>],  's2'   ;
+    test-seq 'sr3',  [<fp>],  's'    ;
+    test-seq 'rps',  [<fs>],  'ps2'  ;
+    test-seq 'rps',  [<fp>],  'p2s'  ;
+    test-seq 'pr3',  [<rw>],  '∅'    ;
+    test-seq 'p',    [<sw>],  '∅'    ;
+    test-seq 'sr2',  [<sw>],  '∅'    ;
+    test-seq 'sr3',  [<sw>],  '∅'    ;
+    test-seq 'cs' ,  [<sw>],  'c'    ;
+    test-seq 'hpc',  [<pw>],  'h'    ;
+    test-seq 'hp2',  [<hw>],  'h2'   ;
+    test-seq 'sr3',  [<fw>],  '∅'    ;
+    test-seq 'hpc',  [<fw>],  '∅'    ;
 }
 
 {
