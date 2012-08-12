@@ -12,21 +12,37 @@ multi MAIN("simple", $n)  {
 
 multi MAIN("ai", *@names) {
     die "Usage: $*PROGRAM_NAME ai <2..6 players>"
-        unless (my $N = +@names) ~~ 2..6;
+        unless (my $k = +@names) ~~ 2..6;
     for "Farm::AI::" <<~<< @names -> $module {
         require_strict($module)
     }
+
+    say "::MAIN names = [{@names}]";
+
+
+
+    my %strategy;
+    my @players = map -> $i,$name  { 
+        my $player = "player_{$i+1}";
+        say "name = $name, player = [$player]";
+        %strategy{$player} = (eval "Farm::AI::$name").new( player => $player );
+        $player
+    }, @names.kv;
+    say "::MAIN players    = ", @players;
+    say "::MAIN strategies = ", %strategy.values; 
+
 }
 
 =begin END
 
-    # say "names = [{@names}]";
-    my @players = map -> $i, $name {
-        my $player = "player_{$i+1}";
-        # say "i = $i, name = $name, player = [$player]";
-        (eval "Farm::AI::$name").new( player => "player_{$i+1}" );
-    }, @names.kv;
-    say "players = ", @players;
+    {
+        my @players = map -> $i, $name {
+            my $player = "player_{$i+1}";
+            say "i = $i, name = $name, player = [$player]";
+            (eval "Farm::AI::$name").new( player => $player );
+        }, @names.kv;
+        say "::MAIN players = ", @players;
+    }
 
     my $game = Game.new(
         p  => hash(map {; "player_$_" => {} },                      1..$N),
