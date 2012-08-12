@@ -155,12 +155,23 @@ class Farm::Sim::Game  {
         }
     }
 
+
+    sub shorten(%h) {
+    }  
+
     method effect-trade  {
         if (%!tr{$!cp} // -> %, @ {;})({%!p}, @!e) -> $_ {
             say "::TRADE $!cp = ", $_; 
+            sub fail_trade(%trade, $reason) {
+                self.reject(%trade, $reason)
+            };
             if !.exists("type") || .<type> ne "trade" {
-                self.reject($_, "Wrong type");
+                .&fail_trade("Wrong type");
             }
+            my $selling = posse(shorten(.<selling>));
+            # elsif !enough_animals(%!p{$!cp}, .<selling>) {
+            #    .&fail_trade("Not enough animals");
+            # }
 
         }
     }
@@ -281,6 +292,13 @@ class Farm::Sim::Game  {
 
 
 =begin END
+
+            sub fail_trade(%trade, $reason) {
+                self.publish: { 
+                    :type<failed>, :$reason, :trader($!cp),
+                    :trade(deepclone(%trade)) 
+                }
+            };
 
 ⚤
 "»» ..";
