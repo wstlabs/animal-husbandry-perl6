@@ -11,6 +11,8 @@ multi MAIN($posse, $animal) {
     say "$me seeks $x!";
     my @t = find-equiv($me,$x);
     say "found: ",@t.Int," = ", @t;
+    say "dogful   = ", grep {  m/<[dD]>/ }, @t; 
+    say "dogless  = ", grep { !m/<[dD]>/ }, @t; 
 }
 
 sub find-equiv(Farm::Sim::Posse $p, Str $x)  {
@@ -23,6 +25,15 @@ sub find-equiv(Farm::Sim::Posse $p, Str $x)  {
 }
 
 =begin END
+
+{
+    say "dogful   = ", grep {  m/<[dD]>/ }, @t; 
+    say "dogless  = ", grep { !m/<[dD]>/ }, @t; 
+    my @s = map { $_.Str }, @t;
+    say "dogful   = ", @s.grep(  m/<[dD]>/ );
+    say "dogless  = ", @s.grep( !m/<[dD]>/ );
+}
+
 {
     look-at(@t);
     look-at(@t.list);
