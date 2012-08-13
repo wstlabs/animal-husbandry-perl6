@@ -47,12 +47,11 @@ is    Farm::AI::Strategy  {
         return %t;
     }
 
-    method accept(%p, @e, $who) {
-        my $roll = Bool.roll;
-        # say "[$.player] a $who ? e = {@e.Int}"; 
-        # say "[$.player] r : $roll";
-        return $roll
-    }
+    method eval-trade($who)  {
+        self.trace("::eval-trade [$.player] p = ", self.p);
+        return Bool.roll
+    } 
+
 }
 
 =begin END
