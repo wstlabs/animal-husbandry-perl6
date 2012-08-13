@@ -11,6 +11,7 @@ constant @valid-roll = <r s   p c   h f w>;  # occur on a valid die roll
 constant @animals    = <r s d p c D h f w>;  # all animals together 
 
 my %ANIMALS   is ro  = hash @animals    Z=> 1..*; 
+my %DOMESTIC  is ro  = hash @domestic   Z=> 1..*; 
 my %VALIDROLL is ro  = hash @valid-roll Z=> 1..*; 
 my $VALIDROLL is ro  = KeyBag.new(%VALIDROLL);
 
@@ -21,9 +22,15 @@ constant %STOCK = {
 
 # XXX some cheap workarounds for exporting data structs,
 # which don't seem to export easily like subs do.
-sub stock-hash()       is export { %STOCK }
-sub frisky-animals()   is export { @frisky }
-sub domestic-animals() is export { @domestic }
+sub stock-hash()          is export { %STOCK }
+sub frisky-animals()      is export { @frisky }
+sub domestic-animals()    is export { @domestic }
+sub is-domestic-animal( Str $x where $x.chars == 1 )  is export { 
+    %DOMESTIC.exists($x) 
+}
+sub is-domestic-posse(  Str $s where $s.chars  > 0 )  is export { 
+    $s eq '∅' || $s ~~ m/^ (<[rspdcDh]>\d*)+ $/ # XXX make non-capturing 
+}
 
 my %LONG2SHORT is ro = < 
     rabbit    r   sheep   s   pig p   cow  c  horse h  
@@ -103,7 +110,12 @@ constant %WORTH = {
     r => 1, s => 6, p => 12, c => 36, h => 72,
     d => 6,                  D => 36
 };
-sub worth-in-trade (KeyBag $x --> Int) is export { $x ∙ %WORTH }
+multi sub worth-in-trade (KeyBag $x --> Int) is export { $x ∙ %WORTH }
+multi sub worth-in-trade (Str $x where $x.chars == 0 ) is export { 
+                '∅' eq $x  ??         0  !! 
+    is-domestic-animal($x) ?? %WORTH{$x} !! 
+    die "not a valid (domestic) animal symbol"
+}
 
 
 
@@ -115,7 +127,6 @@ my %LONG2SHORT is ro = {
     small_dog => 'd', big_dog => 'D', fox => 'f', wolf => 'w',
 };
 
-# my %DOMESTIC  is ro  = hash @domestic Z=> True xx @domestic;
 # my $FRISKY    is ro  = KeyBag.new( hash @frisky     Z=> True xx @frisky );
 
 constant %STOCK = {
