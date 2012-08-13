@@ -111,11 +111,12 @@ constant %WORTH = {
     d => 6,                  D => 36
 };
 multi sub worth-in-trade (KeyBag $x --> Int) is export { $x ∙ %WORTH }
-multi sub worth-in-trade (Str $x where $x.chars == 0 ) is export { 
+multi sub worth-in-trade (Str $x    --> Int) is export { 
                 '∅' eq $x  ??         0  !! 
     is-domestic-animal($x) ?? %WORTH{$x} !! 
     die "not a valid (domestic) animal symbol"
 }
+# multi sub worth-in-trade (Str $x where $x.chars == 0 ) is export { 
 
 
 
