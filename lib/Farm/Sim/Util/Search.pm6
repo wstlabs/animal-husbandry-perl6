@@ -4,10 +4,11 @@ use Farm::Sim::Util;
 # of the 5 core ("frisky") animals, <r s p c h>. 
 #
 my %T = { 
-    'r' => [],
-    's' => [<r6>],
-    'p' => [<d2 dr6 ds r12 s2 sr6>],
+    'r' => [<r>],
+    's' => [<d s r6>],
+    'p' => [<p d2 ds s2 dr6 sr6 r126>],
     'c' => [<
+        D c
         p3 
         p2d2 p2ds p2s2 p2dr6 p2r12 p2sr6 
         pd4 
@@ -21,6 +22,7 @@ my %T = {
         ds5 ds4r6 ds3r12 ds2r18 dsr24 dr30 
         s6 s5r6 s4r12 s3r18 s2r24 sr30 r36 >],
     'h' => [<
+        h
         D2 Dc 
         Dp3 
         Dp2d2 Dp2dr6 Dp2ds Dp2r12 Dp2s2 Dp2sr6 
