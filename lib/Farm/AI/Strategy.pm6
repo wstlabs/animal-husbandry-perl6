@@ -1,4 +1,4 @@
-use Farm::Sim::Posse;
+use Farm::AI::Strategy::Util;
 
 class Farm::AI::Strategy {
     has Str $.player;
@@ -6,12 +6,6 @@ class Farm::AI::Strategy {
     has $.debug = 0;
     method trace(*@a)  { if ($!debug > 1)  { say "[$.player]", @a } }
     method debug(*@a)  { if ($!debug > 2)  { say "[$.player]", @a } }
-
-    sub inflate-posse-hash(%p)  {
-        hash map -> $k,$v { 
-            $k => posse-from-long($v)
-        }, %p.kv
-    } 
 
     has @!e;
     has %!p;
@@ -26,16 +20,23 @@ class Farm::AI::Strategy {
         my %t = self.find-trade; 
         self.trace("::trade [$.player] t = ", {%t});
         return %t;
-    
     }
 
     method find-trade()  {
         die "not implemented in abstract class";
-        # self.trace("::find-trade [$.player] p = ", {!%p})
     }
 }
 
 =begin END
+
+    # self.trace("::find-trade [$.player] p = ", {!%p})
+
+    sub inflate-posse-hash(%p)  {
+        hash map -> $k,$v { 
+            $k => posse-from-long($v)
+        }, %p.kv
+    } 
+
 
     method accept(%p, @e, $who) {
         my $roll = Bool.roll;
