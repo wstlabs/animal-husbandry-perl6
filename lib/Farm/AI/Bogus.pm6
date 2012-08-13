@@ -38,16 +38,16 @@ is    Farm::AI::Strategy  {
         }
     };
 
-    method find-trade()  {
-        self.trace("::find-trade [$.player] p = ", self.p);
-        self.trace("::find-trade [$.player] me = ", self.posse($.player)); 
+    multi method find-trade()  {
+        self.trace("find-trade p = ", self.p);
+        self.trace("find-trade me = ", self.posse($.player)); 
         my $roll = %!t.keys.roll; 
         my %t = %!t{$roll};
-        self.debug("::find-trade $roll => ",{%t});
+        self.trace("::find-trade $roll => ",{%t});
         return %t;
     }
 
-    method eval-trade($who)  {
+    multi method eval-trade(Str $who)  {
         self.trace("::eval-trade [$.player] p = ", self.p);
         return Bool.roll
     } 

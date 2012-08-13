@@ -3,9 +3,9 @@ use Farm::AI::Strategy::Util;
 class Farm::AI::Strategy {
     has Str $.player;
 
-    has $.debug = 0;
-    method trace(*@a)  { if ($!debug > 1)  { say "::[$.player]", @a } }
-    method debug(*@a)  { if ($!debug > 2)  { say "::[$.player]", @a } }
+    has $!debug = 2;
+    method trace(*@a)  { if ($!debug > 1)  { say "++[$.player]", @a } }
+    method debug(*@a)  { if ($!debug > 2)  { say "++[$.player]", @a } }
 
     has @!e;
     has %!p;
@@ -15,9 +15,12 @@ class Farm::AI::Strategy {
 
     method trade(%p, @e) {
         self.trace("trade p = ", {%p});
+        # say "::trade p = ", {%p};
         self.update(%p, @e);
-        my %t = self.find-trade; 
+        # say "::trade find .."; 
+        my %t = self.find-trade(); 
         self.trace("trade t = ", {%t});
+        # say "trade t = ", {%t};
         return %t;
     }
 
@@ -29,13 +32,10 @@ class Farm::AI::Strategy {
         return $stat
     }
 
-    method find-trade()  {
-        die "not implemented in abstract class";
-    }
-
-    method eval-trade(Str $who)  {
-        die "not implemented in abstract class";
-    }
+    multi method find-trade()          { say "::find-trade not the droids you're looking for .." }
+    multi method eval-trade()          { say "::eval-trade not the droids you're looking for .." }
+    # method find-trade()          { die "not implemented in abstract class"; }
+    # method eval-trade(Str $who)  { die "not implemented in abstract class"; }
 
     method update(%p, @e) {
         %!p = inflate-posse-hash(%p);

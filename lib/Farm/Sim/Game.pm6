@@ -112,6 +112,7 @@ class Farm::Sim::Game  {
     # warnings due to undefined values in logging statements.
     # if (%!tr{$!cp} // -> %, @ {;})({%!p}, @!e) -> $_ {
     method effect-trade  {
+        self.trace("::effect-trade $!cp .."); 
         if (%!tr{$!cp} // -> %, @ {;})(self.p, @!e) -> $_ {
             self.trace("::effect-trade $!cp => ", $_); 
             sub fail(%trade, $reason) { self.reject(%trade, $reason) };
