@@ -1,10 +1,12 @@
 use v6;
 
 #
-# hash <=> tuple <=> string conversion.
+# generic hash <=> tuple <=> string conversion utils, not specific
+# to our posse notation, its container class, etc. 
 #  
-# it's mostly to avoid circular dependencies that we keep
-# these subs in a separate module.
+# it's mostly to avoid circular dependencies that we keep these subs 
+# in a separate module; it also seems to simplify the overall module 
+# layout, somewhat.
 #
 
 #
