@@ -3,9 +3,9 @@ use Farm::Sim::Util;
 # combinatorially generated table of trades equivalent to one
 # of the 5 core ("frisky") animals, <r s p c h>. 
 #
-my %T = { 
-    'r' => <r>,
-    's' => <d s r6>,
+constant %T = { 
+    'r' => [<r>],
+    's' => [<d s r6>],
     'p' => [<p d2 ds s2 dr6 sr6 r12>],
     'c' => [<
         D c
@@ -87,11 +87,15 @@ sub table-counts is export {
     }, domestic-animals() 
 }
 
-sub equiv-to(Str $x) is export {
-    return %T{'s'} if $x eq 'd';
-    return %T{'c'} if $x eq 'D';
-    %T.exists($x) ?? %T{$x} !! die "invalid animal symbol '$x'"
+# a simple alias which "binds" animal symbols of equivalent worth
+# and also loudly fails if we're not given a valid animal symbol
+sub deref-to(Str $x) {
+        $x eq 'd' ?? %T{'s'} !! 
+        $x eq 'D' ?? %T{'c'} !! 
+    %T.exists($x) ?? %T{$x}  !! die "invalid (non-domestic) animal symbol '$x'"
 }
+
+sub equiv-to(Str $x) is export { deref-to($x).list }
 
 =begin END
 

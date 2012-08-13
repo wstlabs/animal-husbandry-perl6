@@ -9,16 +9,40 @@ multi MAIN($posse, $animal) {
     my $me  = posse($posse); 
     my $x  := $animal; # shorthand 
     say "$me seeks $x!";
+    my @t = find-equiv($me,$x);
+    say "found: ",@t.Int," = ", @t;
 }
 
 sub find-equiv(Farm::Sim::Posse $p, Str $x)  {
-    my $worth = $p.worth;
-    say "::find-equiv $p == $worth seeks $x"; 
+    say "::find-equiv $p,[$x]";
+    my $have = $p.worth;
+    my $need = worth-in-trade($x); 
+    say "::find-equiv |$p| = $have -> |$x| = $need"; 
+    return [] unless $have >= $need;
+    equiv-to($x)
+}
+
+=begin END
+{
+    look-at(@t);
+    look-at(@t.list);
+    look-at(<a b c>);
+    look-at([<a b c>]);
+    my $foo = [<a b c>];
+    look-at($foo);
+}
+
+sub look-at(@x) {
+    say "which = ", @x.WHICH;
+    say "elems = ", @x.elems;
+    say " perl = ", @x.perl;
+    say " gist = ", @x.gist;
+    say "  int = ", @x.Int; 
 }
 
 
 
-=begin END
+
 
 my $x = equiv-to('h');
 say "x = ", $x.WHICH;
