@@ -23,25 +23,28 @@ class Farm::Sim::Game  {
         $!debug = 1 unless defined($!debug);
     }
 
-    method info(*@a)   { if ($!debug > 0)  { say @a } }
-    method trace(*@a)  { if ($!debug > 1)  { say @a } }
-    method debug(*@a)  { if ($!debug > 2)  { say @a } }
+    has $.loud = 2;
+    method info( *@a)  {       say @a  if $.loud > 0 }
+    method trace(*@a)  { self.emit(@a) if $.loud > 1 }
+    method debug(*@a)  { self.emit(@a) if $.loud > 2 }
+    method emit( *@a)  { say '::',Backtrace.new.[3].subname,' ',@a }
+
 
     #
     # static (factory-like) instance generators 
     #
 
     # creates an empty game on $n players 
-    method simple (:$k, :$n, :$debug )  {
+    method simple (:$k, :$n, :$loud )  {
         my %p = hash map { ; "player_$_" => posse({}) }, 1..$k;
-        self.new(p => %p, :$n, :$debug)
+        self.new(p => %p, :$n, :$loud)
     }
 
     # creates a standard contest game on the specified player list 
     # XXX should check integrity of tr, ac hashes 
-    method contest (:@players, :%tr, :%ac, :$n, :$debug )  {
+    method contest (:@players, :%tr, :%ac, :$n, :$loud )  {
         my %p = hash map { ; $_ => posse({}) }, @players; 
-        self.new(p => %p, :%tr, :%ac, :$n, :$debug)
+        self.new(p => %p, :%tr, :%ac, :$n, :$loud)
     }
 
     method posse (Str $name)  { %!p{$name}.clone if %!p.exists($name) }
@@ -73,7 +76,7 @@ class Farm::Sim::Game  {
     }
     
     method play-round  {
-        self.trace("::play j = $!j, cp = $!cp");
+        self.trace("j = $!j, cp = $!cp");
         self.play-trade;
         self.play-roll;
         self.incr;
@@ -82,19 +85,19 @@ class Farm::Sim::Game  {
 
     method play-trade  {
         my $was   = self.posse($!cp);
-        self.trace("::play-trade: was $was");
+        self.debug("was $was");
         self.effect-trade();
         my $now   = self.posse($!cp);
-        self.trace("::play-trade: now $now");
+        self.debug("now $now");
     }
 
     method play-roll  {
         my $was   = self.posse($!cp);
         my $roll  = @!r[$!j] // $!dice.roll;
-        self.trace("::play-roll: was $was");
+        self.debug("was $was");
         self.effect-roll($roll);
         my $now   = self.posse($!cp);
-        self.trace("::play-roll: now $now");
+        self.debug("now $now");
         self.show-roll( :$was, :$now );
     }
 
@@ -112,22 +115,22 @@ class Farm::Sim::Game  {
     # warnings due to undefined values in logging statements.
     # if (%!tr{$!cp} // -> %, @ {;})({%!p}, @!e) -> $_ {
     method effect-trade  {
-        self.trace("::effect-trade $!cp .."); 
+        self.debug("cp = $!cp"); 
         if (%!tr{$!cp} // -> %, @ {;})(self.p, @!e) -> $_ {
-            self.trace("::effect-trade $!cp => ", $_); 
+            self.trace("$!cp => ", $_); 
             sub fail(%trade, $reason) { self.reject(%trade, $reason) };
-            self.trace("::effect-trade type = ", .<type>);
-            self.trace("::effect-trade with = ", .<with>);
+            self.trace("type = ", .<type>);
+            self.trace("with = ", .<with>);
             return .&fail("Wrong type")                  if !.exists("type") || .<type> ne "trade";
             return .&fail("Player doesn't exist")        if !.exists("with");
             my $cp      = self.posse($!cp);
             my $op      = self.posse(.<with>);
-            self.trace("::effect-trade cp = $cp"); 
-            self.trace("::effect-trade op = $op"); 
+            self.trace("cp = $cp"); 
+            self.trace("op = $op"); 
             my $selling = posse-from-long(.<selling>);
             my $buying  = posse-from-long(.<buying>);
-            self.trace("::effect-trade buying  = $buying");
-            self.trace("::effect-trade selling = $selling");
+            self.trace("buying  = $buying");
+            self.trace("selling = $selling");
             return .&fail("Player doesn't exist")        if !$op;
             return .&fail("Not enough CP animals")       if                       $cp ⊉ $selling;
             return .&fail("Not enough OP animals")       if .<with> ne 'stock' && $op ⊉ $buying;
@@ -157,31 +160,27 @@ class Farm::Sim::Game  {
     # with the existing posse. 
     #
     method effect-roll(Str $roll)  {
-        self.trace("::effect-roll $!cp ~ $roll");
+        self.trace("$!cp ~ $roll");
         self.publish: { :type<roll>, :player($!cp), :$roll };
         given $roll {
             when /[w]/ { 
                 my $posse = self.posse($!cp);
-                self.trace("::effect posse = $posse");
+                self.debug("posse = $posse");
                 if ('D' ∈ $posse)  {
-                    # say "LOSE ", 'D'; 
                     self.transfer( $!cp, 'stock', 'D' )
                 }
                 else  {
-                    # say "LOSE ", ~$posse.slice([<r s p c>]);
                     self.transfer( $!cp, 'stock', $posse.slice([<r s p c>]) )
                 }
                 proceed;
             }
             when /[f]/ { 
                 my $posse = self.posse($!cp);
-                self.trace("::effect posse = $posse");
+                self.debug("posse = $posse");
                 if ('d' ∈ $posse)  {
-                    # say "LOSE ", 'd'; 
                     self.transfer( $!cp, 'stock', 'd' )
                 }
                 else  {
-                    # say "LOSE ", ~$posse.slice([<r>]);
                     self.transfer( $!cp, 'stock', $posse.slice([<r>]) )
                 }
                 proceed;
@@ -189,25 +188,23 @@ class Farm::Sim::Game  {
             default  {
                 my $stock = self.posse('stock'); 
                 my $posse = self.posse($!cp);
-                self.trace("::effect posse = $posse");
-                self.trace("::effect stock = $stock");
+                self.debug("posse = $posse");
+                self.debug("stock = $stock");
                 my $desired = $posse ⚤ $roll;
-                self.trace("::effect desired = $desired");
+                self.debug("desired = $desired");
                 my $allowed = $desired ∩ $stock;
-                self.trace("::effect allowed = $allowed"); 
-                # say "GAIN ", ~$allowed; 
+                self.debug("allowed = $allowed"); 
                 self.transfer( 'stock', $!cp, $allowed )
             }
         }
     }
 
     method transfer($from, $to, $what) {
-        self.trace("::transfer $from => $to:  $what");
+        self.trace("$from => $to:  $what");
         if ($what)  {
              %!p{$to}    ⊎= $what;
              %!p{$from}  ∖= $what;
         }
-        # self.trace("now: ", self.table);
         self.publish: { 
             :type<transfer>, :$from, :$to, 
             'animals' => "$what"
@@ -240,7 +237,7 @@ class Farm::Sim::Game  {
     }
 
     method publish(%event) {
-        self.trace("::publish {%event.perl}");
+        self.debug("event = {%event.perl}");
         push @!e, {%event}
     }
 
@@ -250,37 +247,35 @@ class Farm::Sim::Game  {
     #
     method show-roll( :$was, :$now )  { 
         my %m = self.inspect-roll;
-        self.trace("::meta = {%m.perl}");
-        self.trace("::was = $was, now = $now");
+        self.debug("meta = {%m.perl}");
+        self.debug("was = $was, now = $now");
         my $eaten = (defined %m<puts>) ?? "-%m<puts>" !! "";
         self.info("ROLL %m<player> $was ~ %m<roll> -> +%m<gets> $eaten » $now");
     }
 
     method inspect-roll {
-        # self.debug("::inspect e = ", @!e.Int);
+        self.debug("e.Int = ", @!e.Int);
         my @ev = self.slice-recent-events-upto("type","roll");
-        # self.debug("::inspect e = ", @!e.Int);
-        self.debug("::inspect top = {@ev.perl}");
         for @ev -> %e  {
-            self.debug("::inspect e = {%e.perl}")
+            self.debug("e = {%e.perl}")
         }
 
         my %r = shift @ev;
-        self.debug("::inspect r = {%r.perl}");
+        self.debug("r = {%r.perl}");
         my $player  = %r<player>;
         my $roll    = %r<roll>;
-        self.debug("::inspect player  = ", $player);
-        self.debug("::inspect roll    = ", $roll);
+        self.debug("player  = ", $player);
+        self.debug("roll    = ", $roll);
 
         my (@gets,@puts);
         for @ev -> %e  {
-            self.debug("::inspect e = {%e.perl}");
+            self.debug("e = {%e.perl}");
             my $animals = %e<animals>;
             my $from    = %e<from>;
             my $to      = %e<to>;
-            self.debug("::inspect animals = ", $animals);
-            self.debug("::inspect from    = ", $from);
-            self.debug("::inspect to      = ", $to);
+            self.debug("animals = ", $animals);
+            self.debug("from    = ", $from);
+            self.debug("to      = ", $to);
             if ($from eq 'stock')  { push @gets, $animals }
             if ($to   eq 'stock')  { push @puts, $animals }
         }

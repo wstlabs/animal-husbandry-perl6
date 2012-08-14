@@ -5,7 +5,7 @@ use Farm::Sim::Util::Load;
 multi MAIN("simple", $n)  {
     say "n = $n";
     my $g = Farm::Sim::Game.simple( 
-        k => 3, debug => 1, :$n 
+       k => 3, :$n, loud => 1
     ).play;
     say "stats = ", $g.stats;
 }
@@ -21,7 +21,7 @@ multi MAIN("ai", $n, *@names) {
     my %strategy;
     my @players = map -> $i,$name  { 
         my $player = "player_{$i+1}";
-        say ":: name = $name, player = [$player]";
+        say "::MAIN name = $name, player = [$player]";
         %strategy{$player} = (eval "Farm::AI::$name").new( player => $player );
         $player
     }, @names.kv;
@@ -42,9 +42,8 @@ multi MAIN("ai", $n, *@names) {
     ; 
     say "::MAIN ac = ", %ac;
 
-    my $debug = 2;
     my $game = Farm::Sim::Game.contest(
-        players => @players, :%tr, :%ac, :$debug 
+        players => @players, :%tr, :%ac, loud => 2 
     );
     say "::MAIN game    = ", $game.WHICH; 
     say "::MAIN players = ", $game.players;
