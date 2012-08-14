@@ -127,6 +127,8 @@ class Farm::Sim::Game  {
             my $op      = self.posse(.<with>);
             self.trace("cp = $cp"); 
             self.trace("op = $op"); 
+            self.trace("selling = ", .<selling>);
+            self.trace("buying  = ", .<buying>);
             my $selling = posse-from-long(.<selling>);
             my $buying  = posse-from-long(.<buying>);
             self.trace("buying  = $buying");
