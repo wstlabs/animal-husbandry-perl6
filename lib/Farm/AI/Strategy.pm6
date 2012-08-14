@@ -6,8 +6,7 @@ class Farm::AI::Strategy {
     has $.loud = 2;
     method trace(*@a)  { self.emit(@a) if $.loud > 1 }
     method debug(*@a)  { self.emit(@a) if $.loud > 2 }
-    method emit(*@a)   { say '::', "[$.player]", @a } 
-    # method emit(*@a)   { say '::', caller().sub, "[$.player]", @a } 
+    method emit(*@a)   { say '::', Backtrace.new.[3].subname, "[$.player]", @a } 
 
     has @!e;
     has %!p;
