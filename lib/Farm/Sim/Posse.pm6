@@ -102,6 +102,39 @@ does  Farm::Sim::Posse::Role::Stringy  {
     # used for interface compatiblity with the original game.
     method longhash { short2long(self.hash) }
 
+    #
+    # a boolean comparison method which basically says we can subtract  
+    # the argument from the invocant without losing breeding diversity.
+    # 
+    # Examples:
+    # e.g. { c2p3 > c }  but not { c2p3 > p3 }, even though both ⊂ c2p3
+    # p3s4 > p2s2 but not p3 or ps4
+    #
+    multi method contains-diversely (Farm::Sim::Posse $p --> Bool)  {
+        # for self.base -> $k {
+        #     return False if self.at_key($k) > $p.at_key($k)
+        # }
+        return True
+    }
+
+    # (2,3) - (1,0) = (1,2) => yes 
+    # (2,3) - (0,3) = (2,0) => no
+    #
+    # (3,4) - (2,2) = (1,2) => yes
+    # (3,4) - (3,0) = (0,4) => no
+    # (3,4) - (1,4) = (2,0) => no 
+    #
+    # D2c2 > Dc but not D2 c2
+    # D2c3 > Dc, c2 but not D2 
+    #
+    # (2,2) - (1,1) = (1,1) => yes 
+    # (2,2) - (0,2) = (2,0) => no 
+    # (2,2) - (2,0) = (0,2) => no 
+    #
+    # (2,3) - (1,1) = (1,2) => yes 
+    # (2,3) - (0,2) = (2,1) => yes 
+    # (2,3) - (2,0) = (0,3) => no 
+
 }
 
 
