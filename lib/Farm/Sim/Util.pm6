@@ -103,25 +103,33 @@ multi sub breed-naive (KeyBag $x, KeyBag $r)  {
 #
 # A Posse's nominal trading value (in rabbits), based on standard
 # conversion rates.  Note that the input arg doesn't need to be an
-# actual Posse object; it can also be just a plain old KeyBag,
-# and the trading measure will be computed in the natural way. 
+# actual Posse object; it can also be just a plain old KeyBag, and 
+# the trading measure will be computed in the natural way, ignoring
+# non-animal keys.  
 #
 constant %WORTH = {
     r => 1, s => 6, p => 12, c => 36, h => 72,
     d => 6,                  D => 36
 };
-multi sub worth-in-trade (KeyBag $x --> Int) is export { $x ∙ %WORTH }
-multi sub worth-in-trade (Str $x    --> Int) is export { 
+multi sub worth (KeyBag $x --> Int) is export { $x ∙ %WORTH }
+multi sub worth (Str $x    --> Int) is export { 
                 '∅' eq $x  ??         0  !! 
     is-domestic-animal($x) ?? %WORTH{$x} !! 
     die "not a valid (domestic) animal symbol"
 }
-# multi sub worth-in-trade (Str $x where $x.chars == 0 ) is export { 
+# XXX as a slight bug, currently this works on single-char animal
+# symbols only.  this is because currently it's inconvenient to provide
+# a function which evaluates the worth of a posse-like string, with or 
+# without converting it to Posse object, without creating a dependency 
+# loop between the two modules.
 
 
 
 
 =begin END
+
+# multi sub worth-in-trade (KeyBag $x --> Int) is export { $x ∙ %WORTH }
+# multi sub worth-in-trade (Str $x    --> Int) is export { 
 
 my %LONG2SHORT is ro = {
     rabbit    => 'r', sheep   => 's', pig => 'p', cow  => 'c', horse  => 'h',
