@@ -6,7 +6,7 @@ class Farm::AI::Strategy {
     has $.loud = 2;
     method trace(*@a)  { self.emit(@a) if $.loud > 1 }
     method debug(*@a)  { self.emit(@a) if $.loud > 2 }
-    method emit(*@a)   { say '::', Backtrace.new.[3].subname, "[$.player]", @a } 
+    method emit(*@a)   { say '::', Backtrace.new.[3].subname, "[$.player] ", @a } 
 
     has @!e;
     has %!p;
@@ -15,21 +15,18 @@ class Farm::AI::Strategy {
     method players { %!p.keys.sort }
 
     method trade(%p, @e) {
-        self.trace("trade p = ", {%p});
-        # say "::trade p = ", {%p};
+        self.trace("p = ", {%p});
         self.update(%p, @e);
-        # say "::trade find .."; 
         my %t = self.find-trade(); 
-        self.trace("trade t = ", {%t});
-        # say "trade t = ", {%t};
+        self.trace("t = ", {%t});
         return %t;
     }
 
     method accept(%p, @e, $who) {
-        self.trace("accept p = ", {%p});
+        self.trace("p = ", {%p});
         self.update(%p, @e);
         my $stat = self.eval-trade($who);
-        self.trace("accept stat = ", $stat);
+        self.trace("stat = ", $stat);
         return $stat
     }
 
@@ -46,18 +43,3 @@ class Farm::AI::Strategy {
 
 =begin END
 
-    method trace(*@a)  { if ($!debug > 1)  { say "++[$.player]", @a } }
-    # self.trace("::find-trade [$.player] p = ", {!%p})
-
-    sub inflate-posse-hash(%p)  {
-        hash map -> $k,$v { 
-            $k => posse-from-long($v)
-        }, %p.kv
-    } 
-
-
-    }
-}
-
-
-=begin END

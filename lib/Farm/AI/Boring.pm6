@@ -69,8 +69,8 @@ is    Farm::AI::Strategy  {
     method find-trade()  {
         my $me    = self.posse($.player);
         my $stock = self.posse('stock');
-        self.trace("::find-trade p = ", self.p);
-        self.trace("::find-trade me = $me, need = ", $me.need); 
+        self.trace("p = ", self.p);
+        self.trace("me = $me, need = ", $me.need); 
         if ( $stock ∋ 'D'  ) {
             return %!Dc  if $me{'c'} >= 1;
             return %!Dp3 if $me{'p'} >= 3;
@@ -94,7 +94,7 @@ is    Farm::AI::Strategy  {
     }
 
     method eval-trade($who)  {
-        self.trace("::eval-trade p = ", self.p);
+        self.trace("p = ", self.p);
         return Bool.roll
     } 
 
