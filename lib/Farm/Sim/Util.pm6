@@ -28,7 +28,7 @@ sub domestic-animals()    is export { @domestic }
 sub is-domestic-animal( Str $x where $x.chars == 1 )  is export { 
     %DOMESTIC.exists($x) 
 }
-sub is-domestic-posse(  Str $s where $s.chars  > 0 )  is export { 
+sub is-domestic-posse-str(  Str $s where $s.chars  > 0 )  is export { 
     $s eq '∅' || $s ~~ m/^ (<[rspdcDh]>\d*)+ $/ # XXX make non-capturing 
 }
 
