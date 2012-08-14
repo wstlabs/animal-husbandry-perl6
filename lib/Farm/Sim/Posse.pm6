@@ -70,7 +70,7 @@ does  Farm::Sim::Posse::Role::Stringy  {
     #
     # A Posse's nominal trading value, expressed in terms of rabbits.
     #
-    method worth { worth-in-trade(self) }
+    method worth { worth(self) }
 
 
     #
@@ -200,6 +200,8 @@ multi sub infix:<⊲>(             Any $x, Farm::Sim::Posse $y --> Bool)        
 
 
 =begin END
+
+    # method worth { worth-in-trade(self) }
 
     #    my @t = self.radix Z- $p.radix; 
     #    ?( any(@t) <= 0 )
