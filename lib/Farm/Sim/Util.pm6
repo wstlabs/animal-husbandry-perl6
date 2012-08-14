@@ -37,20 +37,10 @@ my %LONG2SHORT is ro = <
     small_dog d   big_dog D   fox f   wolf w
 >;
 my %SHORT2LONG is ro = %LONG2SHORT.invert; 
-
-sub long2short (%h) is export {
-    hash map -> $long,$v {
-        my $x    = %LONG2SHORT{$long} // die "invalid long animal '$long'"; 
-        $x => $v
-    }, %h.kv
-}
-
-sub short2long (%h) is export {
-    hash map -> $x,$v {
-        my $long = %SHORT2LONG{$x}    // die "invalid short animal '$x'"; 
-        $long => $v
-    }, %h.kv
-}
+multi sub long2short (Str $y) is export { %LONG2SHORT{$y} // die "invalid long animal '$y'"; }
+multi sub short2long (Str $x) is export { %SHORT2LONG{$x} // die "invalid short animal '$x'"; }
+multi sub long2short (%h) is export { hash map -> Str $y, Int $n { long2short($y) => $n }, %h.kv }
+multi sub short2long (%h) is export { hash map -> Str $x, Int $n { short2long($x) => $n }, %h.kv }
 
 
 
@@ -127,6 +117,14 @@ multi sub worth (Str $x    --> Int) is export {
 
 
 =begin END
+
+sub short2long (%h) is export {
+    hash map -> $x,$v {
+        my $long = %SHORT2LONG{$x}    // die "invalid short animal '$x'"; 
+        $long => $v
+    }, %h.kv
+}
+
 
 # multi sub worth-in-trade (KeyBag $x --> Int) is export { $x ∙ %WORTH }
 # multi sub worth-in-trade (Str $x    --> Int) is export { 
