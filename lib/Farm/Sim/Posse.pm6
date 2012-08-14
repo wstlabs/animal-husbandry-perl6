@@ -86,6 +86,12 @@ does  Farm::Sim::Posse::Role::Stringy  {
     method base  { grep {  self.exists($_) }, @frisky } 
     method need  { grep { !self.exists($_) }, @frisky }
 
+    # returns a 5-element "signature" of the keybag height over the
+    # ordered list of breeding symbols, i.e. <hcpsr>.  used e.g. for
+    # diversity comparisons.
+    method radix { map { self.at_key($_) // 0 }, @frisky.reverse }
+
+    #
     # provides the number of distinct animal types in our possession.
     #
     # would seem superflous, given that it's equivalent to either .keys or .base
@@ -103,20 +109,37 @@ does  Farm::Sim::Posse::Role::Stringy  {
     method longhash { short2long(self.hash) }
 
     #
-    # a boolean comparison method which basically says we can subtract  
-    # the argument from the invocant without losing breeding diversity.
+    # a boolean comparison method which basically says that, assuming
+    # we can (validly) subtract the argument from the invocant, that we
+    # can do so without breeding diversity.
     # 
     # Examples:
     # e.g. { c2p3 > c }  but not { c2p3 > p3 }, even though both ⊂ c2p3
     # p3s4 > p2s2 but not p3 or ps4
     #
-    multi method contains-diversely (Farm::Sim::Posse $p --> Bool)  {
-        # for self.base -> $k {
-        #     return False if self.at_key($k) > $p.at_key($k)
-        # }
-        return True
+    # Note that a True output on this relation does -not- imply that
+    # we're a containing superset of the argument (or RHS).  There are 
+    # actually two separate reasons for this:
+    #
+    #  - this comparison is done -only- on the @frisky set, i.e. <rspch>,
+    #    and completely ignores keys in the set <dDfw>. 
+    #
+    #  - even within the @frisky set, the operator is designed to be 
+    #    interface-compatible with the usual set-theoretic minus operation,
+    #    i.e. it happily allows to consider an argument (RHS) which has 
+    #    radix values greater than the LHS (i.e. which would subtract 
+    #    to something below zero, were we not rounding up).
+    #
+    multi method contains-diversely (Farm::Sim::Posse $arg --> Bool)  {
+        ?( any(self.radix Z- $arg.radix) <= 0 )
     }
 
+    #
+    # move these to a test suite:
+    #
+    # c2p3 > c      but not p3        (even though both ⊂ c2p3)
+    # p3s4 > p2s2   but not p3,ps4
+    #
     # (2,3) - (1,0) = (1,2) => yes 
     # (2,3) - (0,3) = (2,0) => no
     #
@@ -124,8 +147,8 @@ does  Farm::Sim::Posse::Role::Stringy  {
     # (3,4) - (3,0) = (0,4) => no
     # (3,4) - (1,4) = (2,0) => no 
     #
-    # D2c2 > Dc but not D2 c2
-    # D2c3 > Dc, c2 but not D2 
+    # D2c2 > Dc     but not D2,c2
+    # D2c3 > Dc,c2  but not D2 
     #
     # (2,2) - (1,1) = (1,1) => yes 
     # (2,2) - (0,2) = (2,0) => no 
@@ -134,7 +157,7 @@ does  Farm::Sim::Posse::Role::Stringy  {
     # (2,3) - (1,1) = (1,2) => yes 
     # (2,3) - (0,2) = (2,1) => yes 
     # (2,3) - (2,0) = (0,3) => no 
-
+    #
 }
 
 
@@ -167,10 +190,20 @@ sub posse-from-long(%h) is export { posse(long2short(%h)) }
 
 
 # go forth and multiply!
-multi sub infix:<⚤>(Farm::Sim::Posse $x, Any $r --> Farm::Sim::Posse) is export {  $x.breed($r) }
+multi sub infix:<⚤>(Farm::Sim::Posse $x,              Any $y --> Farm::Sim::Posse)  is export {  $x.breed($y) }
+multi sub infix:<⊳>(Farm::Sim::Posse $x,              Any $y --> Bool)              is export {  $x.contains-diversely($y) }
+multi sub infix:<⊲>(             Any $x, Farm::Sim::Posse $y --> Bool)              is export {  $y.contains-diversely($x) }
+
+
+
+
 
 
 =begin END
+
+    #    my @t = self.radix Z- $p.radix; 
+    #    ?( any(@t) <= 0 )
+    #   ?( all(@t) >= 0 ) && ?( any(@t) == 0 )
 
 constant %weights = { 
     r => 1, s => 6, p => 12, c => 30, h => 72,
