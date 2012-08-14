@@ -1,4 +1,6 @@
 use Farm::Sim::Util;
+use Farm::Sim::Posse;
+
 #
 # combinatorially generated table of trades equivalent to one
 # of the 5 core ("frisky") animals, <r s p c h>. 
@@ -97,7 +99,18 @@ sub deref-to(Str $x) {
 
 sub equiv-to(Str $x) is export { deref-to($x).list }
 
+my %F;
+multi sub fly(Farm::Sim::Posse $x --> Farm::Sim::Posse) is export { $x }
+multi sub fly(             Str $x --> Farm::Sim::Posse) is export {
+    die "can't inflate:  not a domestic posse string" unless is-domestic-posse-str($x);
+    %F{$x} //= posse($x)
+}
+
+
 =begin END
+
+sub fly(Farm::Sim::Posse $x --> Farm::Sim::Posse) is export { $x }
+sub fly(             Str $x --> Farm::Sim::Posse) is export {
 
 sub table-counts is export {
     hash map -> $k,$v {
