@@ -99,18 +99,21 @@ sub deref-to(Str $x) {
 
 sub equiv-to(Str $x) is export { deref-to($x).list }
 
+
+# flyweight pattern for posse instances - which, theoretically, should save a lot 
+# on construction costs -- but currently at the cost of volatility, in currently 
+# the instances are rw, and fully open to mutation (so don't do that, please).
 my %F;
 multi sub fly(Farm::Sim::Posse $x --> Farm::Sim::Posse) is export { $x }
 multi sub fly(             Str $x --> Farm::Sim::Posse) is export {
     die "can't inflate:  not a domestic posse string" unless is-domestic-posse-str($x);
     %F{$x} //= posse($x)
 }
+sub fly-stats is export { n => %F.keys.Int }
 
 
 =begin END
 
-sub fly(Farm::Sim::Posse $x --> Farm::Sim::Posse) is export { $x }
-sub fly(             Str $x --> Farm::Sim::Posse) is export {
 
 sub table-counts is export {
     hash map -> $k,$v {
