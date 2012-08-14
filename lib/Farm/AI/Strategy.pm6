@@ -3,9 +3,11 @@ use Farm::AI::Strategy::Util;
 class Farm::AI::Strategy {
     has Str $.player;
 
-    has $!debug = 2;
-    method trace(*@a)  { if ($!debug > 1)  { say "++[$.player]", @a } }
-    method debug(*@a)  { if ($!debug > 2)  { say "++[$.player]", @a } }
+    has $.loud = 2;
+    method trace(*@a)  { self.emit(@a) if $.loud > 1 }
+    method debug(*@a)  { self.emit(@a) if $.loud > 2 }
+    method emit(*@a)   { say '::', "[$.player]", @a } 
+    # method emit(*@a)   { say '::', caller().sub, "[$.player]", @a } 
 
     has @!e;
     has %!p;
@@ -45,6 +47,7 @@ class Farm::AI::Strategy {
 
 =begin END
 
+    method trace(*@a)  { if ($!debug > 1)  { say "++[$.player]", @a } }
     # self.trace("::find-trade [$.player] p = ", {!%p})
 
     sub inflate-posse-hash(%p)  {
