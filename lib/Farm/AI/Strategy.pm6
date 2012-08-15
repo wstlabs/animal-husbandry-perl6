@@ -16,6 +16,51 @@ class Farm::AI::Strategy {
     method posse (Str $name)  { %!p{$name}.clone if %!p.exists($name) }
     method players { %!p.keys.sort }
 
+    #
+    # allows for a somewhat more compact (positional) representation in 
+    # our extension classes; e.g. they just need to say
+    # 
+    #    my $pair = ( 'r6' => 's' ) ;
+    #    return ( stock => $pair );
+    #
+    sub expand-details(Pair $p --> Hash)  {
+        my ($with,$what) = $p.kv;
+        my ($selling,$buying) = map { posse($_).longhash }, $what.kv;
+        { :$with, :$selling, :$buying }
+    }
+
+    sub expand-trade(Pair $p --> Hash) { 
+        $p ?? { :type<trade>, expand-details($p) } !! Nil 
+    }
+
+    method trade(%p, @e) {
+        self.trace("p = ", {%p});
+        self.update(%p, @e);
+        my $pair = self.find-trade; 
+        my %t    = expand-trade($pair)   if $pair;
+        return %t; 
+    }
+
+    method accept(%p, @e, $who) {
+        self.trace("p = ", {%p});
+        self.update(%p, @e);
+        self.eval-trade($who)
+    }
+
+    # can be overridden by extension classes. 
+    # especially if you want them to do something useful.
+    multi method find-trade()          { self.debug("not implemented in abstract class"); Nil }
+    multi method eval-trade()          { self.debug("not implemented in abstract class"); Nil }
+
+    method update(%p, @e) {
+        %!p = inflate-posse-hash(%p);
+        @!e = @e; # XXX slow! 
+    }
+}
+
+=begin END
+
+
     sub expand-details(Pair $p --> Hash)  {
         my ($with,$what) = $p.kv;
         # say ":: with = ", $with;
@@ -27,10 +72,6 @@ class Farm::AI::Strategy {
         # say "selling = {$selling.perl} = ", $selling.WHICH;
         # say "buying = {$buying.perl} = ", $buying.WHICH;
         { :$with, :$selling, :$buying }
-    }
-
-    sub expand-trade(Pair $p --> Hash) { 
-        $p ?? { :type<trade>, expand-details($p) } !! Nil 
     }
 
     method trade(%p, @e) {
@@ -45,24 +86,4 @@ class Farm::AI::Strategy {
         self.debug("t    = ", %t);
         return %t; 
     }
-
-    method accept(%p, @e, $who) {
-        self.trace("p = ", {%p});
-        self.update(%p, @e);
-        my $stat = self.eval-trade($who);
-        self.trace("stat = ", $stat);
-        return $stat
-    }
-
-    multi method find-trade()          { self.trace("not the droids you're looking for .."); Nil }
-    multi method eval-trade()          { self.trace("not the droids you're looking for .."); Nil }
-
-    method update(%p, @e) {
-        %!p = inflate-posse-hash(%p);
-        @!e = @e; # XXX slow! 
-    }
-}
-
-=begin END
-
 
