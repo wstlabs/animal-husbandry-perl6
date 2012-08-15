@@ -1,6 +1,7 @@
 use v6;
 use Farm::Sim::Util;
 use Farm::Sim::Util::Search;
+use Farm::Sim::Posse;
 
 say table-counts;
 
@@ -16,6 +17,18 @@ say "dogs = ", @dogs.Int;
 
 my %t = hash map -> $k { $k => equiv-to($k).Int }, domestic-animals;
 say "t = ", %t;
+
+{
+    my $x = posse("d4c3");
+    my $y = posse("D3h3c6p5");
+    my @t = avail-d($x,$y);
+    # say "t = ", @t;
+    # for @t -> $k { say $k }
+    for avail-d($x,$y) -> $k { say $k }
+    my $z = posse("sr6");
+    for avail-d($x,$z) -> $k { say $k }
+    for avail-D($y,$x) -> $k { say $k }
+}
 
 
 

@@ -177,6 +177,14 @@ does  Farm::Sim::Posse::Role::Stringy  {
         self.avail($p.kv)
     }
 
+    method gimme { 
+        grep { worth($_) <= self.worth }, self.need 
+    } 
+
+    method wish  { 
+        my @need = self.need; 
+        (@need == 1) ?? @need.shift !! Nil
+    }
 }
 
 
@@ -216,6 +224,8 @@ multi sub infix:<⚤>(Farm::Sim::Posse $x,              Any $y --> Farm::Sim::Po
 multi sub infix:<⊳>(Farm::Sim::Posse $x,              Any $y --> Bool)              is export {  $x.contains-diversely($y) }
 multi sub infix:<⊲>(             Any $x, Farm::Sim::Posse $y --> Bool)              is export {  $y.contains-diversely($x) }
 
+=begin END
+
 
 # sub circumfix:["⎣","⎦"] (Farm::Sim::Posse $Q, Farm::Sim::Posse $P, Str $x) is export { $Q.avail($P,$x) } 
 # sub circumfix:<⌊ ⌋>(Farm::Sim::Posse $Q, Farm::Sim::Posse $P, Str $x) is export { $Q.avail($P,$x) } 
@@ -227,5 +237,5 @@ multi sub infix:<⊲>(             Any $x, Farm::Sim::Posse $y --> Bool)        
 
 
 
-=begin END
+
 
