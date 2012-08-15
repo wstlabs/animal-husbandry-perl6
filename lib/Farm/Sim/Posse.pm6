@@ -217,6 +217,12 @@ multi sub infix:<⊳>(Farm::Sim::Posse $x,              Any $y --> Bool)        
 multi sub infix:<⊲>(             Any $x, Farm::Sim::Posse $y --> Bool)              is export {  $y.contains-diversely($x) }
 
 
+# sub circumfix:["⎣","⎦"] (Farm::Sim::Posse $Q, Farm::Sim::Posse $P, Str $x) is export { $Q.avail($P,$x) } 
+# sub circumfix:<⌊ ⌋>(Farm::Sim::Posse $Q, Farm::Sim::Posse $P, Str $x) is export { $Q.avail($P,$x) } 
+# sub circumfix:<⎣⎦>(Farm::Sim::Posse $Q, Farm::Sim::Posse $P, Str $x) is export { $Q.avail($P,$x) } 
+# ===SORRY!===
+# Unable to find starter and stopper from ''
+# sub circumfix:["‹","›x"]($e){$e.floor}
 
 
 
