@@ -13,12 +13,12 @@ is    Farm::AI::Strategy  {
         my @gimme = $P.gimme;
         my $wish  = $P.wish;
         self.trace("S = $S");
-        self.trace("P = $P ↦ wish = $wish, need = ",@need,", gimme =",@gimme); 
+        self.trace("P = $P ↦ need = ",@need," ↦ $wish, [",@gimme,"]"); 
         if (my $x = $P.wish)  {
             self.debug("wish [$x]!");
             if ($x ∈ $S)  {
                 my @t = find-admissible-trades($P,$x);
-                self.trace("wish: $x => ", @t);
+                self.trace("wish: $P,$x => ", @t);
             }  else  {
                 self.trace("wish [$x] not available!");
             }
@@ -27,17 +27,17 @@ is    Farm::AI::Strategy  {
         for avail-D($S,$P) -> $x  {
             self.debug("doggy $x ?");
             my @t = find-admissible-trades($P,$x);
-            self.trace("doggy: $x => ", @t);
+            self.trace("doggy: $P,$x => ", @t);
         }
         for avail-d($S,$P) -> $x  {
             self.debug("doggy $x ?");
             my @t = find-admissible-trades($P,$x);
-            self.trace("doggy: $x => ", @t);
+            self.trace("doggy: $P,$x => ", @t);
         }
         for @gimme -> $x {
             self.debug("gimme $x ?");
             my @t = find-admissible-trades($P,$x);
-            self.trace("gimme: $x => ", @t);
+            self.trace("gimme: $P,$x => ", @t);
         }
         return Nil;
     }
