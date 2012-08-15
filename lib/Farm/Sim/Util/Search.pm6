@@ -1,5 +1,6 @@
 use Farm::Sim::Util;
 use Farm::Sim::Posse;
+use KeyBag::Ops;
 
 #
 # combinatorially generated table of trades equivalent to one
@@ -99,6 +100,10 @@ sub deref-to(Str $x) {
 
 sub equiv-to(Str $x) is export { deref-to($x).list }
 
+sub find-admissible-trades(Farm::Sim::Posse $p, Str $x) is export {
+    grep { $p ⊇ fly($_) }, equiv-to($x)
+}
+
 
 # flyweight pattern for posse instances - which, theoretically, should save a lot 
 # on construction costs -- but currently at the cost of volatility, in currently 
@@ -119,14 +124,18 @@ sub fly-stats is export { n => %F.keys.Int }
 # for trade, so that it might be worth searching for matching trades.
 multi sub avail-d(Farm::Sim::Posse $P, Farm::Sim::Posse $Q) is export {
     my $k = $P.avail('d',$Q);
-    ( map { "d$_" }, 1..$k ).reverse
+    ( map { $_ > 1 ?? "d$_" !! "d" }, 1..$k ).reverse
 }
 multi sub avail-D(Farm::Sim::Posse $P, Farm::Sim::Posse $Q) is export {
     my $k = $P.avail('D',$Q);
-    ( map { "D$_" }, 1..$k ).reverse
+    ( map { $_ > 1 ?? "D$_" !! "D" }, 1..$k ).reverse
 }
 multi sub avail-d(Pair $p) is export { avail-d($p.kv) }
 multi sub avail-D(Pair $p) is export { avail-D($p.kv) }
+
+
+
+
 
 =begin END
 

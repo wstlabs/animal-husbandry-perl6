@@ -18,9 +18,13 @@ multi MAIN($posse, $animal) {
     say "fly me = ", fly($posse);
     say "fly x  = ", fly($x);
     say "now...";
-    my @nice = find-trades($me,$x);
+    my @nice = find-all-trades($me,$x);
     say "found: $me => ", @nice;
     say fly-stats;
+}
+
+sub find-all-trades(Farm::Sim::Posse $p, Str $x)  {
+    grep { $p ⊇ fly($_) }, equiv-to($x)
 }
 
 sub find-equiv(Farm::Sim::Posse $p, Str $x)  {
@@ -32,9 +36,6 @@ sub find-equiv(Farm::Sim::Posse $p, Str $x)  {
     equiv-to($x)
 }
 
-sub find-trades(Farm::Sim::Posse $p, Str $x)  {
-    grep { $p ⊇ fly($_) }, equiv-to($x)
-}
 
 =begin END
 
