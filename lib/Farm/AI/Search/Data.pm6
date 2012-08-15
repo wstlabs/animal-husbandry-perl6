@@ -100,43 +100,30 @@ constant %D = {
 };
 
 
-# looks slightly hackish, but necessary to make sure that we don't
-# pull up animals of the type we're looking to trade using! 
+#
+# finds "downward-equivalent" trades for a given canonical search term $x.
+#
+# again, what this means is:  "all valid matching trades on animals of 
+# *equal or lessor rank* to the symbol in $x, but not including animals 
+# of that symbol; and also limited by the initial values of what's in 
+# the stock." 
+#
+# looks slightly hackish, but basically this switch statement is the 
+# simplest way I could think of to cleanly and efficiently dispatch to 
+# lists of "downward-equivalent" trades.  anything more "symmetric" would 
+# have involved some system of aliasing (and perhaps a lot of grepping 
+# to remove dogful trades), and would have ended up looking even weirder.
 sub downward-equiv-to(Str $x) is export { 
-    $x eq 's'  ?? (<d r6>)  !! 
-    $x eq 'p'  ?? (<d2 ds s2 dr6 sr6 r12>)   !!
-    $x eq 'c'  ?? ('D',  %T{36}.list )    !!
-    $x eq 'h'  ?? ('D2', %T{72}.list )    !!
-    $x eq 'D'  ?? ('c',  %T{36}.list )    !!
-    %D.exists($x) ?? %D{$x}.list !!
-        die "invalid search term '$x'"
+    $x eq 's'  ?? (<d r6>)                            !! 
+    $x eq 'p'  ?? (<d2 ds s2 dr6 sr6 r12>)            !!
+    $x eq 'c'  ?? ('D',  %T{36}.list )                !!
+    $x eq 'h'  ?? ('D2', %T{72}.list )                !!
+    $x eq 'D'  ?? ('c',  %T{36}.list )                !!
+    $x eq 'D2' ?? ('h',  %T{72}.list ).grep({!m/D/})  !!
+    %D.exists($x) ?? %D{$x}.list !! die "invalid search term '$x'"
 }
-    # $x eq 'D2' ?? ('h',  %T{'h'}.list ).grep{!m/D/} !!
 
 
 =begin END
 
-#
-# and aliases of doggy trades which have the same worth (and hence,  
-# map to the same equivalence class) as the single-char animal trades.
-#
-constant %A = 
-hash < 
-    d  s
-    d2 p
-    D  c
-    D2 h 
->;
-
-
-# a simple alias which "binds" animal symbols of equivalent worth
-# and also loudly fails if we're not given a valid animal symbol
-sub deref-to(Str $x) {
-    %T.exists($x) ?? %T{$x}       !! 
-    %D.exists($x) ?? %D{$x}       !! 
-    %A.exists($x) ?? %T{ %A{$x} } !!  die "invalid animal search term '$x'"
-}
-
-     s => [<d s r6>],
-     p => [<d2 ds s2 dr6 sr6 r12>], # omit p
 
