@@ -1,16 +1,13 @@
 use Farm::AI::Strategy;
 use Keybag::Ops;
 
-#
-# basically just does some clumsy 'if-then' switches we came up
-# with until something happens.  might reach winning state, or not, 
-# but at least it has a chance.
-#
+# an an obviously boring and tedious strategy, but which at least
+# does some basic hill climbing, and so might reach the winning state,
+# eventually.
 class Farm::AI::Boring
 is    Farm::AI::Strategy  {
 
     sub find-pair(Farm::Sim::Posse $s, Farm::Sim::Posse $p)  {
-        # say "::find-pair p = ",$p.WHICH;
         if ( $p{'D'} < 2 && $s{'D'} > 0)  {
             return ('c'  => 'D') if $p{'c'} >= 1;
             return ('p3' => 'D') if $p{'p'} >= 3;
@@ -38,82 +35,23 @@ is    Farm::AI::Strategy  {
     }
 
     method find-trade()  {
-        self.trace("player = ", $.player);
-        my $me     = self.posse($.player);
-        # self.trace("me = ", $me);
-        my $stock = self.posse('stock');
-        # self.trace("p = ", self.p);
-        # self.trace("me = $me, need = ", $me.need); 
-        # self.trace("me = ", $me.WHICH);
-        # self.trace("me = ", $me.hash);
-        my $pair = find-pair($stock,$me); 
-        self.trace("pair = ", $pair.WHICH, " = ", $pair);
-        return $pair ?? ( stock => $pair ) !! Nil
+        self.debug("player = ", $.player);
+        my $P = self.posse($.player);
+        my $S = self.posse('stock');
+        self.trace("S = $S, P = $P");
+        my $pair = find-pair($S,$P); 
+        return $pair ?? ( stock => $pair ) !! Nil;
     }
 
-
-
     method eval-trade($who)  {
-        self.trace("p = ", self.p);
         return Bool.roll
     } 
 
 }
 
 =begin END
-    has %!Ds6 = {
-        type => "trade", with => "stock",
-        buying  => { big_dog => 1 },
-        selling => { sheep   => 6 }, 
-    };
 
-    has %!Dp3 = {
-        type => "trade", with => "stock",
-        buying  => { big_dog => 1 },
-        selling => { pig     => 3 }, 
-    };
-
-    has %!Dc = {
-        type => "trade", with => "stock",
-        buying  => { big_dog => 1 },
-        selling => { cow     => 1 }, 
-    };
-
-    has %!cs6 = {
-        type => "trade", with => "stock",
-        buying  => { cow     => 1 },
-        selling => { sheep   => 6 }, 
-    };
-
-
-    has %!cp3 = {
-        type => "trade", with => "stock",
-        buying  => { cow     => 1 },
-        selling => { pig     => 3 }, 
-    };
-
-    has %!ds = {
-        type => "trade", with => "stock",
-        buying  => { small_dog => 1 },
-        selling => { sheep     => 1 }, 
-    };
-
-    has %!dr6 = {
-        type => "trade", with => "stock",
-        buying  => { small_dog => 1 }, 
-        selling => { rabbit    => 6 }, 
-    };
-
-    has %!ps2 = {
-        type => "trade", with => "stock",
-        buying  => { pig    => 1 },
-        selling => { sheep  => 2 }, 
-    };
-
-    has %!sr6 = {
-        type => "trade", with => "stock",
-        buying  => { sheep  => 1 },
-        selling => { rabbit => 6 }, 
-    };
-
+# wtf?  this line was generating "can't parse blockoid" 
+# errors, the other day.  
+self.debug ("pair = ", $pair.WHICH, " = ", $pair);
 
