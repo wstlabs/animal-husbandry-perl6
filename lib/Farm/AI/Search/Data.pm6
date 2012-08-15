@@ -88,17 +88,29 @@ constant %T = {
     >]
 };
 
+#
+# and aliases of doggy trades which have the same worth (and hence,  
+# map to the same equivalence class) as the single-char animal trades.
+#
+constant %D = 
+hash < 
+    d  s
+    d2 p
+    D  c
+    D2 h 
+>;
 
 
 # a simple alias which "binds" animal symbols of equivalent worth
 # and also loudly fails if we're not given a valid animal symbol
 sub deref-to(Str $x) {
-        $x eq 'd' ?? %T{'s'} !! 
-        $x eq 'D' ?? %T{'c'} !! 
-    %T.exists($x) ?? %T{$x}  !! die "invalid animal search term '$x'"
+    %T.exists($x) ?? %T{$x}       !! 
+    %D.exists($x) ?? %T{ %D{$x} } !!  die "invalid animal search term '$x'"
 }
 
-# our preferred external interface to this table
+#
+# our preferred external interface to this table.
+#
 sub downward-equiv-to(Str $x) is export { deref-to($x).list }
 
 
