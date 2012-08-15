@@ -3,6 +3,10 @@
 # search generation.
 #
 
+
+my constant @terms = < s p c h d d2 d3 d4 D D2 >;
+sub canon-search-terms is export { @terms }
+
 # equivalence classes of "downward" trades, i.e. less than or equal to 
 # in rank (i.e. worth in trade).  we present this table in the form of
 # two hash-of-list structures, being as one part of the data is in a
@@ -12,11 +16,8 @@
 # downward trades for the 5 core ("frisky") animals, <r s p c h>. 
 #
 constant %T = { 
-    'r' => [<r>],
-    's' => [<d s r6>],
-    'p' => [<p d2 ds s2 dr6 sr6 r12>],
-    'c' => [<
-        D c
+    # omit D,c
+    36 => [<  
         p3 
         p2d2 p2ds p2s2 p2dr6 p2r12 p2sr6 
         pd4 
@@ -28,9 +29,9 @@ constant %T = {
         d3s3 d3s2r6 d3sr12 d3r18 
         d2s4 d2s3r6 d2s2r12 d2sr18 d2r24 
         ds5 ds4r6 ds3r12 ds2r18 dsr24 dr30 
-        s6 s5r6 s4r12 s3r18 s2r24 sr30 r36 >],
-    'h' => [<
-        h
+        s6 s5r6 s4r12 s3r18 s2r24 sr30 r36 >], 
+     # omit h, D
+     72 => [<  
         D2 Dc 
         Dp3 
         Dp2d2 Dp2dr6 Dp2ds Dp2r12 Dp2s2 Dp2sr6 
@@ -92,16 +93,28 @@ constant %T = {
 # basically generated the same way as for canonical trades, but we filter  
 # out the 'd' terms (to make sure we aren't trading dogs for dogs!)
 constant %D = { 
-    'd3' => [< 
-        pd pr6 ps 
-        s3 s2r6 sr12 r18 
-    >], 
-    'd4' => [<
-        pd2 pds pdr6 
-        p2 pr12 psr6 ps2 
-        s4 s3r6 s2r12 sr18 r24 
-    >]
+    'd'  => [<s r6>],
+    'd2' => [<s2 r6 sr6 r12>],
+    'd3' => [< pd pr6 ps s3 s2r6 sr12 r18 >], 
+    'd4' => [< pd2 pds pdr6 p2 pr12 psr6 ps2 s4 s3r6 s2r12 sr18 r24 >]
 };
+
+
+# looks slightly hackish, but necessary to make sure that we don't
+# pull up animals of the type we're looking to trade using! 
+sub downward-equiv-to(Str $x) is export { 
+    $x eq 's'  ?? (<d r6>)  !! 
+    $x eq 'p'  ?? (<d2 ds s2 dr6 sr6 r12>)   !!
+    $x eq 'c'  ?? ('D',  %T{36}.list )    !!
+    $x eq 'h'  ?? ('D2', %T{72}.list )    !!
+    $x eq 'D'  ?? ('c',  %T{36}.list )    !!
+    %D.exists($x) ?? %D{$x}.list !!
+        die "invalid search term '$x'"
+}
+    # $x eq 'D2' ?? ('h',  %T{'h'}.list ).grep{!m/D/} !!
+
+
+=begin END
 
 #
 # and aliases of doggy trades which have the same worth (and hence,  
@@ -124,11 +137,6 @@ sub deref-to(Str $x) {
     %A.exists($x) ?? %T{ %A{$x} } !!  die "invalid animal search term '$x'"
 }
 
-#
-# our preferred external interface to this table.
-#
-sub downward-equiv-to(Str $x) is export { deref-to($x).list }
-
-
-=begin END
+     s => [<d s r6>],
+     p => [<d2 ds s2 dr6 sr6 r12>], # omit p
 

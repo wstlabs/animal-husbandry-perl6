@@ -11,16 +11,17 @@ multi MAIN($posse, $animal) {
     my $me  = posse($posse); 
     my $x  := $animal; # shorthand 
     say "$me seeks $x!";
-    my @t = find-equiv($me,$x);
+    my @t = downward-equiv-to($x);
     say "found: ",@t.Int," = ", @t;
     say "found: ",@t.WHICH;
+    say "found: ", @t;
     say "dogful   = ", grep {  m/<[dD]>/ }, @t; 
     say "dogless  = ", grep { !m/<[dD]>/ }, @t; 
     say "fly me = ", fly($posse);
     say "fly x  = ", fly($x);
     say "now...";
     my @nice = find-all-trades($me,$x);
-    say "found: $me => ", @nice;
+    say "found: $me seeks $x => ", @nice;
     say fly-stats;
 }
 
