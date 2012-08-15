@@ -2,6 +2,7 @@ use v6;
 use Farm::Sim::Util;
 use Farm::Sim::Posse;
 use Farm::AI::Util::Search;
+use Farm::AI::Util::Search::Data;
 use KeyBag::Ops;
 
 multi MAIN($posse, $animal) {
@@ -24,7 +25,7 @@ multi MAIN($posse, $animal) {
 }
 
 sub find-all-trades(Farm::Sim::Posse $p, Str $x)  {
-    grep { $p ⊇ fly($_) }, equiv-to($x)
+    grep { $p ⊇ fly($_) }, downward-equiv-to($x)
 }
 
 sub find-equiv(Farm::Sim::Posse $p, Str $x)  {
@@ -33,7 +34,7 @@ sub find-equiv(Farm::Sim::Posse $p, Str $x)  {
     my $need = worth($x); 
     say "::find-equiv |$p| = $have -> |$x| = $need"; 
     return [] unless $have >= $need;
-    equiv-to($x)
+    downward-equiv-to($x)
 }
 
 

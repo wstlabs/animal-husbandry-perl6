@@ -2,20 +2,21 @@ use v6;
 use Farm::Sim::Util;
 use Farm::Sim::Posse;
 use Farm::AI::Util::Search;
+use Farm::AI::Util::Search::Data;
 
 say table-counts;
 
-my $x = equiv-to('h');
+my $x = downward-equiv-to('h');
 say "x = ", $x.WHICH;
 
-my @piggy = equiv-to('h').grep(/p/);
+my @piggy = downward-equiv-to('h').grep(/p/);
 say "piggy = ", @piggy.Int;
-say "doggy   = ", equiv-to('h').grep(/<[dD]>/).Int;
+say "doggy   = ", downward-equiv-to('h').grep(/<[dD]>/).Int;
 
-my @dogs = grep /<[d]>/, equiv-to('h');
+my @dogs = grep /<[d]>/, downward-equiv-to('h');
 say "dogs = ", @dogs.Int;
 
-my %t = hash map -> $k { $k => equiv-to($k).Int }, domestic-animals;
+my %t = hash map -> $k { $k => downward-equiv-to($k).Int }, domestic-animals;
 say "t = ", %t;
 
 {
