@@ -1,4 +1,5 @@
 use Farm::AI::Strategy;
+use Farm::Sim::Util::Search;
 use Keybag::Ops;
 
 class Farm::AI::Naive
@@ -14,11 +15,11 @@ is    Farm::AI::Strategy  {
             my ($x) = @need;
             self.trace("close [$x]!");
         }  
-        for $S{'D'}...1 -> $k  {      
-            self.trace("got D$k ?") 
+        for avail-D($S,$P) -> $x  {      
+            self.trace("got $x ?") 
         }
-        for $S{'d'}...1 -> $k  {      
-            self.trace("got d$k ?") 
+        for avail-d($S,$P) -> $x  {      
+            self.trace("got $x ?") 
         }
         for @need -> $x {
             self.trace("got $x ?") 
