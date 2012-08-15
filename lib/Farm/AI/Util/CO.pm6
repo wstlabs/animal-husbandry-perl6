@@ -1,10 +1,18 @@
 use v6;
 use Farm::Sim::Util;
-use Farm::Sim::Util::Poly;
 use Farm::Sim::Posse; 
+use Farm::AI::Util::Poly;
 use KeyBag::Ops; 
 
 
+# mercilessly spews a freeform list of tuple equivalence classes.  in general
+# this is done only as a manual, "out-of-band" step to provide boilerplate to 
+# populate the tables over in Farm::AI::Util::Search::Data, which is where
+# the official reference data sets live.
+#
+# note that some of the generation steps can take several seconds, and
+# the final step (for 'h' or 'D2' equivalences) can around 2-3 minutes, 
+# depending perhaps on what compiler you're running.
 sub kombify() is export  { 
     my @s = [<r>]           ∘∘ 6; say @s;  #   1 sheep-equivalent tuple  -> r6
     my @p = ( <d s>, @s)    ∘∘ 2; say @p;  #   5   pig-equivalent tuples -> <d s r6>

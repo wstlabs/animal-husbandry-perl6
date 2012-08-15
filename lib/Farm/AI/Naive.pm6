@@ -1,6 +1,6 @@
-use Farm::AI::Strategy;
-use Farm::Sim::Util::Search;
 use Farm::Sim::Util;
+use Farm::AI::Strategy;
+use Farm::AI::Util::Search;
 use Keybag::Ops;
 
 class Farm::AI::Naive
