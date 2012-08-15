@@ -4,8 +4,6 @@
 #
 
 
-my constant @terms = < s p c h d d2 d3 d4 D D2 >;
-sub canon-search-terms is export { @terms }
 
 # equivalence classes of "downward" trades, i.e. less than or equal to 
 # in rank (i.e. worth in trade).  we present this table in the form of
@@ -114,6 +112,7 @@ constant %D = {
 # have involved some system of aliasing (and perhaps a lot of grepping 
 # to remove dogful trades), and would have ended up looking even weirder.
 sub downward-equiv-to(Str $x) is export { 
+    $x eq 'r'  ?? ()                                  !! 
     $x eq 's'  ?? (<d r6>)                            !! 
     $x eq 'p'  ?? (<d2 ds s2 dr6 sr6 r12>)            !!
     $x eq 'c'  ?? ('D',  %T{36}.list )                !!
@@ -122,6 +121,10 @@ sub downward-equiv-to(Str $x) is export {
     $x eq 'D2' ?? ('h',  %T{72}.list ).grep({!m/D/})  !!
     %D.exists($x) ?? %D{$x}.list !! die "invalid search term '$x'"
 }
+
+# ie, valid args to the function above. 
+my constant @terms = < r s p c h d d2 d3 d4 D D2 >;
+sub canon-search-terms is export { @terms }
 
 
 =begin END
