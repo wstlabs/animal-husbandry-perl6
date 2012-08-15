@@ -1,7 +1,7 @@
 use v6;
 use Farm::Sim::Util;
-use Farm::Sim::Util::Search;
 use Farm::Sim::Posse;
+use Farm::AI::Util::Search;
 
 say table-counts;
 
