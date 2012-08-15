@@ -158,6 +158,25 @@ does  Farm::Sim::Posse::Role::Stringy  {
     # (2,3) - (0,2) = (2,1) => yes 
     # (2,3) - (2,0) = (0,3) => no 
     #
+
+    # an awkwardly named function which computes a quick upper bound on 
+    # the number of animal $x that can be bought by posse $P. 
+    #
+    # although this number is computable for any domestic animal $x, 
+    # generally it's only in cases when when the posse $P wants to buy 
+    # a multiple that animal from us, i.e. when $x = 'd'|'D'.
+    #
+    multi method avail(Str $x, Farm::Sim::Posse $P) is export {
+        die "invalid short animal string '$x'" unless is-domestic-animal($x);
+        my $k = self.at_key($x) // return 0;
+        my $w = $P.worth;
+        while (worth($x) * $k > $w) { $k-- }
+        $k
+    }
+    multi method avail(Pair $p)  {
+        self.avail($p.kv)
+    }
+
 }
 
 
@@ -187,6 +206,9 @@ multi sub posse($arg)  is export {
     }
 }
 sub posse-from-long(%h) is export { posse(long2short(%h)) }
+
+
+
 
 
 # go forth and multiply!

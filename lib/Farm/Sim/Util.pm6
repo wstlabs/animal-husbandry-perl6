@@ -113,7 +113,8 @@ multi sub worth (Str $x    --> Int) is export {
 # without converting it to Posse object, without creating a dependency 
 # loop between the two modules.
 
-
-
 =begin END
+
+ ‹d› 
+ ‹D› 
 
