@@ -177,13 +177,38 @@ does  Farm::Sim::Posse::Role::Stringy  {
         self.avail($p.kv)
     }
 
+    # as in, "gimme some of these".  a quantifier, typically used after
+    # the insurance collection phase, which provides a list of animals that
+    # the posse needs, and can potentially afford.  unlike .need and .base,
+    # we provide the animals in increasing order, on the theory that those
+    # are the ones more natural to search for (all other factors, such as
+    # stock availability, being equal).
+    #
+    # note that the gimme set is mutually exclusive with the wish set;
+    # this is to avoid attempting to match the same high-value animal twice. 
+    #
     method gimme { 
-        grep { worth($_) <= self.worth }, self.need 
+        my @need = self.need; 
+        @need > 1 ?? 
+            grep { worth($_) <= self.worth }, @need.reverse 
+        !! ()
     } 
 
+    # a quantifier which, if we have one and only one animal left to trade for, 
+    # returns that animal, else returns an empty list.  by design, the wish set 
+    # is mutually exclusive with the gimme set.
+    #
+    # note that we don't do cost filtering, like we do for the 'gimme' list.
+    # this is in part because if we're at the point where we have enough 
+    # diversity in our posse to have 4 of 5 animal types, then we almost 
+    # certainly can afford all animal types (even horses) anyway.
+    #
+    # but also, making this quantifier cost-blind means that it can also be
+    # used as a boolean quantifier, to signify that we're close to the winning  
+    # state.
     method wish  { 
         my @need = self.need; 
-        (@need == 1) ?? @need.shift !! Nil
+        @need == 1 ?? @need.shift !! () 
     }
 }
 
