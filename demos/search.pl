@@ -32,12 +32,5 @@ say "t = ", %t;
 }
 
 
-
 =begin END
-my @dogs = equiv-to('D').Int;
-my @dogs = grep /[dD]/, equiv-to('h');
-say "doggy   = ", equiv-to('h').grep( /[dD]/ ).Int;
-say "dogless = ", equiv-to('h').grep( !/d/   ).Int;
-# say "dogless = ", equiv-to('h').grep({ !/[dD]/ }).Int;
-
 
