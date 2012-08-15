@@ -201,18 +201,3 @@ multi sub infix:<⊲>(             Any $x, Farm::Sim::Posse $y --> Bool)        
 
 =begin END
 
-    # method worth { worth-in-trade(self) }
-
-    #    my @t = self.radix Z- $p.radix; 
-    #    ?( any(@t) <= 0 )
-    #   ?( all(@t) >= 0 ) && ?( any(@t) == 0 )
-
-constant %weights = { 
-    r => 1, s => 6, p => 12, c => 30, h => 72,
-    d => 6, D => 12 
-};
-
-
-# use X::Farm::Sim;
-# X::Farm::Sim::Dice::Invalid::Roll.new( r => $r);
-

@@ -114,9 +114,3 @@ sub fly-stats is export { n => %F.keys.Int }
 
 =begin END
 
-
-sub table-counts is export {
-    hash map -> $k,$v {
-        $k => $v.Int 
-    }, %T.kv
-}
