@@ -5,22 +5,23 @@ class Farm::AI::Naive
 is    Farm::AI::Strategy  {
 
     method find-trade()  {
-        my $stock = self.posse('stock');
-        my $me    = self.posse($.player);
-        my @need  = $me.need; 
-        self.trace("p = ", self.p);
-        self.trace("me = $me, need = ", @need); 
+        my $S     = self.posse('stock');
+        my $P     = self.posse($.player);
+        my @need  = $P.need;
+        self.trace("S = $S");
+        self.trace("P = $P ↦ ", @need); 
         if (@need == 1)  {
-            self.trace("close!");
+            my ($x) = @need;
+            self.trace("close [$x]!");
+        }  
+        for $S{'D'}...1 -> $k  {      
+            self.trace("got D$k ?") 
         }
-        for <D2 D> -> $D { 
-            self.trace("big $D ?") 
-        }
-        for <d4 d3 d2 d> -> $d { 
-            self.trace("small $d ?") 
+        for $S{'d'}...1 -> $k  {      
+            self.trace("got d$k ?") 
         }
         for @need -> $x {
-            self.trace("need $x ?") 
+            self.trace("got $x ?") 
         }
         return Nil;
     }
