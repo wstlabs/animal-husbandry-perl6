@@ -1,6 +1,10 @@
+#
+# basically the same as carl's original Example strategy,
+# except that it emits a trade ( r6 => s ) that we're rather
+# more likely to see in the first few turns of a simulation.
+# 
 class Farm::AI::Dumb {
     has Str $.player;
-    has $.debug = 2;
 
     has %!t = {
         type => "trade",
@@ -9,37 +13,12 @@ class Farm::AI::Dumb {
         buying  => { sheep => 1 },
     }
 
-    method info(*@a)   { if ($!debug > 0)  { say @a } }
-    method trace(*@a)  { if ($!debug > 1)  { say @a } }
-    method debug(*@a)  { if ($!debug > 2)  { say @a } }
-
-    has Bool $.done is rw = False;
     method trade(%p, @e) {
-        self.trace("::trade [$.player] p = ", {%p});
-        #    unless $.done = True;
-        # my $roll = Bool.roll;
-        # say "[$.player] t ? $roll; e = {@e.Int}"; 
-        # my %t = $roll ?? %!t !! Nil;
-        my %t = %!t;
-        self.trace("::trade [$.player] t = ", {%t});
-        return %t;
-    
+        return %!t;
     }
 
     method accept(%p, @e, $who) {
-        self.trace("::trade [$.player] p = ", {%p});
-        my $roll = Bool.roll;
-        # say "[$.player] a $who ? e = {@e.Int}"; 
-        # say "[$.player] r : $roll";
-        return $roll
+        return Bool.roll 
     }
 }
-
-
-=begin END
-
-    sub nice (@e) {
-        my $n = @e;
-        return "n = $n; {@e.perl}"
-    }
 

@@ -1,19 +1,20 @@
+#
+# equiavalent to the 'Dumb' strategy, but refactored to use the
+# abstract Strategy class as a base (also, we uniformly reject all 
+# offered trades, instead of rolling a dice). 
+#
 use Farm::AI::Strategy;
-use Keybag::Ops;
 
 class Farm::AI::Empty
 is    Farm::AI::Strategy  {
 
     method find-trade()  {
-        return 'r6' => 's'
+        return ( stock => ('r6' => 's') )
     }
 
     method eval-trade($who)  {
-        self.trace("p = ", self.p);
-        return Bool.roll
+        return False 
     } 
 
 }
-
-=begin END
 
