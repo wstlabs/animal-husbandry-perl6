@@ -7,6 +7,8 @@ use Farm::AI::Util::CO;
 # the final step (for 'h' or 'D2' equivalences) can take about 3 minutes,
 # depending perhaps on what compiler you're running.
 #
-kombify();
+my %S = kombify();
+say %S;
+
 
 

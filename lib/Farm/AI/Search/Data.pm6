@@ -88,11 +88,26 @@ constant %T = {
     >]
 };
 
+# non-canonical "dog-to-many" trades.
+# basically generated the same way as for canonical trades, but we filter  
+# out the 'd' terms (to make sure we aren't trading dogs for dogs!)
+constant %D = { 
+    'd3' => [< 
+        pd pr6 ps 
+        s3 s2r6 sr12 r18 
+    >], 
+    'd4' => [<
+        pd2 pds pdr6 
+        p2 pr12 psr6 ps2 
+        s4 s3r6 s2r12 sr18 r24 
+    >]
+};
+
 #
 # and aliases of doggy trades which have the same worth (and hence,  
 # map to the same equivalence class) as the single-char animal trades.
 #
-constant %D = 
+constant %A = 
 hash < 
     d  s
     d2 p
@@ -105,7 +120,8 @@ hash <
 # and also loudly fails if we're not given a valid animal symbol
 sub deref-to(Str $x) {
     %T.exists($x) ?? %T{$x}       !! 
-    %D.exists($x) ?? %T{ %D{$x} } !!  die "invalid animal search term '$x'"
+    %D.exists($x) ?? %D{$x}       !! 
+    %A.exists($x) ?? %T{ %A{$x} } !!  die "invalid animal search term '$x'"
 }
 
 #
