@@ -6,8 +6,8 @@ plan *;
 
 {
     my $p = posse("dsr2");
-    is_deeply [ $p.base ], [< r s >],   ".base";
-    is_deeply [ $p.need ], [< p c h >], ".need";
+    is_deeply [ $p.base ], [< s r >],   ".base";
+    is_deeply [ $p.need ], [< h c p >], ".need";
 }
 
 
