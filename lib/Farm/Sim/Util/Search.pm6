@@ -111,6 +111,12 @@ multi sub fly(             Str $x --> Farm::Sim::Posse) is export {
 }
 sub fly-stats is export { n => %F.keys.Int }
 
+
+# simple quantifiers which provide a list of available small (or big) dogs,
+# respectively, which are owned by $P and which $Q can (nominally) afford to buy.
+# Note that this -doesn't- mean that $Q has animals available for trade to buy 
+# these dogs from $P; just that in principle it has enough animals available 
+# for trade, so that it might be worth searching for matching trades.
 multi sub avail-d(Farm::Sim::Posse $P, Farm::Sim::Posse $Q) is export {
     my $k = $P.avail('d',$Q);
     ( map { "d$_" }, 1..$k ).reverse
