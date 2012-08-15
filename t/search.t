@@ -4,7 +4,7 @@
 use v6;
 BEGIN { @*INC.unshift: './lib'; }
 use Farm::Sim::Posse;
-use Farm::AI:Util::Search;
+use Farm::AI:Search;
 use KeyBag::Ops;
 use Test;
 plan *;

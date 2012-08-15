@@ -7,8 +7,8 @@ use KeyBag::Ops;
 
 # mercilessly spews a freeform list of tuple equivalence classes.  in general
 # this is done only as a manual, "out-of-band" step to provide boilerplate to 
-# populate the tables over in Farm::AI::Util::Search::Data, which is where
-# the official reference data sets live.
+# populate the tables over in Farm::AI::Search::Data, which is where the 
+# official reference data sets actually live.
 #
 # note that some of the generation steps can take several seconds, and
 # the final step (for 'h' or 'D2' equivalences) can around 2-3 minutes, 

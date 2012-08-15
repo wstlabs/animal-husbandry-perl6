@@ -1,8 +1,15 @@
-use KeyBag::Ops;
+#
+# a little stash space for canned data used e.g. for combinatorial 
+# search generation.
+#
+
+# equivalence classes of "downward" trades, i.e. less than or equal to 
+# in rank (i.e. worth in trade).  we present this table in the form of
+# two hash-of-list structures, being as one part of the data is in a
+# sense more canonical than the other.
 
 #
-# combinatorially generated table of trades equivalent to one
-# of the 5 core ("frisky") animals, <r s p c h>. 
+# downward trades for the 5 core ("frisky") animals, <r s p c h>. 
 #
 constant %T = { 
     'r' => [<r>],
@@ -82,19 +89,17 @@ constant %T = {
 };
 
 
-#
-# ...and our extenal interface to this table.  
-#
+
 # a simple alias which "binds" animal symbols of equivalent worth
 # and also loudly fails if we're not given a valid animal symbol
 sub deref-to(Str $x) {
         $x eq 'd' ?? %T{'s'} !! 
         $x eq 'D' ?? %T{'c'} !! 
-    %T.exists($x) ?? %T{$x}  !! die "invalid (non-domestic) animal symbol '$x'"
+    %T.exists($x) ?? %T{$x}  !! die "invalid animal search term '$x'"
 }
 
+# our preferred external interface to this table
 sub downward-equiv-to(Str $x) is export { deref-to($x).list }
-
 
 
 =begin END

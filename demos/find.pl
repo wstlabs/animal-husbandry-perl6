@@ -1,8 +1,8 @@
 use v6;
 use Farm::Sim::Util;
 use Farm::Sim::Posse;
-use Farm::AI::Util::Search;
-use Farm::AI::Util::Search::Data;
+use Farm::AI::Search;
+use Farm::AI::Search::Data;
 use KeyBag::Ops;
 
 multi MAIN($posse, $animal) {

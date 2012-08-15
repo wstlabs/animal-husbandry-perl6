@@ -1,6 +1,6 @@
 use Farm::Sim::Util;
 use Farm::Sim::Posse;
-use Farm::AI::Util::Search::Data;
+use Farm::AI::Search::Data;
 use KeyBag::Ops;
 
 sub table-counts is export {
