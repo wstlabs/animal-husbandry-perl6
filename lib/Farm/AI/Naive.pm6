@@ -7,6 +7,11 @@ class Farm::AI::Naive
 is    Farm::AI::Strategy  {
 
     method find-trade()  {
+        my $pair = self.find-stock-trade;
+        return ( stock => $pair) if $pair
+    }
+
+    method find-stock-trade()  {
         my $S     = self.posse('stock');
         my $P     = self.posse($.player);
         my @need  = $P.need;
@@ -27,17 +32,32 @@ is    Farm::AI::Strategy  {
         for avail-D($S,$P) -> $x  {
             self.debug("doggy $x ?");
             my @t = find-admissible-trades($P,$x);
-            self.trace("doggy: $P,$x => ", @t);
+            if (@t)  {
+                my $y = @t.pick;
+                self.trace("doggy: $P,$x => ", @t, " => $y!");
+                return ( $y => $x )
+            }
+            else  { self.trace("doggy: $P,$x => ", @t) }
         }
         for avail-d($S,$P) -> $x  {
             self.debug("doggy $x ?");
             my @t = find-admissible-trades($P,$x);
-            self.trace("doggy: $P,$x => ", @t);
+            if (@t)  {
+                my $y = @t.pick;
+                self.trace("doggy: $P,$x => ", @t, " => $y!");
+                return ( $y => $x )
+            }
+            else  { self.trace("doggy: $P,$x => ", @t) }
         }
         for @gimme -> $x {
             self.debug("gimme $x ?");
             my @t = find-admissible-trades($P,$x);
-            self.trace("gimme: $P,$x => ", @t);
+            if (@t)  {
+                my $y = @t.pick;
+                self.trace("gimme: $P,$x => ", @t, " => $y!");
+                return ( $y => $x )
+            }
+            else  { self.trace("doggy: $P,$x => ", @t) }
         }
         return Nil;
     }

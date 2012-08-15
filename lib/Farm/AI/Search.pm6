@@ -31,16 +31,25 @@ sub fly-stats is export { n => %F.keys.Int }
 # Note that this -doesn't- mean that $Q has animals available for trade to buy 
 # these dogs from $P; just that in principle it has enough animals available 
 # for trade, so that it might be worth searching for matching trades.
+
+# so returns some subset of the list <d4 d3 d2 d>
 multi sub avail-d(Farm::Sim::Posse $P, Farm::Sim::Posse $Q) is export {
     my $k = $P.avail('d',$Q);
     ( map { $_ > 1 ?? "d$_" !! "d" }, 1..$k ).reverse
 }
+# so returns some subset of the list <D2 D>
 multi sub avail-D(Farm::Sim::Posse $P, Farm::Sim::Posse $Q) is export {
     my $k = $P.avail('D',$Q);
     ( map { $_ > 1 ?? "D$_" !! "D" }, 1..$k ).reverse
 }
+# so returns some subset of the list <D2 D d4 d3 d2 d>
+multi sub avail-dogs(Farm::Sim::Posse $P, Farm::Sim::Posse $Q) is export {
+    return ( avail-D($P,$Q), avail-d($P,$Q) )
+}
 multi sub avail-d(Pair $p) is export { avail-d($p.kv) }
 multi sub avail-D(Pair $p) is export { avail-D($p.kv) }
+multi sub avail-dogs(Pair $p) is export { avail-dogs($p.kv) }
+
 
 
 

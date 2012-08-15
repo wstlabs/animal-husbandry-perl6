@@ -34,9 +34,14 @@ class Farm::AI::Strategy {
     }
 
     method trade(%p, @e) {
-        self.trace("p = ", {%p});
         self.update(%p, @e);
         my $pair = self.find-trade; 
+        self.trace("pair = ", $pair.WHICH);
+        self.trace("pair = ", $pair);
+        for $pair.kv -> $k,$v {
+            self.trace("k = $k = ", $k.WHICH);
+            self.trace("v = $v = ", $v.WHICH);
+        };
         my %t    = expand-trade($pair)   if $pair;
         return %t; 
     }
@@ -53,6 +58,7 @@ class Farm::AI::Strategy {
     multi method eval-trade()          { self.debug("not implemented in abstract class"); Nil }
 
     method update(%p, @e) {
+        self.debug("p = ", {%p});
         %!p = inflate-posse-hash(%p);
         @!e = @e; # XXX slow! 
     }
