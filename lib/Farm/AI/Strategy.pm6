@@ -64,22 +64,5 @@ class Farm::AI::Strategy {
 }
 
 =begin END
-    # method eval-trade(Str $who)  { die "not implemented in abstract class"; }
-
-    method posse (Str $name)  { 
-        # self.trace("name = $name");
-        # self.trace("xist = ", %!p.exists($name));
-        # self.trace("orig = ", %!p{$name}.WHICH);
-        # my $it = %!p{$name}.clone if %!p.exists($name);
-        # self.trace("it   = ", $it.WHICH);
-        # return $it
-        %!p{$name}.clone if %!p.exists($name);
-    }
-
-    sub pair2long(Pair $p) { 
-        my ($buying,$selling) = map { short2long($_) }, $p.kv;
-        return { :$buying, :$selling }
-    }
-    # sub stock-trade(Pair $p) { :type<trade>, :with<stock>, pair2long($p) } 
 
 
