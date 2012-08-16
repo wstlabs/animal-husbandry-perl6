@@ -312,60 +312,7 @@ class Farm::Sim::Game  {
     
 };
 
-
 =begin END
+⚤ "»» ..";
 
-    sub posse-from-long(%h) { posse(long2short(%h)) }
-
-constant %STOCK = {
-    r => 60, s => 24, p => 20, c => 12, h => 6, 
-    d =>  4, D =>  2
-};
-
-            # self.trace("::effect-trade cp = ", $cp ?? ~$cp !! '-invalid-');
-            # self.trace("::effect-trade op = ", $op ?? ~$op !! '-invalid-');
-
-    # if (%!t{$!cp} // -> %, @ {;})({%!p}, @.e) -> $_ {
-    # elsif not .{'selling'|'buying'}.values.reduce(&infix:<+>) == 1 {
-
-            sub fail_trade(%trade, $reason) {
-                self.publish: { 
-                    :type<failed>, :$reason, :trader($!cp),
-                    :trade(deepclone(%trade)) 
-                }
-            };
-
-⚤
-"»» ..";
-
-↦ U+21A6
-
-01234567890123456789012345678901234567890123456789012345678901234567890123456789
-
-        # XXX ugh. why won't this work in p6?
-        # my (%re,%te,@xtra) = @evens
-
-            say "play j = $!j";
-            say "ugh, ", $!j >= $!n;
-            # last if (defined $!n) && ($!j >= $!n);
-            # last if (@!r.Int > 0) && ($!j >= @!r);
-            last if defined($!n) && $!j >= $!n;
-            last if @!r.Int > 0  && $!j >= @!r;
-            say "play ..";
-            self.play-round() 
-
-            {
-                self.trace("selling = ", .<selling>.WHICH );
-                self.trace("buying  = ", .<buying>.WHICH );
-                self.trace("selling = ", .<selling> );
-                self.trace("buying  = ", .<buying> );
-                my %sell = .<selling>;
-                my %buy  = .<buying>;
-                self.trace("selling (long)  = ", {%sell}); 
-                self.trace("buying  (long)  = ", {%buy});
-                self.trace("selling (short) = ", long2short(%sell));
-                self.trace("buying  (short) = ", long2short(%buy));
-                # self.trace("selling = ", long2short(.<selling>));
-                # self.trace("buying  = ", long2short(.<buying>));
-            }
 
