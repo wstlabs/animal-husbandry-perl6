@@ -7,19 +7,25 @@ use Farm::Sim::Util::HashTup;
 my @frisky is ro = frisky-animals();
 
 #
-# A 'Posse' is any collection of animals that we might find together 
-# in some 'stable' configuration -- that is, without bloodshed immediately 
-# ensuing (so we exclude wolves and foxes.)
+# a 'Posse' is a collection of the valid animals in the Animal Husbandry
+# game, i.e. from the set
 #
-# In other words, any meaningful configuration of animals that we might
-# find together in between 'atomic' actions can be represented as a Posse. 
-# So Player / Stock state, as well as components of proposed trades (valid
-# or otherwise) can be represented as Posse objects.
+#    < r s p c h d D f w >
+#
+# As such they are the generic container for any use case in which we 
+# might need to find look at a collection of animals together: 
+#
+#   - a player's herd (or the animals available in the stock);
+#   - a buy / sell component of a proposed or active trade; 
+#   - a dice roll 
+#
+# That said, there are no other constraints imposed on the combination
+# of animals in a Posse instance -- so in particular, a Posse does not 
+# need to represent a valid instance of any of the above.
 #
 
-
 #
-# a simple stringify role, which we keep contained in a Role so
+# a simple stringify role, which we keep provide in a Role so
 # we can say ".does(Stringy)", at some point.
 #
 # note that by design stringify() will throw if we've managed to 
@@ -32,6 +38,7 @@ role Farm::Sim::Posse::Role::Stringy  {
         stringify-animals(self.hash)
     }
 }
+
 
 
 class Farm::Sim::Posse 
@@ -135,7 +142,8 @@ does  Farm::Sim::Posse::Role::Stringy  {
     }
 
     #
-    # move these to a test suite:
+    # some examples illustrating the above; these should be put 
+    # in a little unit test, perhaps:
     #
     # c2p3 > c      but not p3        (even though both ⊂ c2p3)
     # p3s4 > p2s2   but not p3,ps4
