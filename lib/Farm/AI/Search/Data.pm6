@@ -92,7 +92,7 @@ constant %T = {
 # out the 'd' terms (to make sure we aren't trading dogs for dogs!)
 constant %D = { 
     'd'  => [<s r6>],
-    'd2' => [<s2 r6 sr6 r12>],
+    'd2' => [<s2 sr6 r12>],
     'd3' => [< pd pr6 ps s3 s2r6 sr12 r18 >], 
     'd4' => [< pd2 pds pdr6 p2 pr12 psr6 ps2 s4 s3r6 s2r12 sr18 r24 >]
 };
