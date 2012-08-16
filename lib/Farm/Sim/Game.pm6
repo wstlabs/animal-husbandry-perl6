@@ -29,7 +29,7 @@ class Farm::Sim::Game  {
         %!p<stock> //= posse(stock-hash()); 
         $!dice     //= Farm::Sim::Dice.instance;
         $!j = 0;
-        say "LOUD = $!loud";
+        # say "LOUD = $!loud";
     }
 
     method reset  {
