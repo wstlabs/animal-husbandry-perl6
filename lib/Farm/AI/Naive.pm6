@@ -6,12 +6,12 @@ use Keybag::Ops;
 class Farm::AI::Naive
 is    Farm::AI::Strategy  {
 
-    method find-trade()  {
-        my $pair = self.find-stock-trade;
-        return ( stock => $pair) if $pair
+    method find-trade  {
+        my %trade = self.find-stock-trade;
+        %trade ?? { with => 'stock', %trade } !! Nil
     }
 
-    method find-stock-trade()  {
+    method find-stock-trade  {
         my $S     = self.posse('stock');
         my $P     = self.posse($.player);
         my @need  = $P.need;
@@ -29,13 +29,14 @@ is    Farm::AI::Strategy  {
             }
             
         }  
+        self.trace("dogful: ", avail-dogs($S,$P));
         for avail-D($S,$P) -> $x  {
             self.debug("doggy $x ?");
             my @t = find-admissible-trades($P,$x);
             if (@t)  {
                 my $y = @t.pick;
                 self.trace("doggy: $P,$x => ", @t, " => $y!");
-                return ( $y => $x )
+                return { selling => $y, buying => $x } 
             }
             else  { self.trace("doggy: $P,$x => ", @t) }
         }
@@ -45,17 +46,17 @@ is    Farm::AI::Strategy  {
             if (@t)  {
                 my $y = @t.pick;
                 self.trace("doggy: $P,$x => ", @t, " => $y!");
-                return ( $y => $x )
+                return { selling => $y, buying => $x } 
             }
             else  { self.trace("doggy: $P,$x => ", @t) }
         }
         for @gimme -> $x {
             self.debug("gimme $x ?");
-            my @t = find-admissible-trades($P,$x);
+            my @t = find-admissible-trades($P,$x).grep({!m/[dD]/});
             if (@t)  {
                 my $y = @t.pick;
                 self.trace("gimme: $P,$x => ", @t, " => $y!");
-                return ( $y => $x )
+                return { selling => $y, buying => $x } 
             }
             else  { self.trace("doggy: $P,$x => ", @t) }
         }

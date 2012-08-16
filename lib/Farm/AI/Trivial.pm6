@@ -7,9 +7,14 @@ use Farm::AI::Strategy;
 class Farm::AI::Trivial
 is    Farm::AI::Strategy  {
 
+    has %!t = {
+        with => "stock",
+        selling => "r6",
+        buying  => "s" 
+    }
+
     method find-trade()  {
-        my $pair = ( 'r6' => 's' );
-        return ( stock => $pair )
+        return %!t;
     }
 
     method eval-trade($who)  {

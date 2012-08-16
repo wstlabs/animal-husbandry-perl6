@@ -16,6 +16,40 @@ class Farm::AI::Strategy {
     method posse (Str $name)  { %!p{$name}.clone if %!p.exists($name) }
     method players { %!p.keys.sort }
 
+    sub expand(%t is copy)  {
+        # say ":: t = ", %t;
+        %t<buying>  = posse(%t<buying>).longhash;
+        %t<selling> = posse(%t<selling>).longhash;
+        %t
+    }
+
+    method trade(%p, @e) {
+        self.update(%p, @e);
+        my %trade = self.find-trade; 
+        # say ":: x = ", expand(%trade);
+        return { type => 'trade', expand(%trade) } if %trade; 
+    }
+
+    method accept(%p, @e, $who) {
+        self.trace("p = ", {%p});
+        self.update(%p, @e);
+        self.eval-trade($who)
+    }
+
+    # can be overridden by extension classes. 
+    # especially if you want them to do something useful.
+    multi method find-trade()          { self.debug("not implemented in abstract class"); Nil }
+    multi method eval-trade()          { self.debug("not implemented in abstract class"); Nil }
+
+    method update(%p, @e) {
+        self.debug("p = ", {%p});
+        %!p = inflate-posse-hash(%p);
+        @!e = @e; # XXX slow! 
+    }
+}
+
+=begin END
+
     #
     # allows for a somewhat more compact (positional) representation in 
     # our extension classes; e.g. they just need to say
@@ -46,50 +80,4 @@ class Farm::AI::Strategy {
         return %t; 
     }
 
-    method accept(%p, @e, $who) {
-        self.trace("p = ", {%p});
-        self.update(%p, @e);
-        self.eval-trade($who)
-    }
-
-    # can be overridden by extension classes. 
-    # especially if you want them to do something useful.
-    multi method find-trade()          { self.debug("not implemented in abstract class"); Nil }
-    multi method eval-trade()          { self.debug("not implemented in abstract class"); Nil }
-
-    method update(%p, @e) {
-        self.debug("p = ", {%p});
-        %!p = inflate-posse-hash(%p);
-        @!e = @e; # XXX slow! 
-    }
-}
-
-=begin END
-
-
-    sub expand-details(Pair $p --> Hash)  {
-        my ($with,$what) = $p.kv;
-        # say ":: with = ", $with;
-        # say ":: what = ", $what;
-        # say ":: what = ", $what.WHICH;
-        # say ":: what.kv   = ", $what.kv;
-        # say ":: kv   = ", $what.kv.WHICH;
-        my ($selling,$buying) = map { posse($_).longhash }, $what.kv;
-        # say "selling = {$selling.perl} = ", $selling.WHICH;
-        # say "buying = {$buying.perl} = ", $buying.WHICH;
-        { :$with, :$selling, :$buying }
-    }
-
-    method trade(%p, @e) {
-        self.trace("p = ", {%p});
-        self.update(%p, @e);
-        my $pair = self.find-trade(); 
-        self.debug("pair = ", $pair.WHICH);
-        self.debug("pair = {$pair.perl}");
-        my %d    = expand-details($pair) if $pair;
-        self.debug("d    = ", %d);
-        my %t    = expand-trade($pair)   if $pair;
-        self.debug("t    = ", %t);
-        return %t; 
-    }
 
