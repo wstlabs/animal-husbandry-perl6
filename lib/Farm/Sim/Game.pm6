@@ -16,6 +16,8 @@ class Farm::Sim::Game  {
     has $!n;         # (optional) last step 
     has @!r;         # (optional) canned roll sequence, for testing
     has $!debug;     # (optional) debug flag
+    has $!t0; 
+    has $!t1; 
     submethod BUILD(:%!p, :@!e, :$!cp = 'player_1', :%!tr, :%!ac, :$!n, :@!r, :$!debug = 0) {
         %!p<stock> //= posse(stock-hash()); 
         $!dice     //= Farm::Sim::Dice.instance;
@@ -51,14 +53,21 @@ class Farm::Sim::Game  {
     method players { %!p.keys.sort }
     method table { hash map -> $k,$v { $k => $v.Str      }, %!p.kv }
     method p     { hash map -> $k,$v { $k => $v.longhash }, %!p.kv }
-    method stats { return { j => $!j } }
+    method stats { 
+        return { j => $!j, dt => ($!t1 - $!t0).Real.Str } 
+    }
 
 
     #
     # play for a fixed number of rounds
     #
     multi method play(Int $n where { $n >= 0 })  {
-        self.play-round() for 1..$n;
+        $!t0 = now;
+        for (1..$n)  {
+            last if self.someone_won;
+            self.play-round();
+        }
+        $!t1 //= now;
         return self
     }
 
@@ -68,6 +77,7 @@ class Farm::Sim::Game  {
     #
     multi method play()  {
         while (1)  {
+            last if self.someone_won;
             last if defined($!n) && $!j >= $!n;
             last if @!r.Int > 0  && $!j >= @!r;
             self.play-round() 
@@ -78,7 +88,9 @@ class Farm::Sim::Game  {
     method play-round  {
         self.trace("j = $!j, cp = $!cp");
         self.play-trade;
+        return self.celebrate if self.someone_won; 
         self.play-roll;
+        return self.celebrate if self.someone_won; 
         self.incr;
         return self
     }
@@ -144,9 +156,10 @@ class Farm::Sim::Game  {
 
             my $truncated = $op ∩ $buying;
             my $remark = $truncated ⊂ $buying ?? " (truncated => $truncated)" !! ""; 
-            self.info("SWAP $!cp ↦",.<with>,": $selling <=> $buying" ~ $remark);
             self.transfer( $!cp, .<with>, $selling   );
             self.transfer( .<with>, $!cp, $truncated );
+            my $now = self.posse($!cp);
+            self.info("SWAP $!cp ↦",.<with>,": $selling => $buying" ~ $remark ~ " » $now");
         }
     }
 
@@ -238,6 +251,17 @@ class Farm::Sim::Game  {
         }
     }
 
+    method celebrate  {
+        $!t1 = now;
+        self.publish: { :type<win>, :who($!cp) };
+        my $posse = self.posse($!cp);
+        my Real $dt    = $!t1 - $!t0;
+        my $i = self.round;
+        self.info("WIN! $!cp = $posse at round $i / $!j steps, in $dt sec.");
+        self
+    }
+
+
     method publish(%event) {
         self.debug("event = {%event.perl}");
         push @!e, {%event}
@@ -309,6 +333,15 @@ class Farm::Sim::Game  {
         $!cp = "player_1" unless %!p.exists(++$!cp);
         $!j++
     }
+    method round { 
+        my $n = +self.players;
+        ($!j - $!j % $n) / $n
+    }
+
+    method someone_won { 
+        so %!p{$!cp}{all <r s p c h>} 
+    }
+
     
 };
 

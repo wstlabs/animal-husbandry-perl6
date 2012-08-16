@@ -48,6 +48,9 @@ multi MAIN("ai", $n, *@names) {
     say "::MAIN game    = ", $game.WHICH; 
     say "::MAIN players = ", $game.players;
     $game.play($n);
+    my $stats = $game.stats;
+    # my $stats = $game.play($n).stats;
+    say "stats = ", $stats; 
 
 }
 

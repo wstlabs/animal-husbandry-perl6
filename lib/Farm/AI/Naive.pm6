@@ -20,27 +20,24 @@ is    Farm::AI::Strategy  {
         self.trace("S = $S");
         self.trace("P = $P ↦ need = ",@need," ↦ $wish, [",@gimme,"]"); 
         if (my $x = $P.wish)  {
-            self.debug("wish [$x]!");
+            self.debug("wish [$x] ..");
             if ($x ∈ $S)  {
                 my @t = find-admissible-trades($P,$x);
-                self.trace("wish: $P,$x => ", @t);
+                if (@t)  {
+                    my $y = @t.pick;
+                    self.trace("WISH: $P,$x => ", @t, " => $y!");
+                    return { selling => $y, buying => $x } 
+                }
+                else  {
+                    self.trace("wish: $P,$x => ", @t);
+                }
             }  else  {
                 self.trace("wish [$x] not available!");
             }
             
         }  
         self.trace("dogful: ", avail-dogs($S,$P));
-        for avail-D($S,$P) -> $x  {
-            self.debug("doggy $x ?");
-            my @t = find-admissible-trades($P,$x);
-            if (@t)  {
-                my $y = @t.pick;
-                self.trace("doggy: $P,$x => ", @t, " => $y!");
-                return { selling => $y, buying => $x } 
-            }
-            else  { self.trace("doggy: $P,$x => ", @t) }
-        }
-        for avail-d($S,$P) -> $x  {
+        for avail-dogs($S,$P) -> $x  {
             self.debug("doggy $x ?");
             my @t = find-admissible-trades($P,$x);
             if (@t)  {
