@@ -10,8 +10,37 @@ sub table-counts is export {
     }, domestic-animals() 
 }
 
+#   
+# finds what we call "admissible" trades for the given canonical search 
+# term $x, i.e. all tuples which can be validly traded for $x and are 
+# contained in Posse $p.
+#
+# XXX some definite weirdness going on, here.  All we're trying to do is 
+# do a grep on the innards of $t, itself a Capture representing a memoized
+# Array instance.  But when we do it the way we want to:
+#
+#   my $t = downward-equiv-to($x);
+#   return grep { $p ⊇ fly($_) }, @$t
+#
+# rakudo comes back with: 
+#
+#   ===SORRY!===
+#   Non-declarative sigil is missing its name
+#  
+# However, if we unwind the above sequence -- which seems to work in 
+# other contexts, btw -- by gratuitously inserting a few intermediate 
+# container instances below, then the squawking goes away.  
+#
+# Unfortunately, aside from being awkward looking, this also de-singletonizes 
+# the list references we had so carefully memoized up in Farm::AI::Search::Data,
+# where the original sub decl lives.  So hopefully we'll get to find out what's 
+# happening here.
+#
 sub find-admissible-trades(Farm::Sim::Posse $p, Str $x) is export {
-    grep { $p ⊇ fly($_) }, downward-equiv-to($x)
+    my $t = downward-equiv-to($x);
+    my @a = @$t;
+    my @b = grep { $p ⊇ fly($_) }, @a;
+    return @b; 
 }
 
 
@@ -59,15 +88,17 @@ multi sub avail-dogs(Farm::Sim::Posse $P, Farm::Sim::Posse $Q) is export {
 
 =begin END
 
-my %F;
-# flyweight pattern for posse instances - which, theoretically, should save a lot 
-# on construction costs -- but currently at the cost of volatility, in currently 
-# the instances are rw, and fully open to mutation (so don't do that, please).
-multi sub fly(Farm::Sim::Posse $x --> Farm::Sim::Posse) is export { $x }
-multi sub fly(             Str $x --> Farm::Sim::Posse) is export {
-    die "can't inflate:  not a domestic posse string" unless is-domestic-posse-str($x);
-    %F{$x} //= posse($x)
+sub find-admissible-trades-loud(Farm::Sim::Posse $p, Str $x) is export {
+    my $t = downward-equiv-to($x);
+    say "::find-admissible-trades 1 $x => = {$t.WHICH} = ", $t; 
+    my @a = @$t;
+    say "::find-admissible-trades 2 $x => = {@a.WHICH} = ", @a; 
+    my @b = grep { $p ⊇ fly($_) }, @a;
+    say "::find-admissible-trades 3 $x => = {@b.WHICH} = ", @b;
+    return @b; 
 }
-sub fly-stats is export { n => %F.keys.Int }
 
 
+===SORRY!===
+Non-declarative sigil is missing its name
+ 

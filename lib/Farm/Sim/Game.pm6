@@ -15,7 +15,6 @@ class Farm::Sim::Game  {
     has $!j;         # current step
     has $!n;         # (optional) last step 
     has @!r;         # (optional) canned roll sequence, for testing
-    has $!debug;     # (optional) debug flag
     has $!wins;
     has $!t0; 
     has $!t1; 
@@ -26,11 +25,11 @@ class Farm::Sim::Game  {
     method debug(*@a)  { self.emit(@a) if $.loud > 2 }
     method emit( *@a)  { say '::',Backtrace.new.[3].subname,' ',@a }
 
-    submethod BUILD(:%!p, :@!e, :$!cp = 'player_1', :%!tr, :%!ac, :$!n, :@!r, :$!debug = 0) {
+    submethod BUILD(:%!p, :@!e, :$!cp = 'player_1', :%!tr, :%!ac, :$!n, :@!r, :$!loud = 0) {
         %!p<stock> //= posse(stock-hash()); 
         $!dice     //= Farm::Sim::Dice.instance;
         $!j = 0;
-        $!debug = 1 unless defined($!debug);
+        say "LOUD = $!loud";
     }
 
     method reset  {

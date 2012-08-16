@@ -111,15 +111,30 @@ constant %D = {
 # lists of "downward-equivalent" trades.  anything more "symmetric" would 
 # have involved some system of aliasing (and perhaps a lot of grepping 
 # to remove dogful trades), and would have ended up looking even weirder.
-sub downward-equiv-to(Str $x) is export { 
-    $x eq 'r'  ?? ()                                  !! 
-    $x eq 's'  ?? (<d r6>)                            !! 
-    $x eq 'p'  ?? (<d2 ds s2 dr6 sr6 r12>)            !!
-    $x eq 'c'  ?? ('D',  %T{36}.list )                !!
-    $x eq 'h'  ?? ('D2', %T{72}.list )                !!
-    $x eq 'D'  ?? ('c',  %T{36}.list )                !!
-    $x eq 'D2' ?? ('h',  %T{72}.list ).grep({!m/D/})  !!
+
+# first we provide this function in costly, non-memoized form.  note that 
+# it can be rather keep creating all these large new lists each time: 
+sub downward-equiv-raw(Str $x) is export { 
+    $x eq 'r'  ?? []                                  !! 
+    $x eq 's'  ?? [<d r6>]                            !! 
+    $x eq 'p'  ?? [<d2 ds s2 dr6 sr6 r12>]            !!
+    $x eq 'c'  ?? ['D',  %T{36}.list ]                !!
+    $x eq 'h'  ?? ['D2', %T{72}.list ]                !!
+    $x eq 'D'  ?? ['c',  %T{36}.list ]                !!
+    $x eq 'D2' ?? ['h',  %T{72}.list ].grep({!m/D/})  !!
     %D.exists($x) ?? %D{$x}.list !! die "invalid search term '$x'"
+}
+
+my %E;
+#
+# ... and in memoized form.  
+#
+# XXX note that the singletons it returns are rw, and hence quite
+# volatile to unintended mutation.  Also, the calling context 
+# (find-admissible-trades() in Farm::AI::Strategy) seems to be having
+# problems with grepping on the returned Capture in List context. 
+sub downward-equiv-to(Str $x) is export { 
+    %E{$x} //= downward-equiv-raw($x)
 }
 
 # ie, valid args to the function above. 
