@@ -7,7 +7,7 @@ use KeyBag::Ops;
 
 multi MAIN($posse, $animal) {
     die "<posse>  argument not a valid posse string"                unless is-domestic-posse-str($posse); 
-    die "<animal> argument not a valid (single-char) animal symbol" unless is-domestic-animal($animal);
+    # die "<animal> argument not a valid (single-char) animal symbol" unless is-domestic-animal($animal);
     my $me  = posse($posse); 
     my $x  := $animal; # shorthand 
     say "$me seeks $x!";
