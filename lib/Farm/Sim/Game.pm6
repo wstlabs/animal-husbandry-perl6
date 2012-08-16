@@ -16,8 +16,16 @@ class Farm::Sim::Game  {
     has $!n;         # (optional) last step 
     has @!r;         # (optional) canned roll sequence, for testing
     has $!debug;     # (optional) debug flag
+    has $!wins;
     has $!t0; 
     has $!t1; 
+
+    has $.loud = 2;
+    method info( *@a)  {       say @a  if $.loud > 0 }
+    method trace(*@a)  { self.emit(@a) if $.loud > 1 }
+    method debug(*@a)  { self.emit(@a) if $.loud > 2 }
+    method emit( *@a)  { say '::',Backtrace.new.[3].subname,' ',@a }
+
     submethod BUILD(:%!p, :@!e, :$!cp = 'player_1', :%!tr, :%!ac, :$!n, :@!r, :$!debug = 0) {
         %!p<stock> //= posse(stock-hash()); 
         $!dice     //= Farm::Sim::Dice.instance;
@@ -25,11 +33,18 @@ class Farm::Sim::Game  {
         $!debug = 1 unless defined($!debug);
     }
 
-    has $.loud = 2;
-    method info( *@a)  {       say @a  if $.loud > 0 }
-    method trace(*@a)  { self.emit(@a) if $.loud > 1 }
-    method debug(*@a)  { self.emit(@a) if $.loud > 2 }
-    method emit( *@a)  { say '::',Backtrace.new.[3].subname,' ',@a }
+    method reset  {
+        self.trace("..");
+        $!j = 0;
+        @!e = ();
+        @!r = ();
+        $!cp = 'player_1';
+        $!t0 = $!t1 = Nil;
+        %!p<stock> //= posse(stock-hash()); 
+        for %!p.keys -> $k { %!p{$k} = posse({}) };
+        self
+    }
+
 
 
     #
@@ -54,7 +69,11 @@ class Farm::Sim::Game  {
     method table { hash map -> $k,$v { $k => $v.Str      }, %!p.kv }
     method p     { hash map -> $k,$v { $k => $v.longhash }, %!p.kv }
     method stats { 
-        return { j => $!j, dt => ($!t1 - $!t0).Real.Str } 
+        return { 
+            j => $!j, 
+            wins => $!wins,
+            dt => ($!t1 - $!t0).Real.Str 
+        } 
     }
 
 
@@ -339,7 +358,8 @@ class Farm::Sim::Game  {
     }
 
     method someone_won { 
-        so %!p{$!cp}{all <r s p c h>} 
+        $!wins = $!cp if 
+            so %!p{$!cp}{all <r s p c h>} 
     }
 
     

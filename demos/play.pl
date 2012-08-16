@@ -10,8 +10,8 @@ multi MAIN("simple", $n)  {
     say "stats = ", $g.stats;
 }
 
-multi MAIN("ai", $n, *@names) {
-    die "Usage: $*PROGRAM_NAME ai <2..6 players>"
+multi MAIN("ai", $m, $n, *@names) {
+    die "Usage: $*PROGRAM_NAME ai <m> <n> <2..6 players>"
         unless (my $k = +@names) ~~ 2..6;
     say "::MAIN names = [{@names}]";
     for "Farm::AI::" <<~<< @names -> $module {
@@ -42,15 +42,16 @@ multi MAIN("ai", $n, *@names) {
     ; 
     say "::MAIN ac = ", %ac;
 
-    my $game = Farm::Sim::Game.contest(
-        players => @players, :%tr, :%ac, loud => 2 
-    );
-    say "::MAIN game    = ", $game.WHICH; 
-    say "::MAIN players = ", $game.players;
-    $game.play($n);
-    my $stats = $game.stats;
-    # my $stats = $game.play($n).stats;
-    say "stats = ", $stats; 
+    for (1..$m) -> $i  {
+        my $game = Farm::Sim::Game.contest(
+            players => @players, :%tr, :%ac, loud => 2 
+        );
+        say "::MAIN game ($i) = ", $game.WHICH; 
+        $game.play($n);
+        my $stats = $game.stats;
+        # my $stats = $game.play($n).stats;
+        say "STAT $i = ", $stats; 
+    }
 
 }
 
