@@ -1,0 +1,605 @@
+Round 1
+::find-stock-trade[player_1] S = h6D2c12p20d4s24r60
+::find-stock-trade[player_1] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_1] dogful: 
+Round 2
+::find-stock-trade[player_2] S = h6D2c12p20d4s24r60
+::find-stock-trade[player_2] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_2] dogful: 
+Round 3
+::find-stock-trade[player_1] S = h6D2c12p20d4s24r60
+::find-stock-trade[player_1] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_1] dogful: 
+Round 4
+::find-stock-trade[player_2] S = h6D2c12p20d4s24r60
+::find-stock-trade[player_2] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_2] dogful: 
+Round 5
+::find-stock-trade[player_1] S = h6D2c12p20d4s24r60
+::find-stock-trade[player_1] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_1] dogful: 
+Round 6
+::find-stock-trade[player_2] S = h6D2c12p20d4s24r60
+::find-stock-trade[player_2] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_2] dogful: 
+Round 7
+::find-stock-trade[player_1] S = h6D2c12p20d4s24r60
+::find-stock-trade[player_1] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_1] dogful: 
+Round 8
+::find-stock-trade[player_2] S = h6D2c12p20d4s24r60
+::find-stock-trade[player_2] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_2] dogful: 
+Round 9
+::find-stock-trade[player_1] S = h6D2c12p20d4s24r60
+::find-stock-trade[player_1] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_1] dogful: 
+Round 10
+::find-stock-trade[player_2] S = h6D2c12p20d4s24r60
+::find-stock-trade[player_2] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_2] dogful: 
+Round 11
+::find-stock-trade[player_1] S = h6D2c12p20d4s24r60
+::find-stock-trade[player_1] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_1] dogful: 
+Round 12
+::find-stock-trade[player_2] S = h6D2c12p20d4s24r60
+::find-stock-trade[player_2] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_2] dogful: 
+Round 13
+::find-stock-trade[player_1] S = h6D2c12p20d4s24r60
+::find-stock-trade[player_1] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_1] dogful: 
+Round 14
+::find-stock-trade[player_2] S = h6D2c12p20d4s24r59
+::find-stock-trade[player_2] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_2] dogful: 
+Round 15
+::find-stock-trade[player_1] S = h6D2c12p20d4s24r59
+::find-stock-trade[player_1] P = r ↦ need =  h c p s  ↦ , [ ]
+::find-stock-trade[player_1] dogful: 
+Round 16
+::find-stock-trade[player_2] S = h6D2c12p20d4s24r58
+::find-stock-trade[player_2] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_2] dogful: 
+Round 17
+::find-stock-trade[player_1] S = h6D2c12p20d4s24r58
+::find-stock-trade[player_1] P = r2 ↦ need =  h c p s  ↦ , [ ]
+::find-stock-trade[player_1] dogful: 
+Round 18
+::find-stock-trade[player_2] S = h6D2c12p20d4s24r57
+::find-stock-trade[player_2] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_2] dogful: 
+Round 19
+::find-stock-trade[player_1] S = h6D2c12p20d4s24r57
+::find-stock-trade[player_1] P = r3 ↦ need =  h c p s  ↦ , [ ]
+::find-stock-trade[player_1] dogful: 
+Round 20
+::find-stock-trade[player_2] S = h6D2c12p20d4s24r55
+::find-stock-trade[player_2] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_2] dogful: 
+Round 21
+::find-stock-trade[player_1] S = h6D2c12p20d4s24r55
+::find-stock-trade[player_1] P = r5 ↦ need =  h c p s  ↦ , [ ]
+::find-stock-trade[player_1] dogful: 
+Round 22
+::find-stock-trade[player_2] S = h6D2c12p20d4s24r52
+::find-stock-trade[player_2] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_2] dogful: 
+Round 23
+::find-stock-trade[player_1] S = h6D2c12p20d4s24r51
+::find-stock-trade[player_1] P = r8 ↦ need =  h c p s  ↦ , [ s ]
+::find-stock-trade[player_1] dogful:  d
+::<anon>[player_1] doggy: r8,d =>  r6  => r6!
+Round 24
+::find-stock-trade[player_2] S = h6D2c12p20d3s24r59
+::find-stock-trade[player_2] P = r ↦ need =  h c p s  ↦ , [ ]
+::find-stock-trade[player_2] dogful: 
+Round 25
+::find-stock-trade[player_1] S = h6D2c12p20d3s24r58
+::find-stock-trade[player_1] P = d ↦ need =  h c p s r  ↦ , [ r s ]
+::find-stock-trade[player_1] dogful:  d
+::<anon>[player_1] doggy: d,d => 
+::<anon>[player_1] doggy: d,r => 
+::<anon>[player_1] gimme: d,s =>  d  => d!
+Round 26
+::find-stock-trade[player_2] S = h6D2c12p20d4s23r58
+::find-stock-trade[player_2] P = r2 ↦ need =  h c p s  ↦ , [ ]
+::find-stock-trade[player_2] dogful: 
+Round 27
+::find-stock-trade[player_1] S = h6D2c12p20d4s23r56
+::find-stock-trade[player_1] P = s ↦ need =  h c p r  ↦ , [ r ]
+::find-stock-trade[player_1] dogful:  d
+::<anon>[player_1] doggy: s,d =>  s  => s!
+Round 28
+::find-stock-trade[player_2] S = h6D2c12p20d3s24r56
+::find-stock-trade[player_2] P = r4 ↦ need =  h c p s  ↦ , [ ]
+::find-stock-trade[player_2] dogful: 
+Round 29
+::find-stock-trade[player_1] S = h6D2c12p20d3s24r54
+::find-stock-trade[player_1] P = d ↦ need =  h c p s r  ↦ , [ r s ]
+::find-stock-trade[player_1] dogful:  d
+::<anon>[player_1] doggy: d,d => 
+::<anon>[player_1] doggy: d,r => 
+::<anon>[player_1] gimme: d,s =>  d  => d!
+Round 30
+::find-stock-trade[player_2] S = h6D2c12p20d4s23r54
+::find-stock-trade[player_2] P = r6 ↦ need =  h c p s  ↦ , [ s ]
+::find-stock-trade[player_2] dogful:  d
+::<anon>[player_2] doggy: r6,d =>  r6  => r6!
+Round 31
+::find-stock-trade[player_1] S = h6D2c12p20d3s23r60
+::find-stock-trade[player_1] P = s ↦ need =  h c p r  ↦ , [ r ]
+::find-stock-trade[player_1] dogful:  d
+::<anon>[player_1] doggy: s,d =>  s  => s!
+Round 32
+::find-stock-trade[player_2] S = h6D2c12p20d2s24r60
+::find-stock-trade[player_2] P = d ↦ need =  h c p s r  ↦ , [ r s ]
+::find-stock-trade[player_2] dogful:  d
+::<anon>[player_2] doggy: d,d => 
+::<anon>[player_2] doggy: d,r => 
+::<anon>[player_2] gimme: d,s =>  d  => d!
+Round 33
+::find-stock-trade[player_1] S = h6D2c12p20d3s22r60
+::find-stock-trade[player_1] P = d ↦ need =  h c p s r  ↦ , [ r s ]
+::find-stock-trade[player_1] dogful:  d
+::<anon>[player_1] doggy: d,d => 
+::<anon>[player_1] doggy: d,r => 
+::<anon>[player_1] gimme: d,s =>  d  => d!
+Round 34
+::find-stock-trade[player_2] S = h6D2c12p20d4s20r60
+::find-stock-trade[player_2] P = s2 ↦ need =  h c p r  ↦ , [ r p ]
+::find-stock-trade[player_2] dogful:  d2 d
+::<anon>[player_2] doggy: s2,d2 =>  s2  => s2!
+Round 35
+::find-stock-trade[player_1] S = h6D2c12p20d4s19r60
+::find-stock-trade[player_1] P = s2 ↦ need =  h c p r  ↦ , [ r p ]
+::find-stock-trade[player_1] dogful:  d2 d
+::<anon>[player_1] doggy: s2,d2 =>  s2  => s2!
+Round 36
+::find-stock-trade[player_2] S = h6D2c12p20d4s19r60
+::find-stock-trade[player_2] P = s3 ↦ need =  h c p r  ↦ , [ r p ]
+::find-stock-trade[player_2] dogful:  d3 d2 d
+::<anon>[player_2] doggy: s3,d3 =>  s3  => s3!
+Round 37
+::find-stock-trade[player_1] S = h6D2c12p20d4s17r60
+::find-stock-trade[player_1] P = s2 ↦ need =  h c p r  ↦ , [ r p ]
+::find-stock-trade[player_1] dogful:  d2 d
+::<anon>[player_1] doggy: s2,d2 =>  s2  => s2!
+Round 38
+::find-stock-trade[player_2] S = h6D2c12p20d4s16r60
+::find-stock-trade[player_2] P = s5 ↦ need =  h c p r  ↦ , [ r p ]
+::find-stock-trade[player_2] dogful:  d4 d3 d2 d
+::<anon>[player_2] doggy: s5,d4 =>  s4  => s4!
+Round 39
+::find-stock-trade[player_1] S = h6D2c12p20d4s13r60
+::find-stock-trade[player_1] P = s3 ↦ need =  h c p r  ↦ , [ r p ]
+::find-stock-trade[player_1] dogful:  d3 d2 d
+::<anon>[player_1] doggy: s3,d3 =>  s3  => s3!
+Round 40
+::find-stock-trade[player_2] S = h6D2c12p20d4s16r60
+::find-stock-trade[player_2] P = s8 ↦ need =  h c p r  ↦ , [ r p c ]
+::find-stock-trade[player_2] dogful:  D d4 d3 d2 d
+::<anon>[player_2] doggy: s8,D =>  s6  => s6!
+Round 41
+::find-stock-trade[player_1] S = h6Dc12p20d4s22r59
+::find-stock-trade[player_1] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_1] dogful: 
+Round 42
+::find-stock-trade[player_2] S = h6Dc12p20d4s22r59
+::find-stock-trade[player_2] P = Ds2r ↦ need =  h c p  ↦ , [ p c ]
+::find-stock-trade[player_2] dogful:  D d4 d3 d2 d
+::<anon>[player_2] doggy: Ds2r,D => 
+::<anon>[player_2] doggy: Ds2r,d4 => 
+::<anon>[player_2] doggy: Ds2r,d3 => 
+::<anon>[player_2] doggy: Ds2r,d2 =>  s2  => s2!
+Round 43
+::find-stock-trade[player_1] S = h6Dc12p20d4s21r59
+::find-stock-trade[player_1] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_1] dogful: 
+Round 44
+::find-stock-trade[player_2] S = h6Dc12p20d4s21r58
+::find-stock-trade[player_2] P = Ds3r ↦ need =  h c p  ↦ , [ p c ]
+::find-stock-trade[player_2] dogful:  D d4 d3 d2 d
+::<anon>[player_2] doggy: Ds3r,D => 
+::<anon>[player_2] doggy: Ds3r,d4 => 
+::<anon>[player_2] doggy: Ds3r,d3 =>  s3  => s3!
+Round 45
+::find-stock-trade[player_1] S = h6Dc12p20d4s21r57
+::find-stock-trade[player_1] P = r ↦ need =  h c p s  ↦ , [ ]
+::find-stock-trade[player_1] dogful: 
+Round 46
+::find-stock-trade[player_2] S = h6Dc12p20d4s21r56
+::find-stock-trade[player_2] P = Ds3r2 ↦ need =  h c p  ↦ , [ p c ]
+::find-stock-trade[player_2] dogful:  D d4 d3 d2 d
+::<anon>[player_2] doggy: Ds3r2,D => 
+::<anon>[player_2] doggy: Ds3r2,d4 => 
+::<anon>[player_2] doggy: Ds3r2,d3 =>  s3  => s3!
+Round 47
+::find-stock-trade[player_1] S = h6Dc12p20d4s21r54
+::find-stock-trade[player_1] P = r2 ↦ need =  h c p s  ↦ , [ ]
+::find-stock-trade[player_1] dogful: 
+Round 48
+::find-stock-trade[player_2] S = h6Dc12p20d4s21r53
+::find-stock-trade[player_2] P = Ds3r4 ↦ need =  h c p  ↦ , [ p c ]
+::find-stock-trade[player_2] dogful:  D d4 d3 d2 d
+::<anon>[player_2] doggy: Ds3r4,D => 
+::<anon>[player_2] doggy: Ds3r4,d4 => 
+::<anon>[player_2] doggy: Ds3r4,d3 =>  s3  => s3!
+Round 49
+::find-stock-trade[player_1] S = h6Dc12p20d4s19r51
+::find-stock-trade[player_1] P = r3 ↦ need =  h c p s  ↦ , [ ]
+::find-stock-trade[player_1] dogful: 
+Round 50
+::find-stock-trade[player_2] S = h6Dc12p20d4s19r49
+::find-stock-trade[player_2] P = Ds5r6 ↦ need =  h c p  ↦ , [ p c h ]
+::find-stock-trade[player_2] dogful:  D d4 d3 d2 d
+::<anon>[player_2] doggy: Ds5r6,D =>  s5r6  => s5r6!
+Round 51
+::find-stock-trade[player_1] S = h6c12p20d4s24r55
+::find-stock-trade[player_1] P = r5 ↦ need =  h c p s  ↦ , [ ]
+::find-stock-trade[player_1] dogful: 
+Round 52
+::find-stock-trade[player_2] S = h6c12p20d4s24r52
+::find-stock-trade[player_2] P = D2 ↦ need =  h c p s r  ↦ , [ r s p c h ]
+::find-stock-trade[player_2] dogful:  d4 d3 d2 d
+::<anon>[player_2] doggy: D2,d4 => 
+::<anon>[player_2] doggy: D2,d3 => 
+::<anon>[player_2] doggy: D2,d2 => 
+::<anon>[player_2] doggy: D2,d => 
+::<anon>[player_2] doggy: D2,r => 
+::<anon>[player_2] doggy: D2,s => 
+::<anon>[player_2] doggy: D2,p => 
+::<anon>[player_2] gimme: D2,c =>  D  => D!
+Round 53
+::find-stock-trade[player_1] S = h6Dc11p20d4s24r52
+::find-stock-trade[player_1] P = r8 ↦ need =  h c p s  ↦ , [ s ]
+::find-stock-trade[player_1] dogful:  d
+::<anon>[player_1] doggy: r8,d =>  r6  => r6!
+Round 54
+::find-stock-trade[player_2] S = h6Dc11p20d3s24r56
+::find-stock-trade[player_2] P = Dc ↦ need =  h p s r  ↦ , [ r s p h ]
+::find-stock-trade[player_2] dogful:  D d3 d2 d
+::<anon>[player_2] doggy: Dc,D =>  c  => c!
+Round 55
+::find-stock-trade[player_1] S = h6Dc12p20d3s24r56
+::find-stock-trade[player_1] P = dr4 ↦ need =  h c p s  ↦ , [ s ]
+::find-stock-trade[player_1] dogful:  d
+::<anon>[player_1] doggy: dr4,d => 
+::<anon>[player_1] gimme: dr4,s =>  d  => d!
+Round 56
+::find-stock-trade[player_2] S = h6Dc12p20d4s22r56
+::find-stock-trade[player_2] P = D ↦ need =  h c p s r  ↦ , [ r s p c ]
+::find-stock-trade[player_2] dogful:  D d4 d3 d2 d
+::<anon>[player_2] doggy: D,D => 
+::<anon>[player_2] doggy: D,d4 => 
+::<anon>[player_2] doggy: D,d3 => 
+::<anon>[player_2] doggy: D,d2 => 
+::<anon>[player_2] doggy: D,d => 
+::<anon>[player_2] doggy: D,r => 
+::<anon>[player_2] doggy: D,s => 
+::<anon>[player_2] doggy: D,p => 
+::<anon>[player_2] gimme: D,c =>  D  => D!
+Round 57
+::find-stock-trade[player_1] S = h6D2c11p20d4s22r56
+::find-stock-trade[player_1] P = s2r4 ↦ need =  h c p  ↦ , [ p ]
+::find-stock-trade[player_1] dogful:  d2 d
+::<anon>[player_1] doggy: s2r4,d2 =>  s2  => s2!
+Round 58
+::find-stock-trade[player_2] S = h6D2c11p20d4s22r53
+::find-stock-trade[player_2] P = c ↦ need =  h p s r  ↦ , [ r s p ]
+::find-stock-trade[player_2] dogful:  D d4 d3 d2 d
+::<anon>[player_2] doggy: c,D =>  c  => c!
+Round 59
+::find-stock-trade[player_1] S = h6Dc12p20d4s22r53
+::find-stock-trade[player_1] P = s2r7 ↦ need =  h c p  ↦ , [ p ]
+::find-stock-trade[player_1] dogful:  d3 d2 d
+::<anon>[player_1] doggy: s2r7,d3 =>  s2r6  => s2r6!
+Round 60
+::find-stock-trade[player_2] S = h6Dc12p20d4s22r49
+::find-stock-trade[player_2] P = D ↦ need =  h c p s r  ↦ , [ r s p c ]
+::find-stock-trade[player_2] dogful:  D d4 d3 d2 d
+::<anon>[player_2] doggy: D,D => 
+::<anon>[player_2] doggy: D,d4 => 
+::<anon>[player_2] doggy: D,d3 => 
+::<anon>[player_2] doggy: D,d2 => 
+::<anon>[player_2] doggy: D,d => 
+::<anon>[player_2] doggy: D,r => 
+::<anon>[player_2] doggy: D,s => 
+::<anon>[player_2] doggy: D,p => 
+::<anon>[player_2] gimme: D,c =>  D  => D!
+Round 61
+::find-stock-trade[player_1] S = h6D2c11p20d4s22r49
+::find-stock-trade[player_1] P = s2r11 ↦ need =  h c p  ↦ , [ p ]
+::find-stock-trade[player_1] dogful:  d3 d2 d
+::<anon>[player_1] doggy: s2r11,d3 =>  s2r6  => s2r6!
+Round 62
+::find-stock-trade[player_2] S = h6D2c11p20d4s22r60
+::find-stock-trade[player_2] P = c ↦ need =  h p s r  ↦ , [ r s p ]
+::find-stock-trade[player_2] dogful:  D d4 d3 d2 d
+::<anon>[player_2] doggy: c,D =>  c  => c!
+Round 63
+::find-stock-trade[player_1] S = h6Dc12p20d4s22r60
+::find-stock-trade[player_1] P = s2 ↦ need =  h c p r  ↦ , [ r p ]
+::find-stock-trade[player_1] dogful:  d2 d
+::<anon>[player_1] doggy: s2,d2 =>  s2  => s2!
+Round 64
+::find-stock-trade[player_2] S = h6Dc12p20d4s21r60
+::find-stock-trade[player_2] P = D ↦ need =  h c p s r  ↦ , [ r s p c ]
+::find-stock-trade[player_2] dogful:  D d4 d3 d2 d
+::<anon>[player_2] doggy: D,D => 
+::<anon>[player_2] doggy: D,d4 => 
+::<anon>[player_2] doggy: D,d3 => 
+::<anon>[player_2] doggy: D,d2 => 
+::<anon>[player_2] doggy: D,d => 
+::<anon>[player_2] doggy: D,r => 
+::<anon>[player_2] doggy: D,s => 
+::<anon>[player_2] doggy: D,p => 
+::<anon>[player_2] gimme: D,c =>  D  => D!
+Round 65
+::find-stock-trade[player_1] S = h6D2c11p20d4s21r60
+::find-stock-trade[player_1] P = s3 ↦ need =  h c p r  ↦ , [ r p ]
+::find-stock-trade[player_1] dogful:  d3 d2 d
+::<anon>[player_1] doggy: s3,d3 =>  s3  => s3!
+Round 66
+::find-stock-trade[player_2] S = h6D2c11p20d4s19r60
+::find-stock-trade[player_2] P = c ↦ need =  h p s r  ↦ , [ r s p ]
+::find-stock-trade[player_2] dogful:  D d4 d3 d2 d
+::<anon>[player_2] doggy: c,D =>  c  => c!
+Round 67
+::find-stock-trade[player_1] S = h6Dc12p20d4s19r59
+::find-stock-trade[player_1] P = s5 ↦ need =  h c p r  ↦ , [ r p ]
+::find-stock-trade[player_1] dogful:  d4 d3 d2 d
+::<anon>[player_1] doggy: s5,d4 =>  s4  => s4!
+Round 68
+::find-stock-trade[player_2] S = h6Dc12p20d4s16r59
+::find-stock-trade[player_2] P = Dr ↦ need =  h c p s  ↦ , [ s p c ]
+::find-stock-trade[player_2] dogful:  D d4 d3 d2 d
+::<anon>[player_2] doggy: Dr,D => 
+::<anon>[player_2] doggy: Dr,d4 => 
+::<anon>[player_2] doggy: Dr,d3 => 
+::<anon>[player_2] doggy: Dr,d2 => 
+::<anon>[player_2] doggy: Dr,d => 
+::<anon>[player_2] doggy: Dr,s => 
+::<anon>[player_2] doggy: Dr,p => 
+::<anon>[player_2] gimme: Dr,c =>  D  => D!
+Round 69
+::find-stock-trade[player_1] S = h6D2c11p20d4s16r58
+::find-stock-trade[player_1] P = s8 ↦ need =  h c p r  ↦ , [ r p c ]
+::find-stock-trade[player_1] dogful:  D d4 d3 d2 d
+::<anon>[player_1] doggy: s8,D =>  s6  => s6!
+Round 70
+::find-stock-trade[player_2] S = h6Dc11p20d4s22r57
+::find-stock-trade[player_2] P = cr2 ↦ need =  h p s  ↦ , [ s p ]
+::find-stock-trade[player_2] dogful:  D d4 d3 d2 d
+::<anon>[player_2] doggy: cr2,D =>  c  => c!
+Round 71
+::find-stock-trade[player_1] S = h6Dc12p20d4s22r59
+::find-stock-trade[player_1] P = Ds2r ↦ need =  h c p  ↦ , [ p c ]
+::find-stock-trade[player_1] dogful:  D d4 d3 d2 d
+::<anon>[player_1] doggy: Ds2r,D => 
+::<anon>[player_1] doggy: Ds2r,d4 => 
+::<anon>[player_1] doggy: Ds2r,d3 => 
+::<anon>[player_1] doggy: Ds2r,d2 =>  s2  => s2!
+Round 72
+::find-stock-trade[player_2] S = h6Dc12p20d4s22r58
+::find-stock-trade[player_2] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_2] dogful: 
+Round 73
+::find-stock-trade[player_1] S = h6Dc12p20d4s22r58
+::find-stock-trade[player_1] P = Ds2r2 ↦ need =  h c p  ↦ , [ p c ]
+::find-stock-trade[player_1] dogful:  D d4 d3 d2 d
+::<anon>[player_1] doggy: Ds2r2,D => 
+::<anon>[player_1] doggy: Ds2r2,d4 => 
+::<anon>[player_1] doggy: Ds2r2,d3 => 
+::<anon>[player_1] doggy: Ds2r2,d2 =>  s2  => s2!
+Round 74
+::find-stock-trade[player_2] S = h6Dc12p20d4s22r58
+::find-stock-trade[player_2] P = ∅ ↦ need =  h c p s r  ↦ , [ ]
+::find-stock-trade[player_2] dogful: 
+Round 75
+::find-stock-trade[player_1] S = h6Dc12p20d4s22r57
+::find-stock-trade[player_1] P = Ds2r2 ↦ need =  h c p  ↦ , [ p c ]
+::find-stock-trade[player_1] dogful:  D d4 d3 d2 d
+::<anon>[player_1] doggy: Ds2r2,D => 
+::<anon>[player_1] doggy: Ds2r2,d4 => 
+::<anon>[player_1] doggy: Ds2r2,d3 => 
+::<anon>[player_1] doggy: Ds2r2,d2 =>  s2  => s2!
+Round 76
+::find-stock-trade[player_2] S = h6Dc12p20d4s21r57
+::find-stock-trade[player_2] P = r ↦ need =  h c p s  ↦ , [ ]
+::find-stock-trade[player_2] dogful: 
+Round 77
+::find-stock-trade[player_1] S = h6Dc12p20d4s21r56
+::find-stock-trade[player_1] P = Ds3r2 ↦ need =  h c p  ↦ , [ p c ]
+::find-stock-trade[player_1] dogful:  D d4 d3 d2 d
+::<anon>[player_1] doggy: Ds3r2,D => 
+::<anon>[player_1] doggy: Ds3r2,d4 => 
+::<anon>[player_1] doggy: Ds3r2,d3 =>  s3  => s3!
+Round 78
+::find-stock-trade[player_2] S = h6Dc12p20d4s19r58
+::find-stock-trade[player_2] P = r2 ↦ need =  h c p s  ↦ , [ ]
+::find-stock-trade[player_2] dogful: 
+Round 79
+::find-stock-trade[player_1] S = h6Dc12p20d4s19r58
+::find-stock-trade[player_1] P = Ds5 ↦ need =  h c p r  ↦ , [ r p c ]
+::find-stock-trade[player_1] dogful:  D d4 d3 d2 d
+::<anon>[player_1] doggy: Ds5,D => 
+::<anon>[player_1] doggy: Ds5,d4 =>  s4  => s4!
+Round 80
+::find-stock-trade[player_2] S = h6Dc12p20d4s19r58
+::find-stock-trade[player_2] P = r2 ↦ need =  h c p s  ↦ , [ ]
+::find-stock-trade[player_2] dogful: 
+Round 81
+::find-stock-trade[player_1] S = h6Dc12p20d4s19r56
+::find-stock-trade[player_1] P = Ds5 ↦ need =  h c p r  ↦ , [ r p c ]
+::find-stock-trade[player_1] dogful:  D d4 d3 d2 d
+::<anon>[player_1] doggy: Ds5,D => 
+::<anon>[player_1] doggy: Ds5,d4 =>  s4  => s4!
+Round 82
+::find-stock-trade[player_2] S = h6Dc12p20d4s19r56
+::find-stock-trade[player_2] P = r4 ↦ need =  h c p s  ↦ , [ ]
+::find-stock-trade[player_2] dogful: 
+Round 83
+::find-stock-trade[player_1] S = h6Dc12p20d4s19r54
+::find-stock-trade[player_1] P = Ds5 ↦ need =  h c p r  ↦ , [ r p c ]
+::find-stock-trade[player_1] dogful:  D d4 d3 d2 d
+::<anon>[player_1] doggy: Ds5,D => 
+::<anon>[player_1] doggy: Ds5,d4 =>  s4  => s4!
+Round 84
+::find-stock-trade[player_2] S = h6Dc12p20d4s16r54
+::find-stock-trade[player_2] P = r6 ↦ need =  h c p s  ↦ , [ s ]
+::find-stock-trade[player_2] dogful:  d
+::<anon>[player_2] doggy: r6,d =>  r6  => r6!
+Round 85
+::find-stock-trade[player_1] S = h6Dc12p20d3s16r60
+::find-stock-trade[player_1] P = Ds8 ↦ need =  h c p r  ↦ , [ r p c h ]
+::find-stock-trade[player_1] dogful:  D d3 d2 d
+::<anon>[player_1] doggy: Ds8,D =>  s6  => s6!
+Round 86
+::find-stock-trade[player_2] S = h6c12p20d3s22r59
+::find-stock-trade[player_2] P = d ↦ need =  h c p s r  ↦ , [ r s ]
+::find-stock-trade[player_2] dogful:  d
+::<anon>[player_2] doggy: d,d => 
+::<anon>[player_2] doggy: d,r => 
+::<anon>[player_2] gimme: d,s =>  d  => d!
+Round 87
+::find-stock-trade[player_1] S = h6c12p20d4s21r58
+::find-stock-trade[player_1] P = D2s2r ↦ need =  h c p  ↦ , [ p c h ]
+::find-stock-trade[player_1] dogful:  d4 d3 d2 d
+::<anon>[player_1] doggy: D2s2r,d4 => 
+::<anon>[player_1] doggy: D2s2r,d3 => 
+::<anon>[player_1] doggy: D2s2r,d2 =>  s2  => s2!
+Round 88
+::find-stock-trade[player_2] S = h6c12p20d4s20r58
+::find-stock-trade[player_2] P = sr ↦ need =  h c p  ↦ , [ ]
+::find-stock-trade[player_2] dogful:  d
+::<anon>[player_2] doggy: sr,d =>  s  => s!
+Round 89
+::find-stock-trade[player_1] S = h6c12p20d3s21r58
+::find-stock-trade[player_1] P = D2s3r ↦ need =  h c p  ↦ , [ p c h ]
+::find-stock-trade[player_1] dogful:  d3 d2 d
+::<anon>[player_1] doggy: D2s3r,d3 =>  s3  => s3!
+Round 90
+::find-stock-trade[player_2] S = h6c12p20d3s21r57
+::find-stock-trade[player_2] P = dr ↦ need =  h c p s  ↦ , [ s ]
+::find-stock-trade[player_2] dogful:  d
+::<anon>[player_2] doggy: dr,d => 
+::<anon>[player_2] gimme: dr,s =>  d  => d!
+Round 91
+::find-stock-trade[player_1] S = h6c12p20d4s20r56
+::find-stock-trade[player_1] P = D2s3r2 ↦ need =  h c p  ↦ , [ p c h ]
+::find-stock-trade[player_1] dogful:  d4 d3 d2 d
+::<anon>[player_1] doggy: D2s3r2,d4 => 
+::<anon>[player_1] doggy: D2s3r2,d3 =>  s3  => s3!
+Round 92
+::find-stock-trade[player_2] S = h6c12p20d4s18r55
+::find-stock-trade[player_2] P = sr2 ↦ need =  h c p  ↦ , [ ]
+::find-stock-trade[player_2] dogful:  d
+::<anon>[player_2] doggy: sr2,d =>  s  => s!
+Round 93
+::find-stock-trade[player_1] S = h6c12p20d3s19r54
+::find-stock-trade[player_1] P = D2s5r3 ↦ need =  h c p  ↦ , [ p c h ]
+::find-stock-trade[player_1] dogful:  d3 d2 d
+::<anon>[player_1] doggy: D2s5r3,d3 =>  s3  => s3!
+Round 94
+::find-stock-trade[player_2] S = h6c12p20d3s16r52
+::find-stock-trade[player_2] P = dr3 ↦ need =  h c p s  ↦ , [ s ]
+::find-stock-trade[player_2] dogful:  d
+::<anon>[player_2] doggy: dr3,d => 
+::<anon>[player_2] gimme: dr3,s =>  d  => d!
+Round 95
+::find-stock-trade[player_1] S = h6c12p20d4s15r50
+::find-stock-trade[player_1] P = D2s8r5 ↦ need =  h c p  ↦ , [ p c h ]
+::find-stock-trade[player_1] dogful:  d4 d3 d2 d
+::<anon>[player_1] doggy: D2s8r5,d4 =>  s4  => s4!
+Round 96
+::find-stock-trade[player_2] S = h6c12p20d4s11r47
+::find-stock-trade[player_2] P = sr5 ↦ need =  h c p  ↦ , [ ]
+::find-stock-trade[player_2] dogful:  d
+::<anon>[player_2] doggy: sr5,d =>  s  => s!
+Round 97
+::find-stock-trade[player_1] S = h6c12p20d3s12r44
+::find-stock-trade[player_1] P = D2s12r8 ↦ need =  h c p  ↦ , [ p c h ]
+::find-stock-trade[player_1] dogful:  d3 d2 d
+::<anon>[player_1] doggy: D2s12r8,d3 =>  s3 s2r6  => s3!
+Round 98
+::find-stock-trade[player_2] S = h6c12p20d3s12r40
+::find-stock-trade[player_2] P = dr8 ↦ need =  h c p s  ↦ , [ s p ]
+::find-stock-trade[player_2] dogful:  d2 d
+::<anon>[player_2] doggy: dr8,d2 => 
+::<anon>[player_2] doggy: dr8,d =>  r6  => r6!
+Round 99
+::find-stock-trade[player_1] S = h6c12p20d3s12r46
+::find-stock-trade[player_1] P = D2s12r12 ↦ need =  h c p  ↦ , [ p c h ]
+::find-stock-trade[player_1] dogful:  d3 d2 d
+::<anon>[player_1] doggy: D2s12r12,d3 =>  s3 s2r6 sr12  => sr12!
+Round 100
+::find-stock-trade[player_2] S = h6c12p20s7r58
+::find-stock-trade[player_2] P = dr2 ↦ need =  h c p s  ↦ , [ s ]
+::find-stock-trade[player_2] dogful: 
+::<anon>[player_2] gimme: dr2,s =>  d  => d!
+Round 101
+::find-stock-trade[player_1] S = h6c12p20ds6r60
+::find-stock-trade[player_1] P = D2d3s17 ↦ need =  h c p r  ↦ , [ r p c h ]
+::find-stock-trade[player_1] dogful:  d
+::<anon>[player_1] doggy: D2d3s17,d =>  s  => s!
+Round 102
+::find-stock-trade[player_2] S = h6c12p20s7r59
+::find-stock-trade[player_2] P = s ↦ need =  h c p r  ↦ , [ r ]
+::find-stock-trade[player_2] dogful: 
+::<anon>[player_2] doggy: s,r => 
+Round 103
+::find-stock-trade[player_1] S = h6c12p20s6r59
+::find-stock-trade[player_1] P = D2d4s16r ↦ need =  h c p  ↦ , [ p c h ]
+::find-stock-trade[player_1] dogful: 
+::<anon>[player_1] gimme: D2d4s16r,p =>  d2 ds s2  => ds!
+Round 104
+::find-stock-trade[player_2] S = h6c12p19dr58
+::find-stock-trade[player_2] P = s2 ↦ need =  h c p r  ↦ , [ r p ]
+::find-stock-trade[player_2] dogful:  d
+::<anon>[player_2] doggy: s2,d =>  s  => s!
+Round 105
+::find-stock-trade[player_1] S = h6c12p19r58
+::find-stock-trade[player_1] P = D2pd3s22r2 ↦ need =  h c  ↦ , [ c h ]
+::find-stock-trade[player_1] dogful: 
+::<anon>[player_1] gimme: D2pd3s22r2,c =>  D pd3s pd2s2 pds3 ps4 d3s3 d2s4 ds5 s6  => pds3!
+Round 106
+::find-stock-trade[player_2] S = h6c11p20dr57
+::find-stock-trade[player_2] P = ds2 ↦ need =  h c p r  ↦ , [ r p ]
+::find-stock-trade[player_2] dogful:  d
+::<anon>[player_2] doggy: ds2,d =>  s  => s!
+Round 107
+::find-stock-trade[player_1] S = h6c11p20r57
+::find-stock-trade[player_1] P = D2cd2s22r3 ↦ need =  h p  ↦ , [ p h ]
+::find-stock-trade[player_1] dogful: 
+::<anon>[player_1] gimme: D2cd2s22r3,p =>  d2 ds s2  => s2!
+Round 108
+::find-stock-trade[player_2] S = h6c11p18r57
+::find-stock-trade[player_2] P = d2s2 ↦ need =  h c p r  ↦ , [ r p ]
+::find-stock-trade[player_2] dogful: 
+::<anon>[player_2] doggy: d2s2,r => 
+::<anon>[player_2] gimme: d2s2,p =>  d2 ds s2  => d2!
+Round 109
+::find-stock-trade[player_1] S = h6c11p16d2r57
+::find-stock-trade[player_1] P = D2cp2d2s22r3 ↦ need =  h  ↦ h, [ ]
+::<anon>[player_1] WISH: D2cp2d2s22r3,h =>  D2 D2 Dc Dp2d2 Dp2ds Dp2s2 Dpd2s2 Dpds3 Dps4 Dd2s4 Dds5 Ds6 cp2d2 cp2ds cp2s2 cpd2s2 cpds3 cps4 cd2s4 cds5 cs6 p2d2s6 p2ds7 p2s8 pd2s8 pds9 ps10 d2s10 ds11 s12  => cds5!
+Round 110
+::find-stock-trade[player_2] S = h5c12p16d3s5r55
+::find-stock-trade[player_2] P = p2s2 ↦ need =  h c r  ↦ , [ r c ]
+::find-stock-trade[player_2] dogful:  d3 d2 d
+::<anon>[player_2] doggy: p2s2,d3 =>  ps  => ps!
+Round 111
+::find-stock-trade[player_1] S = h5c12p16s5r55
+::find-stock-trade[player_1] P = hD2p2ds17r5 ↦ need =  c  ↦ c, [ ]
+::<anon>[player_1] WISH: hD2p2ds17r5,c =>  D p2ds p2s2 pds3 ps4 ds5 s6  => p2ds!
+Round 112
+::find-stock-trade[player_2] S = h5c11p18dr55
+::find-stock-trade[player_2] P = p2d3s2 ↦ need =  h c r  ↦ , [ r c ]
+::find-stock-trade[player_2] dogful:  d
+::<anon>[player_2] doggy: p2d3s2,d =>  s  => s!
+Round 113
+::find-stock-trade[player_1] S = h5c11p18r55
+::find-stock-trade[player_1] P = hD2cs22r5 ↦ need =  p  ↦ p, [ ]
+::<anon>[player_1] WISH: hD2cs22r5,p =>  s2  => s2!
+player_1 won!
