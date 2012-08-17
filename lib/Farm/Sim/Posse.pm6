@@ -205,25 +205,68 @@ sub posse-from-long(%h) is export { posse(long2short(%h)) }
 # See the unit test t/diversity.t for more some sample use cases. 
 #
 sub subtracts-diversely(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool) is export {
-    # XXX we'd like to tighten this loop up, please.
     for ($x.radix Z=> $y.radix) -> $p {
         my ($m,$n) = $p.kv;
-        return False if ($m > 0 && $m-$n <= 0)
+        return False if $m > 0 && $m-$n <= 0
     }
     return True
 }
 
 
 #
-# finally, some ops!
+# let's do some ops!
 #
-multi sub infix:<⚤>(Farm::Sim::Posse $x,              Any $y --> Farm::Sim::Posse)  is export {  $x.breed($y) }
-multi sub infix:<⊲>(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool)              is export {  subtracts-diversely($x,$y) }
-multi sub infix:<⊳>(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool)              is export {  subtracts-diversely($y,$x) }
+
+#
+# For the "subtracts-diversely" relation, we borrow an operator from abstract 
+# algebra normally used to mean, respectively:
+#
+#   X contains Y as a proper normal subgroup      if $X ⊳ $Y
+#   X is a proper normal subgroup of Y            if $X ⊲ $Y
+#
+# but in our case they're deemed to mean:
+#
+#   X subtracts Y diversely                       if $X ⊳ $Y
+#   X subtracts diversely from Y                  if $X ⊲ $Y
+#
+# Idea being that the operator can be loosely contrived to mean 
+#
+#   X contains Y in a nice way
+#   X is contained by Y in a nice way
+# 
+# respectively, for some value of "nice."
+#  
+multi sub infix:<⊳>(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool)              is export {  subtracts-diversely($x,$y) }
+multi sub infix:<⊲>(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool)              is export {  subtracts-diversely($y,$x) }
+
+
+#
+# And then the magical breeding operator, ⚤:
+#
+# Recall from our definition of the method .breed() on an invocant $P
+# with a dice roll $R:
+#
+#     $P ⚤ $r = $P.breed($r) -->  the "brood" we get when $P mates with $r
+#
+multi sub infix:<⚤>(Farm::Sim::Posse $x, Any $y --> Farm::Sim::Posse)  is export {  $x.breed($y) }
+
+#
+#
 
 =begin END
 
+   $X ⊲ $Y
+   $X ⊳ $Y
+      ⊲
+      ⊳
 
+    # XXX we'd like to tighten this loop up, please.
+    # say "::x = ", $x.radix, " = $x";
+    # say "::y = ", $y.radix, " = $y";
+        {
+            my $stat = ($m > 0 && $m-$n <= 0);
+            say ":: m,n = $m,$n => $stat"
+        }
 
 
 sub subtracts-diversely(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool) is export {
