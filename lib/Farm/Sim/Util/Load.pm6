@@ -1,7 +1,6 @@
 use v6;
 
 sub require_strict(Str $module) is export {
-    say "::require-strict [$module] ..";
     require $module;
     my $class = eval($module);
     die "no class definition found for $module" if $class ~~ Failure;

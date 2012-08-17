@@ -250,25 +250,13 @@ sub posse-from-long(%h) is export { posse(long2short(%h)) }
 
 
 
-
-
-# go forth and multiply!
+#
+# finally, how about some ops
+#
 multi sub infix:<⚤>(Farm::Sim::Posse $x,              Any $y --> Farm::Sim::Posse)  is export {  $x.breed($y) }
 multi sub infix:<⊳>(Farm::Sim::Posse $x,              Any $y --> Bool)              is export {  $x.contains-diversely($y) }
 multi sub infix:<⊲>(             Any $x, Farm::Sim::Posse $y --> Bool)              is export {  $y.contains-diversely($x) }
 
 =begin END
-
-
-# sub circumfix:["⎣","⎦"] (Farm::Sim::Posse $Q, Farm::Sim::Posse $P, Str $x) is export { $Q.avail($P,$x) } 
-# sub circumfix:<⌊ ⌋>(Farm::Sim::Posse $Q, Farm::Sim::Posse $P, Str $x) is export { $Q.avail($P,$x) } 
-# sub circumfix:<⎣⎦>(Farm::Sim::Posse $Q, Farm::Sim::Posse $P, Str $x) is export { $Q.avail($P,$x) } 
-# ===SORRY!===
-# Unable to find starter and stopper from ''
-# sub circumfix:["‹","›x"]($e){$e.floor}
-
-
-
-
 
 

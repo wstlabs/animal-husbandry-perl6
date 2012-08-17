@@ -13,10 +13,10 @@ use Farm::Sim::Util;
 
 class Farm::AI::Strategy {
 
-    has $!loud;
+    has $!verbose;
     has Str $!player;
-    method trace(*@a)  { self.emit(@a) if $!loud > 1 }
-    method debug(*@a)  { self.emit(@a) if $!loud > 2 }
+    method trace(*@a)  { self.emit(@a) if $!verbose > 1 }
+    method debug(*@a)  { self.emit(@a) if $!verbose > 2 }
     method emit(*@a)   { say '::', Backtrace.new.[3].subname, "[$!player] ", @a } 
 
     has @!e;
@@ -26,8 +26,8 @@ class Farm::AI::Strategy {
     method players { %!p.keys.sort }
     method who     { $!player }
 
-    submethod BUILD(:$!loud, :%!p, :$!player) {
-        # say "::AI (strategy) = $!loud";
+    submethod BUILD(:$!verbose, :%!p, :$!player) {
+        # say "::AI (strategy) = $!verbose";
     }
 
 
@@ -45,7 +45,7 @@ class Farm::AI::Strategy {
     }
 
     method trade(%p, @e) {
-        # say "::AI loud = $!loud";
+        # say "::AI verbose = $!verbose";
         # say "::AI player = $!player";
         self.update(%p, @e);
         # say "::AI p = ", %p;
