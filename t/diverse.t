@@ -18,30 +18,39 @@ sub ok-R-to-L (Str $yy, Str $xx, Bool $bool)  {
 
 
 my @R is ro = <
+        ∅    ∅  True 
+        r    r  False 
+        r    s  True 
+        s    r  True 
         r    ∅  True 
         ∅    r  True 
-        r    s  True 
-        s    s  False 
-       s2    s  True 
         r   sr  False 
         s   sr  False 
+       s2    s  True 
+       s2    r  True 
        sr   sr  False 
        sr    r  False 
        sr    s  False 
+       s3   s3  False 
       s2r    s  True 
       s2r    r  False 
+      s2r   s2  False 
      p2s2   ps  True 
+    cp2s2   ps  True 
      p2s2   p2  False 
      p2s2   s2  False 
      c2p3    c  True
+    hc2p3    c  True
      c2p3   p2  True 
      c2p3   p3  False 
      p3s4   p3  False 
      p3s4   p4  False 
      p3s4 p2s2  True 
-     c2p3   hc  True
+    cp3s4 p2s2  True 
      c2p3   p4  False 
      p2s2   s3  False 
+     c2p3   hc  True
+    hc2p3   hc  False 
 >;
 
 # L-to-R:  "LHS subtracts RHS diversely to .."

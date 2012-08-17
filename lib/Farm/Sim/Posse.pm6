@@ -214,7 +214,7 @@ sub subtracts-diversely(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool) is ex
 
 
 #
-# let's do some ops!
+# Let's do some ops!
 #
 
 #
@@ -236,106 +236,28 @@ sub subtracts-diversely(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool) is ex
 # 
 # respectively, for some value of "nice."
 #  
-multi sub infix:<⊳>(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool)              is export {  subtracts-diversely($x,$y) }
-multi sub infix:<⊲>(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool)              is export {  subtracts-diversely($y,$x) }
+multi sub infix:<⊳>(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool) is export {  subtracts-diversely($x,$y) }
+multi sub infix:<⊲>(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool) is export {  subtracts-diversely($y,$x) }
 
 
 #
-# And then the magical breeding operator, ⚤:
+# And then the magical breeding operator, ⚤ , which provdes the number
+# of animals when the Posse on the left "breeds" with the Posse on the
+# right (which in our use case always happens to be a dice roll), BUT 
+# without yet considering whether these animals are available for
+# release by the Stock.  
 #
-# Recall from our definition of the method .breed() on an invocant $P
-# with a dice roll $R:
+# So in the case of a player $P and a dice roll $r:
 #
-#     $P ⚤ $r = $P.breed($r) -->  the "brood" we get when $P mates with $r
+#     $P ⚤ $r = $P.breed($r) = animals player P gets by mating with r (before
+#                              controlling for availability from the Stock).
 #
 multi sub infix:<⚤>(Farm::Sim::Posse $x, Any $y --> Farm::Sim::Posse)  is export {  $x.breed($y) }
 
-#
-#
 
 =begin END
 
    $X ⊲ $Y
    $X ⊳ $Y
-      ⊲
-      ⊳
-
-    # XXX we'd like to tighten this loop up, please.
-    # say "::x = ", $x.radix, " = $x";
-    # say "::y = ", $y.radix, " = $y";
-        {
-            my $stat = ($m > 0 && $m-$n <= 0);
-            say ":: m,n = $m,$n => $stat"
-        }
-
-
-sub subtracts-diversely(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool) is export {
-    my @t = @frisky.reverse;
-    say "t = ",@t;
-    say "x = ", $x.radix, " = $x";
-    say "y = ", $y.radix, " = $y";
-    for ($x.radix Z=> $y.radix).kv -> $p {
-        say "p = $p";
-        say "shift ", @t;
-        my ($m,$n) = $p.kv;
-        {
-            my $t = @t.shift;
-            my $stat = ($m > 0 && $m-$n <= 0);
-            say "$t: $m,$n => $stat"
-        }
-        return False if ($m > 0 && $m-$n <= 0)
-
-
-    #
-    # a boolean comparison method which basically says that, assuming
-    # we can (validly) subtract the argument from the invocant, that we
-    # can do so without breeding diversity.
-    # 
-    # Examples:
-    # e.g. { c2p3 > c }  but not { c2p3 > p3 }, even though both ⊂ c2p3
-    # p3s4 > p2s2 but not p3 or ps4
-    #
-    # Note that a True output on this relation does -not- imply that
-    # we're a containing superset of the argument (or RHS).  There are 
-    # actually two separate reasons for this:
-    #
-    #  - this comparison is done -only- on the @frisky set, i.e. <rspch>,
-    #    and completely ignores keys in the set <dDfw>. 
-    #
-    #  - even within the @frisky set, the operator is designed to be 
-    #    interface-compatible with the usual set-theoretic minus operation,
-    #    i.e. it happily allows to consider an argument (RHS) which has 
-    #    radix values greater than the LHS (i.e. which would subtract 
-    #    to something below zero, were we not rounding up).
-    #
-    multi method contains-diversely (Farm::Sim::Posse $arg --> Bool)  {
-        ?( any(self.radix Z- $arg.radix) <= 0 )
-    }
-
-    #
-    # some examples illustrating the above; these should be put 
-    # in a little unit test, perhaps:
-    #
-    # c2p3 > c      but not p3        (even though both ⊂ c2p3)
-    # p3s4 > p2s2   but not p3,ps4
-    #
-    # (2,3) - (1,0) = (1,2) => yes 
-    # (2,3) - (0,3) = (2,0) => no
-    #
-    # (3,4) - (2,2) = (1,2) => yes
-    # (3,4) - (3,0) = (0,4) => no
-    # (3,4) - (1,4) = (2,0) => no 
-    #
-    # D2c2 > Dc     but not D2,c2
-    # D2c3 > Dc,c2  but not D2 
-    #
-    # (2,2) - (1,1) = (1,1) => yes 
-    # (2,2) - (0,2) = (2,0) => no 
-    # (2,2) - (2,0) = (0,2) => no 
-    #
-    # (2,3) - (1,1) = (1,2) => yes 
-    # (2,3) - (0,2) = (2,1) => yes 
-    # (2,3) - (2,0) = (0,3) => no 
-    #
-
+     ⊲ ⊳
 
