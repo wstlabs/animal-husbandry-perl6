@@ -12,31 +12,32 @@ class Farm::Sim::Game  {
     has $!cp;        # current player
     has %!tr;        # player trading code objects
     has %!ac;        # player accept trade code objects
-    has $!j;         # current step
+    has $!i;         # current step 
+    has $!j;         # current round
+    has $!m;         # (optional) last round
     has $!n;         # (optional) last step 
     has @!r;         # (optional) canned roll sequence, for testing
-    has $!wins;
     has $!t0; 
     has $!t1; 
+    has $!winner;
 
-    has $.loud = 2;
-    method info( *@a)  {       say @a  if $.loud > 0 }
-    method trace(*@a)  { self.emit(@a) if $.loud > 1 }
-    method debug(*@a)  { self.emit(@a) if $.loud > 2 }
+    has $!loud = 1;
+    method info( *@a)  {       say @a  if $!loud > 0 }
+    method trace(*@a)  { self.emit(@a) if $!loud > 1 }
+    method debug(*@a)  { self.emit(@a) if $!loud > 2 }
     method emit( *@a)  { say '::',Backtrace.new.[3].subname,' ',@a }
 
-    submethod BUILD(:%!p, :@!e, :$!cp = 'player_1', :%!tr, :%!ac, :$!n, :@!r, :$!loud = 0) {
+    submethod BUILD(:%!p, :@!e, :$!cp = 'player_1', :%!tr, :%!ac, :@!r, :$!loud, :$!n) {
         %!p<stock> //= posse(stock-hash()); 
         $!dice     //= Farm::Sim::Dice.instance;
-        $!j = 0;
-        # say "LOUD = $!loud";
+        # say "::LOUD (game) = $!loud";
     }
 
     method reset  {
         self.trace("..");
-        $!j = 0;
         @!e = ();
         @!r = ();
+        $!i = $!j = Nil;
         $!cp = 'player_1';
         $!t0 = $!t1 = Nil;
         %!p<stock> //= posse(stock-hash()); 
@@ -69,66 +70,60 @@ class Farm::Sim::Game  {
     method p     { hash map -> $k,$v { $k => $v.longhash }, %!p.kv }
     method stats { 
         return { 
-            j => $!j, 
-            wins => $!wins,
+            :$!i, :$!j, 
+            :$!m, $!n, 
+            :$!winner,
             dt => ($!t1 - $!t0).Real.Str 
         } 
     }
 
 
-    #
-    # play for a fixed number of rounds
-    #
-    multi method play(Int $n where { $n >= 0 })  {
+    multi method play()  {
         $!t0 = now;
-        for (1..$n)  {
-            last if self.someone_won;
-            self.play-round();
+        $!t1 = Nil; 
+        $!i = $!j = 0;
+        say "::PLAY loud = $!loud, n = $!n";
+        while (1)  {
+            self.play-round;
+            if (self.someone-won)  {
+                self.celebrate;
+                last
+            }  else  {
+                self.incr
+            }
+            last if defined($!m) && $!i >= $!m;
+            last if defined($!n) && $!j >= $!n;
+            last if @!r.Int > 0  && $!j >= @!r;
         }
         $!t1 //= now;
         return self
     }
-
-    #
-    # keep playing until we hit some limit specified by
-    # parameters given to the constructor 
-    #
-    multi method play()  {
-        while (1)  {
-            last if self.someone_won;
-            last if defined($!n) && $!j >= $!n;
-            last if @!r.Int > 0  && $!j >= @!r;
-            self.play-round() 
-        }
-        return self
-    }
     
     method play-round  {
-        self.trace("j = $!j, cp = $!cp");
-        self.play-trade;
-        return self.celebrate if self.someone_won; 
-        self.play-roll;
-        return self.celebrate if self.someone_won; 
-        self.incr;
-        return self
+        self.debug("i = $!i, j = $!j, cp = $!cp");
+        return self.do-trade;
+        return self if self.someone_won; 
+        return self.do-roll;
     }
 
-    method play-trade  {
+    method do-trade  {
         my $was   = self.posse($!cp);
         self.debug("was $was");
         self.effect-trade();
         my $now   = self.posse($!cp);
         self.debug("now $now");
+        return self
     }
 
-    method play-roll  {
+    method do-roll  {
         my $was   = self.posse($!cp);
-        my $roll  = @!r[$!j] // $!dice.roll;
+        my $roll  = @!r[$!i] // $!dice.roll;
         self.debug("was $was");
         self.effect-roll($roll);
         my $now   = self.posse($!cp);
         self.debug("now $now");
         self.show-roll( :$was, :$now );
+        return self
     }
 
 
@@ -274,8 +269,7 @@ class Farm::Sim::Game  {
         self.publish: { :type<win>, :who($!cp) };
         my $posse = self.posse($!cp);
         my Real $dt    = $!t1 - $!t0;
-        my $i = self.round;
-        self.info("WIN! $!cp = $posse at round $i / $!j steps, in $dt sec.");
+        self.info("WIN! $!cp = $posse at round $!i / step $!j, in $dt sec.");
         self
     }
 
@@ -331,8 +325,8 @@ class Farm::Sim::Game  {
 
     #
     # slices from the top of the event stack (non-destructively)
-    # until a certain criterion -- here clumsily represnted by a
-    # positional $k, $v pair -- is met.
+    # until a certain criterion -- here unimaginately represented 
+    # by a positional $k,$v pair -- is met.  sample output:
     #
     # Array.new(
     #   {"type" => "roll", "player" => "P1", "roll" => "hr"}, 
@@ -347,18 +341,20 @@ class Farm::Sim::Game  {
         }.reverse
     }
 
+    # 0: 1,0
+    # 1: 2,0
+    # 2: 3,1
+    # 3: 4,1
     method incr {
         $!cp = "player_1" unless %!p.exists(++$!cp);
-        $!j++
-    }
-    method round { 
-        my $n = +self.players;
-        ($!j - $!j % $n) / $n
+        ++$!j % +self.players ?? $!i !! ++$!i
     }
 
-    method someone_won { 
-        $!wins = $!cp if 
-            so %!p{$!cp}{all <r s p c h>} 
+    method someone-won { 
+        if ( so %!p{$!cp}{all <r s p c h>} )  { 
+            $!t1 = now;
+            $!winner = $!cp;
+        }
     }
 
     
@@ -366,5 +362,25 @@ class Farm::Sim::Game  {
 
 =begin END
 ⚤ "»» ..";
+
+    method round { 
+        my $n = +self.players;
+        ($!j - $!j % $n) / $n
+    }
+
+    #
+    # play for a fixed number of rounds
+    #
+    multi method play(Int $n where { $n >= 0 })  {
+        $!t0 = now;
+        while (1)  {
+            self.play-round;
+            last if someone-won;
+            self.incr;
+            last if $!i >= $!k || $!j >= $!n
+        }
+        $!t1 //= now;
+        return self
+    }
 
 

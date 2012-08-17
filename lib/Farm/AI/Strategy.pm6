@@ -5,9 +5,9 @@ use Farm::Sim::Util;
 class Farm::AI::Strategy {
     has Str $.player;
 
-    has $.loud = 2;
-    method trace(*@a)  { self.emit(@a) if $.loud > 1 }
-    method debug(*@a)  { self.emit(@a) if $.loud > 2 }
+    has $!loud = 2;
+    method trace(*@a)  { self.emit(@a) if $!loud > 1 }
+    method debug(*@a)  { self.emit(@a) if $!loud > 2 }
     method emit(*@a)   { say '::', Backtrace.new.[3].subname, "[$.player] ", @a } 
 
     has @!e;
@@ -24,6 +24,7 @@ class Farm::AI::Strategy {
     }
 
     method trade(%p, @e) {
+        say "::WHAT = $!loud";
         self.update(%p, @e);
         my %trade = self.find-trade; 
         # say ":: x = ", expand(%trade);

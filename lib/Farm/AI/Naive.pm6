@@ -36,7 +36,7 @@ is    Farm::AI::Strategy  {
             }
             
         }  
-        self.trace("dogful: ", avail-dogs($S,$P));
+        self.trace("dogs for sale: ", avail-dogs($S,$P));
         for avail-dogs($S,$P) -> $x  {
             self.debug("doggy $x ?");
             my @t = find-admissible-trades($P,$x);
