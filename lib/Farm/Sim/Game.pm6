@@ -70,16 +70,17 @@ class Farm::Sim::Game  {
     method players { %!p.keys.sort }
     method table { hash map -> $k,$v { $k => $v.Str      }, %!p.kv }
     method p     { hash map -> $k,$v { $k => $v.longhash }, %!p.kv }
-    # XXX currently this hash comes out a bit garbled around the vicintiy 
-    # of the undefined $!m variable.  what's up with that?
+    method elapsed { ($!t1-$!t0).Real }
     method stats { 
         return { 
             :$!i, :$!j, 
             :$!m, $!n, 
             :$!winner,
-            dt => ($!t1 - $!t0).Real.Str 
+            dt => self.elapsed 
         } 
     }
+    # XXX currently this hash comes out a bit garbled around the vicintiy 
+    # of the undefined $!m variable.  what's up with that?
 
 
     multi method play()  {
@@ -179,8 +180,9 @@ class Farm::Sim::Game  {
             self.transfer( $!cp, .<with>, $selling   );
             self.transfer( .<with>, $!cp, $truncated );
             my $now = self.posse($!cp);
+            my $ij = format-counts($!i,$!j);
+            self.info("SWAP $ij $!cp ↦",.<with>,": $selling => $buying" ~ $remark ~ " » $now");
             # say "::GAME verbose = $!verbose";
-            self.info("SWAP $!cp ↦",.<with>,": $selling => $buying" ~ $remark ~ " » $now");
         }
     }
 
@@ -263,7 +265,8 @@ class Farm::Sim::Game  {
     # the guts of &fail, aka &fail_trade in .effect-trade 
     method reject(%trade, $reason) {
         my %i = trade2info(%trade);
-        self.info("FAIL $!cp ↦ %i<op> : %i<sell> <=> %i<buy> : $reason");
+        my $ij = format-counts($!i,$!j);
+        self.info("FAIL $ij $!cp ↦ %i<op> : %i<sell> <=> %i<buy> : $reason");
         self.publish: { 
             :type<failed>, 
             :$reason, 
@@ -275,9 +278,10 @@ class Farm::Sim::Game  {
     method celebrate  {
         $!t1 = now;
         self.publish: { :type<win>, :who($!cp) };
-        my $posse = self.posse($!cp);
-        my Real $dt    = $!t1 - $!t0;
-        self.info("WIN! $!cp = $posse at step $!i / round $!j, in $dt sec.");
+        my $winner = self.posse($!cp);
+        my $dt     = self.elapsed; 
+        my $ij     = format-counts($!i,$!j);
+        self.info("WIN! $ij $winner = $!cp, in $dt sec.");
         self
     }
 
@@ -294,10 +298,9 @@ class Farm::Sim::Game  {
     method show-roll( :$was, :$now )  { 
         my %m = self.inspect-roll;
         self.debug("meta = {%m.perl}");
-        self.debug("was = $was, now = $now");
+        my $ij = format-counts($!i,$!j);
         my $eaten = (defined %m<puts>) ?? "-%m<puts>" !! "";
-        # say "::GAME (game) = $!verbose";
-        self.info("ROLL %m<player> $was ~ %m<roll> -> +%m<gets> $eaten » $now");
+        self.info("ROLL $ij %m<player> $was ~ %m<roll> -> +%m<gets> $eaten » $now");
     }
 
     method inspect-roll {
@@ -370,6 +373,12 @@ class Farm::Sim::Game  {
         }
     }
 
+    # formatting hacks used to keep the ROLL/SWAP/FAIL/WIN! status lines sort of 
+    # fixed-width-ish.  3-char defaults for $!i, $!j should be fine for the values 
+    # we're dealing with.
+    # XXX btw, so where -is- the perlform manpage for perl 6, anyway?
+    sub right-justify(Int $k, Any $s --> Str) { (' 'x($k-$s.chars)~$s) }
+    sub format-counts($i,$j) { right-justify(3,$i) ~ " " ~ right-justify(3,$j) }
     
 };
 
