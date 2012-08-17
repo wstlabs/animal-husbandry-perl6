@@ -266,7 +266,8 @@ class Farm::Sim::Game  {
     method reject(%trade, $reason) {
         my %i = trade2info(%trade);
         my $ij = format-counts($!i,$!j);
-        self.info("FAIL $ij $!cp ↦ %i<op> : %i<sell> <=> %i<buy> : $reason");
+        my $op = %i<op> // '-unknown-'; 
+        self.info("FAIL $ij $!cp ↦ $op : %i<sell> <=> %i<buy> : $reason");
         self.publish: { 
             :type<failed>, 
             :$reason, 

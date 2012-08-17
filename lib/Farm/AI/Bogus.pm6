@@ -1,9 +1,11 @@
+#
+# a highly bogus strategy which intentially spews out mostly failing trades
+#
 use Farm::AI::Strategy;
 
-class Farm::AI::Bogus 
-is    Farm::AI::Strategy  {
-
-    has %!t = {
+class Farm::AI::Bogus  {
+    has Str $.player;
+    has %!junk = {
         legit => {
             type => "trade", with => "stock",
             selling => { sheep => 1 }, buying  => { rabbit => 6 },
@@ -32,30 +34,26 @@ is    Farm::AI::Strategy  {
             type => "trade", with => "stock",
             selling => { sheep => 1, rabbit => 6, pig => 2 }, buying  => { cow => 1 },
         },
-        mull-trade => {
+        null-trade => {
             type => "trade", with => "stock",
             selling => { }, buying  => { },
         }
     };
 
-    multi method find-trade()  {
-        self.trace("find-trade p = ", self.p);
-        self.trace("find-trade me = ", self.posse($.player)); 
-        my $roll = %!t.keys.roll; 
-        my %t = %!t{$roll};
-        self.trace("::find-trade $roll => ",{%t});
+    method trade(%p, @e) {
+        say "::trade[$.player] .."; 
+        my ($name,%t) = %!junk.roll.kv;
+        say "::trade[$.player] $name => ",%t;
         return %t;
     }
 
-    multi method eval-trade(Str $who)  {
-        self.trace("::eval-trade [$.player] p = ", self.p);
+    method accept (%p, @e,$t) {
         return Bool.roll
     } 
 
 }
 
 =begin END
-    method trade(%p, @e) {
-        self.trace("p = ", {%p}) unless $.done //= True;
-    }
+
+
 
