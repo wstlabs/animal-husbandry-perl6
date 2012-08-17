@@ -113,17 +113,3 @@ sub op-dies-ok (Str $xx, Str $yy)  {
 
 =begin END
 
-# deprecated Nil breeding case
-multi sub op-ok (Str $xx, Str $yy, Nil $z)  {
-    my $x  = posse($xx);
-    my $y  = keybag(hashify($yy));
-    my $s   = $x ⚤ $y;
-    ok $s eqv Nil, "obj $x ⚤ $yy => Nil";
-} 
-
-    # my $ss  = $x ⚤ $yy;
-    # ok $ss eqv Nil, "str $x ⚤ $yy => Nil";
-    # say "z  = ", $z.WHICH, " = ", $z;
-    # say "s  = ", $s.WHICH, " = ", $s;
-    # say "ss = ", $ss.WHICH, " = ", $ss;
-

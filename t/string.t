@@ -23,9 +23,6 @@ sub test_surj($s, %h)  {
     ok  hashify-animals($s) eqv %h,       "$s --> Hash eqv Hash";
     lives_ok { $x = posse($s) },  "$s --> Obj";
     ok  $x.hash eqv %h,           "$s --> Obj eqv Hash";
-    # say "x      = ", $x;
-    # say "x.hash = ", $x.hash;
-    # say "h      = ", %h;
 }
 
 #
