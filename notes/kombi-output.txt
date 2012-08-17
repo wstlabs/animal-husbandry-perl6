@@ -1,0 +1,19 @@
+generating equivalence classes; may take a while (4-5 min)..
+s = 6 ...
+p = 12 ...
+c = 36 ...
+h = 72 ...
+d3 = 18 ...
+d4 = 24 ...
+let's see, now:
+  3 s- or d-  equivalent trades
+  7 p- or d2-     "        "   
+  6 d3-           "        "   
+  9 d4-           "        "   
+ 52 c- or D-      "        "   
+355 h- or D2-     "        "   
+|T| = ("s" => 3, "p" => 7, "c" => 52, "h" => 355, "d3" => 6, "d4" => 9).hash
+restricting for stock-admissibility (S = h6D2c12p20d4s24r60) ..
+|A| = ("s" => 3, "p" => 7, "c" => 49, "h" => 276, "d3" => 6, "d4" => 9).hash
+|S| = ("s" => 1, "p" => 1, "c" => 1, "h" => 1, "d3" => 1, "d4" => 1).hash
+("s" => ["d s r6"], "p" => ["p d2 dr6 ds r12 sr6 s2"], "c" => ["D c p2d2 pd2r12 pd2sr6 pd2s2 d2s2r12 d2sr18 d2r24 d2s3r6 d2s4 pd3r6 pd3s d3sr12 d3r18 d3s2r6 d3s3 pd4 d4r12 d4sr6 d4s2 p2dr6 p2ds pdsr12 pdr18 pds2r6 pds3 ds3r12 ds2r18 dsr24 dr30 ds4r6 ds5 p2r12 p2sr6 p2s2 p3 ps2r12 psr18 pr24 ps3r6 ps4 s4r12 s3r18 s2r24 sr30 r36 s5r6 s6"], "h" => ["D2 Dc Dp2d2 Dpd2r12 Dpd2sr6 Dpd2s2 Dd2s2r12 Dd2sr18 Dd2r24 Dd2s3r6 Dd2s4 Dpd3r6 Dpd3s Dd3sr12 Dd3r18 Dd3s2r6 Dd3s3 Dpd4 Dd4r12 Dd4sr6 Dd4s2 Dp2dr6 Dp2ds Dpdsr12 Dpdr18 Dpds2r6 Dpds3 Dds3r12 Dds2r18 Ddsr24 Ddr30 Dds4r6 Dds5 Dp2r12 Dp2sr6 Dp2s2 Dp3 Dps2r12 Dpsr18 Dpr24 Dps3r6 Dps4 Ds4r12 Ds3r18 Ds2r24 Dsr30 Dr36 Ds5r6 Ds6 c2 cp2d2 cpd2r12 cpd2sr6 cpd2s2 cd2s2r12 cd2sr18 cd2r24 cd2s3r6 cd2s4 cpd3r6 cpd3s cd3sr12 cd3r18 cd3s2r6 cd3s3 cpd4 cd4r12 cd4sr6 cd4s2 cp2dr6 cp2ds cpdsr12 cpdr18 cpds2r6 cpds3 cds3r12 cds2r18 cdsr24 cdr30 cds4r6 cds5 cp2r12 cp2sr6 cp2s2 cp3 cps2r12 cpsr18 cpr24 cps3r6 cps4 cs4r12 cs3r18 cs2r24 csr30 cr36 cs5r6 cs6 p2d2s4r12 p2d2s3r18 p2d2s2r24 p2d2sr30 p2d2r36 p2d2s5r6 p2d2s6 p3d2s2r12 p3d2sr18 p3d2r24 p3d2s3r6 p3d2s4 p4d2r12 p4d2sr6 p4d2s2 p5d2 pd2s6r12 pd2s5r18 pd2s4r24 pd2s3r30 pd2s2r36 pd2sr42 pd2r48 pd2s7r6 pd2s8 d2s8r12 d2s7r18 d2s6r24 d2s5r30 d2s4r36 d2s3r42 d2s2r48 d2sr54 d2r60 d2s9r6 d2s10 p2d3s3r12 p2d3s2r18 p2d3sr24 p2d3r30 p2d3s4r6 p2d3s5 p3d3sr12 p3d3r18 p3d3s2r6 p3d3s3 p4d3r6 p4d3s pd3s5r12 pd3s4r18 pd3s3r24 pd3s2r30 pd3sr36 pd3r42 pd3s6r6 pd3s7 d3s7r12 d3s6r18 d3s5r24 d3s4r30 d3s3r36 d3s2r42 d3sr48 d3r54 d3s8r6 d3s9 p2d4s2r12 p2d4sr18 p2d4r24 p2d4s3r6 p2d4s4 p3d4r12 p3d4sr6 p3d4s2 p4d4 pd4s4r12 pd4s3r18 pd4s2r24 pd4sr30 pd4r36 pd4s5r6 pd4s6 d4s6r12 d4s5r18 d4s4r24 d4s3r30 d4s2r36 d4sr42 d4r48 d4s7r6 d4s8 p2ds5r12 p2ds4r18 p2ds3r24 p2ds2r30 p2dsr36 p2dr42 p2ds6r6 p2ds7 p3ds3r12 p3ds2r18 p3dsr24 p3dr30 p3ds4r6 p3ds5 p4dsr12 p4dr18 p4ds2r6 p4ds3 p5dr6 p5ds pds7r12 pds6r18 pds5r24 pds4r30 pds3r36 pds2r42 pdsr48 pdr54 pds8r6 pds9 ds9r12 ds8r18 ds7r24 ds6r30 ds5r36 ds4r42 ds3r48 ds2r54 dsr60 ds10r6 ds11 p2s6r12 p2s5r18 p2s4r24 p2s3r30 p2s2r36 p2sr42 p2r48 p2s7r6 p2s8 p3s4r12 p3s3r18 p3s2r24 p3sr30 p3r36 p3s5r6 p3s6 p4s2r12 p4sr18 p4r24 p4s3r6 p4s4 p5r12 p5sr6 p5s2 p6 ps8r12 ps7r18 ps6r24 ps5r30 ps4r36 ps3r42 ps2r48 psr54 pr60 ps9r6 ps10 s10r12 s9r18 s8r24 s7r30 s6r36 s5r42 s4r48 s3r54 s2r60 s11r6 s12"], "d3" => ["pr6 ps sr12 r18 s2r6 s3"], "d4" => ["p2 pr12 psr6 ps2 s2r12 sr18 r24 s3r6 s4"]).hash
