@@ -277,7 +277,7 @@ class Farm::Sim::Game  {
         self.publish: { :type<win>, :who($!cp) };
         my $posse = self.posse($!cp);
         my Real $dt    = $!t1 - $!t0;
-        self.info("WIN! $!cp = $posse at round $!i / step $!j, in $dt sec.");
+        self.info("WIN! $!cp = $posse at step $!i / round $!j, in $dt sec.");
         self
     }
 
