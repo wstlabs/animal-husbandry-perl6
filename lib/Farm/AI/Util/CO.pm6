@@ -39,14 +39,15 @@ sub kombify() is export  {
     say "d3 = 18 ..."; my @d3 = grep { !m/<[d]>/ }, @p ∘ @s; # 13 dogful, 6 dogless
     say "d4 = 24 ..."; my @d4 = grep { !m/<[d]>/ }, @p ∘ @p; # 22 dogful, 9 dogless      
 
-    say "got:";
-    say '  ', +@s, ' s- or d-  equivalent trades';
-    say '  ', +@p, ' p- or d2-     "        "   ';
-    say ' ', +@d3, ' d3-           "        "   ';
-    say ' ', +@d4, ' d4-           "        "   ';
-    say ' ',  +@c, ' c- or D-      "        "   ';
-    say       +@h, ' h- or D2-     "        "   ';
-    # XXX sorry, gave up trying to figure out what's up with heredocs and formatting in rakudo. 
+    say "let's see, now:";
+    say '  ', +@s,  ' s- or d-  equivalent trades';
+    say '  ', +@p,  ' p- or d2-     "        "   ';
+    say '  ', +@d3, ' d3-           "        "   ';
+    say '  ', +@d4, ' d4-           "        "   ';
+    say ' ',  +@c,  ' c- or D-      "        "   ';
+    say       +@h,  ' h- or D2-     "        "   ';
+    # XXX sorry, gave up trying to figure out what's up with heredocs and formatting 
+    # in rakudo.  easier just to format that table by hand.
 
     my @k = < s p c h d3 d4 >;
     my %T = hash map -> $k { $k => eval '@'~$k     }, @k;
@@ -56,13 +57,15 @@ sub kombify() is export  {
     my $stock = posse( stock-hash() );
     say "restricting for stock-admissibility (S = $stock) ..";
     my %A = map -> $k {
-        my @inflated =  map {   posse($_) }, %T{$k}.list; 
+        my @inflated =  map {  posse($_)  }, %T{$k}.list; 
         $k =>          grep { $_ ⊆ $stock }, @inflated
     }, @k;
     say "|A| = ", count-hash-of-lists(%A);
 
-    # finally, let's do some kind of sorting on the way out;
-    # default alpha sort will be fine for now.
+    # finally, let's do some kind of sorting on the way out; while there 
+    # are ways we can sort these tuples so that they (sort of) come out in 
+    # a sensible order, with higher-ranking animals generally closer to the 
+    # front of the line, the default alpha sort will be fine for now.
     my %S = hash map { 
         my @s = %A{$_}.list.Str.sort({ $^a leg $^b });
         $_ => @s 

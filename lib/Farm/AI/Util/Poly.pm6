@@ -56,7 +56,7 @@ sub mul-poly (@p, @q) is export {
 }
 
 #
-# iterative form of the mul-poly op
+# straightforward iterative form of the mul-poly op.
 #
 sub pow-poly (@p is copy, Int $k where { $k > 0 }) is export  {
     $k == 1 ?? 
@@ -65,9 +65,12 @@ sub pow-poly (@p is copy, Int $k where { $k > 0 }) is export  {
         mul-poly( @p, pow-poly(@p, $k-1) )
 }
 
-# let's unimaginatively hijack U+2218, aka the function composition operator,
+# in which we hijack '∘', aka the function composition operator (U+2218) 
+# to do our bidding in the service of our homegrown mul and pow ops.
 multi sub infix:<∘> ( @p, @q ) is export { mul-poly @p, @q }
 multi sub infix:<∘∘>( @p, $k ) is export { pow-poly @p, $k }
+
+
 
 
 

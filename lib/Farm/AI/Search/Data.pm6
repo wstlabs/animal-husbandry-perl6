@@ -1,10 +1,4 @@
 #
-# a little stash space for canned data used e.g. for combinatorial 
-# search generation.
-#
-
-
-
 # equivalence classes of "downward" trades, i.e. less than or equal to 
 # in rank (i.e. worth in trade).  we present this table in the form of
 # two hash-of-list structures, being as one part of the data is in a
@@ -12,6 +6,19 @@
 
 #
 # downward trades for the 5 core ("frisky") animals, <r s p c h>. 
+# the data were originally generated combintorially, with the help of 
+# the subs over in Farm::AI::Util::CO; and then formatted by hand.
+# (there are automatic ways to do this, but at this scale the manual
+# approach was far easier).
+#
+# as to the visual alignment:
+#
+# the tuples are generally weighted such that tuples dominated by powers 
+# of higher-ranking animals appear closer to the top, and aligned horizontally 
+# with tuples of "similar" composition.  but given that what we have here is 
+# really a poset lattice, there's no unique traversal order to this structure, 
+# so you just have to pick an alignment that "looks right" for you at the
+# moment.
 #
 constant %T = { 
     # omit D,c
@@ -30,7 +37,8 @@ constant %T = {
         s6 s5r6 s4r12 s3r18 s2r24 sr30 r36 >], 
      # omit h, D
      72 => [<  
-        D2 Dc 
+        D2 
+        Dc 
         Dp3 
         Dp2d2 Dp2dr6 Dp2ds Dp2r12 Dp2s2 Dp2sr6 
         Dpd4 
@@ -75,7 +83,7 @@ constant %T = {
         p2ds7 p2ds6r6 p2ds5r12 p2ds4r18 p2ds3r24 p2ds2r30 p2dsr36 p2dr42 
         p2s8 p2s7r6 p2s6r12 p2s5r18 p2s4r24 p2s3r30 p2s2r36 p2sr42 p2r48 
         pd4r36 pd4s2r24 pd4s3r18 pd4s4r12 pd4s5r6 pd4s6 pd4sr30 
-        pd3r42 pd3s2r30 pd3s3r24 pd3s4r18 pd3s5r12 pd3s6r6 pd3s7 pd3sr36 
+        pd3r42 pd3sr36 pd3s2r30 pd3s3r24 pd3s4r18 pd3s5r12 pd3s6r6 pd3s7 
         pd2r48 pd2s2r36 pd2s3r30 pd2s4r24 pd2s5r18 pd2s6r12 pd2s7r6 pd2s8 pd2sr42 
         pdr54 pds2r42 pds3r36 pds4r30 pds5r24 pds6r18 pds7r12 pds8r6 pds9 pdsr48 
         ps10 ps9r6 ps8r12 ps7r18 ps6r24 ps5r30 ps4r36 ps3r42 ps2r48 psr54 pr60 
@@ -87,14 +95,17 @@ constant %T = {
     >]
 };
 
-# non-canonical "dog-to-many" trades.
-# basically generated the same way as for canonical trades, but we filter  
-# out the 'd' terms (to make sure we aren't trading dogs for dogs!)
+#
+# non-canonical, "dog-to-other" trades.
+#
+# basically generated the same way canonical trades, i.e. via characerestic 
+# polynomials, but we filter out the 'd' terms, of course, to make sure we
+# aren't trading dogs for dogs!
 constant %D = { 
-    'd'  => [<s r6>],
-    'd2' => [<s2 sr6 r12>],
-    'd3' => [< pd pr6 ps s3 s2r6 sr12 r18 >], 
-    'd4' => [< pd2 pds pdr6 p2 pr12 psr6 ps2 s4 s3r6 s2r12 sr18 r24 >]
+    'd'  => [<  s r6  >],
+    'd2' => [<  s2 sr6 r12  >],
+    'd3' => [<  pr6 ps s3 s2r6 sr12 r18  >], 
+    'd4' => [<  p2 pr12 psr6 ps2 s4 s3r6 s2r12 sr18 r24  >]
 };
 
 
@@ -112,33 +123,34 @@ constant %D = {
 # have involved some system of aliasing (and perhaps a lot of grepping 
 # to remove dogful trades), and would have ended up looking even weirder.
 
-# first we provide this function in costly, non-memoized form.  note that 
-# it can be rather keep creating all these large new lists each time: 
+#
+# first we provide this lookup function in costly, non-memoized form.  
+#
 sub downward-equiv-raw(Str $x) is export { 
-    $x eq 'r'  ?? []                                  !! 
-    $x eq 's'  ?? [<d r6>]                            !! 
-    $x eq 'p'  ?? [<d2 ds s2 dr6 sr6 r12>]            !!
-    $x eq 'c'  ?? ['D',  %T{36}.list ]                !!
-    $x eq 'h'  ?? ['D2', %T{72}.list ]                !!
-    $x eq 'D'  ?? ['c',  %T{36}.list ]                !!
-    $x eq 'D2' ?? ['h',  %T{72}.list ].grep({!m/D/})  !!
+    $x eq 'r'  ?? []                                     !! 
+    $x eq 's'  ?? [  <d r6>  ]                           !! 
+    $x eq 'p'  ?? [  <d2 ds s2 dr6 sr6 r12> ]            !!
+    $x eq 'c'  ?? [  'D',  %T{36}.list ]                 !!
+    $x eq 'h'  ?? [  'D2', %T{72}.list ]                 !!
+    $x eq 'D'  ?? [  'c',  %T{36}.list ]                 !!
+    $x eq 'D2' ?? [ ('h',  %T{72}.list).grep({!m/D/}) ]  !!
     %D.exists($x) ?? %D{$x}.list !! die "invalid search term '$x'"
 }
 
-my %E;
 #
-# ... and in memoized form.  
+# ... and then memoized.
 #
 # XXX note that the singletons it returns are rw, and hence quite
 # volatile to unintended mutation.  Also, the calling context 
 # (find-admissible-trades() in Farm::AI::Strategy) seems to be having
 # problems with grepping on the returned Capture in List context. 
+my %E;
 sub downward-equiv-to(Str $x) is export { 
     %E{$x} //= downward-equiv-raw($x)
 }
 
-# ie, valid args to the function above. 
-my constant @terms = < r s p c h d d2 d3 d4 D D2 >;
+# ie, valid arg tests to the function above, should we need them.
+my constant @terms = < r s p c h  d d2 d3 d4  D D2 >;
 sub canon-search-terms is export { @terms }
 
 
