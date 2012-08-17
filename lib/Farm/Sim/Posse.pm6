@@ -1,6 +1,6 @@
 use v6;
-use KeyBag::Deco;
 use KeyBag::Ops;
+use KeyBag::Deco;
 use Farm::Sim::Util;
 use Farm::Sim::Util::HashTup;
 
@@ -46,7 +46,7 @@ is    KeyBag::Deco
 does  Farm::Sim::Posse::Role::Stringy  {
     #
     # The magical .breed() method, in which we determine the "desired" number 
-    # of animals that could (in principle) be provided when a Posse "mates" with 
+    # of animals that could (in principle) be provided when a Posse mates with 
     # the animals represented in a valid roll of a fox/wolf die pair -- but NOT,
     # at this stage, checking to make sure those animals are actually available 
     # in the Stock.
@@ -115,57 +115,6 @@ does  Farm::Sim::Posse::Role::Stringy  {
     # used for interface compatiblity with the original game.
     method longhash { short2long(self.hash) }
 
-    #
-    # a boolean comparison method which basically says that, assuming
-    # we can (validly) subtract the argument from the invocant, that we
-    # can do so without breeding diversity.
-    # 
-    # Examples:
-    # e.g. { c2p3 > c }  but not { c2p3 > p3 }, even though both ⊂ c2p3
-    # p3s4 > p2s2 but not p3 or ps4
-    #
-    # Note that a True output on this relation does -not- imply that
-    # we're a containing superset of the argument (or RHS).  There are 
-    # actually two separate reasons for this:
-    #
-    #  - this comparison is done -only- on the @frisky set, i.e. <rspch>,
-    #    and completely ignores keys in the set <dDfw>. 
-    #
-    #  - even within the @frisky set, the operator is designed to be 
-    #    interface-compatible with the usual set-theoretic minus operation,
-    #    i.e. it happily allows to consider an argument (RHS) which has 
-    #    radix values greater than the LHS (i.e. which would subtract 
-    #    to something below zero, were we not rounding up).
-    #
-    multi method contains-diversely (Farm::Sim::Posse $arg --> Bool)  {
-        ?( any(self.radix Z- $arg.radix) <= 0 )
-    }
-
-    #
-    # some examples illustrating the above; these should be put 
-    # in a little unit test, perhaps:
-    #
-    # c2p3 > c      but not p3        (even though both ⊂ c2p3)
-    # p3s4 > p2s2   but not p3,ps4
-    #
-    # (2,3) - (1,0) = (1,2) => yes 
-    # (2,3) - (0,3) = (2,0) => no
-    #
-    # (3,4) - (2,2) = (1,2) => yes
-    # (3,4) - (3,0) = (0,4) => no
-    # (3,4) - (1,4) = (2,0) => no 
-    #
-    # D2c2 > Dc     but not D2,c2
-    # D2c3 > Dc,c2  but not D2 
-    #
-    # (2,2) - (1,1) = (1,1) => yes 
-    # (2,2) - (0,2) = (2,0) => no 
-    # (2,2) - (2,0) = (0,2) => no 
-    #
-    # (2,3) - (1,1) = (1,2) => yes 
-    # (2,3) - (0,2) = (2,1) => yes 
-    # (2,3) - (2,0) = (0,3) => no 
-    #
 
     # an awkwardly named function which computes a quick upper bound on 
     # the number of animal $x that can be bought by posse $P. 
@@ -222,13 +171,6 @@ does  Farm::Sim::Posse::Role::Stringy  {
 
 
 #
-# XXX we'd also like to provide overrides for .gist and .perl, but something's 
-# not quite working.
-#
-# multi method gist(Any:D $ : --> Str) { "posse({ self.pairs>>.gist.join(', ') })" }
-# multi method perl(Any:D $ : --> Str) { 'Farm::Sim::Posse.new(' ~ self.hash.perl ~ ')' }
-
-#
 # A convenient 'quasi-constructor', analagous to set(), keybag(), etc. 
 # Note however that we tweak the signatures somewhat -- in order to allow Str
 # arguments, it seems we need to disallow tuple-like contexts (and we'd rather
@@ -251,12 +193,106 @@ sub posse-from-long(%h) is export { posse(long2short(%h)) }
 
 
 #
-# finally, how about some ops
+# A boolean relation which basically says "if we subtract $y from $x, then the
+# diversity of animals remains the same." i.e. equivalent to 
+#
+#   (($x ∖ $y) ∩ $F).Set eqv ($x ∩ $F).Set 
+#
+# where $F is the set of "frisky" animals, <r s p c h>.  (and perhaps a bit quicker, 
+# the way we compute it here.)  
+#
+# The relation can be used as a filter to maintain conservative trading strategies.
+# See the unit test t/diversity.t for more some sample use cases. 
+#
+sub subtracts-diversely(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool) is export {
+    # XXX we'd like to tighten this loop up, please.
+    for ($x.radix Z=> $y.radix) -> $p {
+        my ($m,$n) = $p.kv;
+        return False if ($m > 0 && $m-$n <= 0)
+    }
+    return True
+}
+
+
+#
+# finally, some ops!
 #
 multi sub infix:<⚤>(Farm::Sim::Posse $x,              Any $y --> Farm::Sim::Posse)  is export {  $x.breed($y) }
-multi sub infix:<⊳>(Farm::Sim::Posse $x,              Any $y --> Bool)              is export {  $x.contains-diversely($y) }
-multi sub infix:<⊲>(             Any $x, Farm::Sim::Posse $y --> Bool)              is export {  $y.contains-diversely($x) }
+multi sub infix:<⊲>(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool)              is export {  subtracts-diversely($x,$y) }
+multi sub infix:<⊳>(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool)              is export {  subtracts-diversely($y,$x) }
 
 =begin END
+
+
+
+
+sub subtracts-diversely(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool) is export {
+    my @t = @frisky.reverse;
+    say "t = ",@t;
+    say "x = ", $x.radix, " = $x";
+    say "y = ", $y.radix, " = $y";
+    for ($x.radix Z=> $y.radix).kv -> $p {
+        say "p = $p";
+        say "shift ", @t;
+        my ($m,$n) = $p.kv;
+        {
+            my $t = @t.shift;
+            my $stat = ($m > 0 && $m-$n <= 0);
+            say "$t: $m,$n => $stat"
+        }
+        return False if ($m > 0 && $m-$n <= 0)
+
+
+    #
+    # a boolean comparison method which basically says that, assuming
+    # we can (validly) subtract the argument from the invocant, that we
+    # can do so without breeding diversity.
+    # 
+    # Examples:
+    # e.g. { c2p3 > c }  but not { c2p3 > p3 }, even though both ⊂ c2p3
+    # p3s4 > p2s2 but not p3 or ps4
+    #
+    # Note that a True output on this relation does -not- imply that
+    # we're a containing superset of the argument (or RHS).  There are 
+    # actually two separate reasons for this:
+    #
+    #  - this comparison is done -only- on the @frisky set, i.e. <rspch>,
+    #    and completely ignores keys in the set <dDfw>. 
+    #
+    #  - even within the @frisky set, the operator is designed to be 
+    #    interface-compatible with the usual set-theoretic minus operation,
+    #    i.e. it happily allows to consider an argument (RHS) which has 
+    #    radix values greater than the LHS (i.e. which would subtract 
+    #    to something below zero, were we not rounding up).
+    #
+    multi method contains-diversely (Farm::Sim::Posse $arg --> Bool)  {
+        ?( any(self.radix Z- $arg.radix) <= 0 )
+    }
+
+    #
+    # some examples illustrating the above; these should be put 
+    # in a little unit test, perhaps:
+    #
+    # c2p3 > c      but not p3        (even though both ⊂ c2p3)
+    # p3s4 > p2s2   but not p3,ps4
+    #
+    # (2,3) - (1,0) = (1,2) => yes 
+    # (2,3) - (0,3) = (2,0) => no
+    #
+    # (3,4) - (2,2) = (1,2) => yes
+    # (3,4) - (3,0) = (0,4) => no
+    # (3,4) - (1,4) = (2,0) => no 
+    #
+    # D2c2 > Dc     but not D2,c2
+    # D2c3 > Dc,c2  but not D2 
+    #
+    # (2,2) - (1,1) = (1,1) => yes 
+    # (2,2) - (0,2) = (2,0) => no 
+    # (2,2) - (2,0) = (0,2) => no 
+    #
+    # (2,3) - (1,1) = (1,2) => yes 
+    # (2,3) - (0,2) = (2,1) => yes 
+    # (2,3) - (2,0) = (0,3) => no 
+    #
 
 
