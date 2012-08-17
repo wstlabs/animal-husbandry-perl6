@@ -21,7 +21,7 @@ class Farm::Sim::Game  {
     has $!t1; 
     has $!winner;
 
-    has $!loud = 1;
+    has $!loud;
     method info( *@a)  {       say @a  if $!loud > 0 }
     method trace(*@a)  { self.emit(@a) if $!loud > 1 }
     method debug(*@a)  { self.emit(@a) if $!loud > 2 }
@@ -30,13 +30,13 @@ class Farm::Sim::Game  {
     submethod BUILD(:%!p, :@!e, :$!cp = 'player_1', :%!tr, :%!ac, :@!r, :$!loud, :$!n) {
         %!p<stock> //= posse(stock-hash()); 
         $!dice     //= Farm::Sim::Dice.instance;
-        # say "::LOUD (game) = $!loud";
+        # say "::GAME (game) = $!loud";
     }
 
     method reset  {
         self.trace("..");
-        @!e = ();
-        @!r = ();
+        $!winner = Nil;
+        @!e = @!r = ();
         $!i = $!j = Nil;
         $!cp = 'player_1';
         $!t0 = $!t1 = Nil;
@@ -58,16 +58,20 @@ class Farm::Sim::Game  {
     }
 
     # creates a standard contest game on the specified player list 
-    # XXX should check integrity of tr, ac hashes 
+    # XXX should perhaps check integrity of tr, ac hashes before blindly 
+    # passig on to the instance constructor.
     method contest (:@players, :%tr, :%ac, :$n, :$loud )  {
         my %p = hash map { ; $_ => posse({}) }, @players; 
         self.new(p => %p, :%tr, :%ac, :$n, :$loud)
     }
 
+
     method posse (Str $name)  { %!p{$name}.clone if %!p.exists($name) }
     method players { %!p.keys.sort }
     method table { hash map -> $k,$v { $k => $v.Str      }, %!p.kv }
     method p     { hash map -> $k,$v { $k => $v.longhash }, %!p.kv }
+    # XXX currently this hash comes out a bit garbled around the vicintiy 
+    # of the undefined $!m variable.  what's up with that?
     method stats { 
         return { 
             :$!i, :$!j, 
@@ -82,7 +86,8 @@ class Farm::Sim::Game  {
         $!t0 = now;
         $!t1 = Nil; 
         $!i = $!j = 0;
-        say "::PLAY loud = $!loud, n = $!n";
+        # say "::GAME loud = $!loud, n = $!n";
+        self.trace("..");
         while (1)  {
             self.play-round;
             if (self.someone-won)  {
@@ -100,22 +105,23 @@ class Farm::Sim::Game  {
     }
     
     method play-round  {
-        self.debug("i = $!i, j = $!j, cp = $!cp");
-        return self.do-trade;
-        return self if self.someone_won; 
+        self.trace("i = $!i, j = $!j, cp = $!cp");
+        return self if self.do-trade.someone-won;
         return self.do-roll;
     }
 
     method do-trade  {
-        my $was   = self.posse($!cp);
-        self.debug("was $was");
-        self.effect-trade();
-        my $now   = self.posse($!cp);
-        self.debug("now $now");
+        self.debug("..");
+        # my $was   = self.posse($!cp);
+        # self.debug("was $was");
+        self.effect-trade;
+        # my $now   = self.posse($!cp);
+        # self.debug("now $now");
         return self
     }
 
     method do-roll  {
+        self.debug("..");
         my $was   = self.posse($!cp);
         my $roll  = @!r[$!i] // $!dice.roll;
         self.debug("was $was");
@@ -172,6 +178,7 @@ class Farm::Sim::Game  {
             self.transfer( $!cp, .<with>, $selling   );
             self.transfer( .<with>, $!cp, $truncated );
             my $now = self.posse($!cp);
+            # say "::GAME loud = $!loud";
             self.info("SWAP $!cp ↦",.<with>,": $selling => $buying" ~ $remark ~ " » $now");
         }
     }
@@ -288,6 +295,7 @@ class Farm::Sim::Game  {
         self.debug("meta = {%m.perl}");
         self.debug("was = $was, now = $now");
         my $eaten = (defined %m<puts>) ?? "-%m<puts>" !! "";
+        # say "::GAME (game) = $!loud";
         self.info("ROLL %m<player> $was ~ %m<roll> -> +%m<gets> $eaten » $now");
     }
 
@@ -347,13 +355,17 @@ class Farm::Sim::Game  {
     # 3: 4,1
     method incr {
         $!cp = "player_1" unless %!p.exists(++$!cp);
-        ++$!j % +self.players ?? $!i !! ++$!i
+        (++$!i % +self.players) ?? $!j !! ++$!j
     }
 
-    method someone-won { 
+    method someone-won( --> Bool ) { 
+        self.trace("..");
         if ( so %!p{$!cp}{all <r s p c h>} )  { 
             $!t1 = now;
             $!winner = $!cp;
+            return True
+        }  else  {
+            return False
         }
     }
 
@@ -362,25 +374,4 @@ class Farm::Sim::Game  {
 
 =begin END
 ⚤ "»» ..";
-
-    method round { 
-        my $n = +self.players;
-        ($!j - $!j % $n) / $n
-    }
-
-    #
-    # play for a fixed number of rounds
-    #
-    multi method play(Int $n where { $n >= 0 })  {
-        $!t0 = now;
-        while (1)  {
-            self.play-round;
-            last if someone-won;
-            self.incr;
-            last if $!i >= $!k || $!j >= $!n
-        }
-        $!t1 //= now;
-        return self
-    }
-
 

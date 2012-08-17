@@ -7,13 +7,15 @@ class Farm::AI::Naive
 is    Farm::AI::Strategy  {
 
     method find-trade  {
+        self.trace("..");
         my %trade = self.find-stock-trade;
         %trade ?? { with => 'stock', %trade } !! Nil
     }
 
     method find-stock-trade  {
+        my $who   = self.who;
         my $S     = self.posse('stock');
-        my $P     = self.posse($.player);
+        my $P     = self.posse($who);
         my @need  = $P.need;
         my @gimme = $P.gimme;
         my $wish  = $P.wish;

@@ -12,18 +12,24 @@ use Farm::Sim::Posse;
 use Farm::Sim::Util;
 
 class Farm::AI::Strategy {
-    has Str $.player;
 
     has $!loud;
+    has Str $!player;
     method trace(*@a)  { self.emit(@a) if $!loud > 1 }
     method debug(*@a)  { self.emit(@a) if $!loud > 2 }
-    method emit(*@a)   { say '::', Backtrace.new.[3].subname, "[$.player] ", @a } 
+    method emit(*@a)   { say '::', Backtrace.new.[3].subname, "[$!player] ", @a } 
 
     has @!e;
     has %!p;
     method p() { %!p }
     method posse (Str $name)  { %!p{$name}.clone if %!p.exists($name) }
     method players { %!p.keys.sort }
+    method who     { $!player }
+
+    submethod BUILD(:$!loud, :%!p, :$!player) {
+        # say "::AI (strategy) = $!loud";
+    }
+
 
     #
     # "expands" a hash returned by .find-trade(), i.e. from one of  the form
@@ -39,8 +45,10 @@ class Farm::AI::Strategy {
     }
 
     method trade(%p, @e) {
-        say "::WHAT = $!loud";
+        # say "::AI loud = $!loud";
+        # say "::AI player = $!player";
         self.update(%p, @e);
+        # say "::AI p = ", %p;
         my %trade = self.find-trade; 
         # say ":: x = ", expand(%trade);
         return { type => 'trade', expand(%trade) } if %trade; 
@@ -65,35 +73,5 @@ class Farm::AI::Strategy {
 }
 
 =begin END
-
-    #
-    # allows for a somewhat more compact (positional) representation in 
-    # our extension classes; e.g. they just need to say
-    # 
-    #    my $pair = ( 'r6' => 's' ) ;
-    #    return ( stock => $pair );
-    #
-    sub expand-details(Pair $p --> Hash)  {
-        my ($with,$what) = $p.kv;
-        my ($selling,$buying) = map { posse($_).longhash }, $what.kv;
-        { :$with, :$selling, :$buying }
-    }
-
-    sub expand-trade(Pair $p --> Hash) { 
-        $p ?? { :type<trade>, expand-details($p) } !! Nil 
-    }
-
-    method trade(%p, @e) {
-        self.update(%p, @e);
-        my $pair = self.find-trade; 
-        self.trace("pair = ", $pair.WHICH);
-        self.trace("pair = ", $pair);
-        for $pair.kv -> $k,$v {
-            self.trace("k = $k = ", $k.WHICH);
-            self.trace("v = $v = ", $v.WHICH);
-        };
-        my %t    = expand-trade($pair)   if $pair;
-        return %t; 
-    }
 
 
