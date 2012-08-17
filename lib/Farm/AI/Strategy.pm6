@@ -22,8 +22,9 @@ class Farm::AI::Strategy {
     has @!e;
     has %!p;
     method p() { %!p }
-    method posse (Str $name)  { %!p{$name}.clone if %!p.exists($name) }
     method players { %!p.keys.sort }
+    method posse (Str $name)  { %!p{$name}.clone if %!p.exists($name) }
+    method current { self.posse($!player) }
     method who     { $!player }
 
     submethod BUILD(:$!verbose, :%!p, :$!player) {

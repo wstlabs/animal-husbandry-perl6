@@ -36,12 +36,11 @@
 #
 use Farm::Sim::Util;
 use Farm::AI::Strategy;
-use Farm::AI::Search::Data;
+use Farm::AI::Search;
 use Keybag::Ops;
 
 class Farm::AI::Naive
 is    Farm::AI::Strategy  {
-
 
     method find-trade  {
         my %trade = self.find-stock-trade;
@@ -49,28 +48,25 @@ is    Farm::AI::Strategy  {
     }
 
     method find-stock-trade  {
-        my $who   = self.who;
         my $S     = self.posse('stock');
-        my $P     = self.posse($who);
-        if (my $x = $P.wish)  {
-            if ($x ∈ $S)  {
-                my @t = find-admissible-trades($P,$x);
-                return { selling => @t.pick, buying => $x } if @t
-            }
+        my $P     = self.current;
+        if ((my $x = $P.wish) ∈ $S)  {
+            my @t = find-admissible-trades($P,$x);
+            return { buying => $x, selling => @t.pick } if @t
         }  
         for avail-dogs($S,$P) -> $x  {
             my @t = find-admissible-trades($P,$x);
-            return { selling => @t.pick, buying => $x } if @t
+            return { buying => $x, selling => @t.pick } if @t
         }
         for $P.gimme -> $x {
             my @t = find-admissible-trades($P,$x).grep({!m/[dD]/});
-            return { selling => @t.pick, buying => $x } if @t
+            return { buying => $x, selling => @t.pick } if @t
         }
         return Nil;
     }
 
-    method eval-trade($who)  {
-        return Bool.roll
+    method eval-trade(Str $with)  {
+        return False 
     } 
 
 }
