@@ -36,10 +36,10 @@ sub table-counts is export {
 # where the original sub decl lives.  So hopefully we'll get to find out what's 
 # happening here.
 #
-sub find-admissible-trades(Farm::Sim::Posse $p, Str $x) is export {
+sub find-admissible-trades(Farm::Sim::Posse $P, Str $x) is export {
     my $t = downward-equiv-to($x);
     my @a = @$t;
-    my @b = grep { $p ⊇ fly($_) }, @a;
+    my @b = grep { $P ⊇ fly($_) }, @a;
     return @b; 
 }
 

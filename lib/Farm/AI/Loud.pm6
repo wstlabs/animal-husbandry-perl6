@@ -1,9 +1,12 @@
+#
+# equivalent to the Naive strategy, but with lots of logging statements.
+#
 use Farm::Sim::Util;
 use Farm::AI::Strategy;
 use Farm::AI::Search;
 use Keybag::Ops;
 
-class Farm::AI::Naive
+class Farm::AI::Loud
 is    Farm::AI::Strategy  {
 
     method find-trade  {
