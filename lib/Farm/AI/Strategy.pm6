@@ -13,27 +13,25 @@ use Farm::Sim::Util;
 
 class Farm::AI::Strategy {
 
-    has $!verbose;
-    has Str $!player;
-    method trace(*@a)  { self.emit(@a) if $!verbose > 1 }
-    method debug(*@a)  { self.emit(@a) if $!verbose > 2 }
-    method emit(*@a)   { say '::', Backtrace.new.[3].subname, "[$!player] ", @a } 
-
     has @!e;
     has %!p;
+    has Str $!player;
     method p() { %!p }
     method players { %!p.keys.sort }
     method posse (Str $name)  { %!p{$name}.clone if %!p.exists($name) }
     method current { self.posse($!player) }
     method who     { $!player }
 
-    submethod BUILD(:$!verbose, :%!p, :$!player) {
-        # say "::AI (strategy) = $!verbose";
-    }
+    has $!verbose;
+    method trace(*@a)  { self.emit(@a) if $!verbose > 1 }
+    method debug(*@a)  { self.emit(@a) if $!verbose > 2 }
+    method emit(*@a)   { say '::', Backtrace.new.[3].subname, "[$!player] ", @a } 
+
+    submethod BUILD(:$!verbose=0, :%!p, :$!player) { }
 
 
     #
-    # "expands" a hash returned by .find-trade(), i.e. from one of  the form
+    # expands a hash returned by .find-trade(), i.e. from one of  the form
     #    
     #   { buying => { s => 6 }, selling => { s => 1 } }
     # 

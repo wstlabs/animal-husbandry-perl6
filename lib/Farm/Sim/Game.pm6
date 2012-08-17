@@ -27,7 +27,7 @@ class Farm::Sim::Game  {
     method debug(*@a)  { self.emit(@a) if $!verbose > 2 }
     method emit( *@a)  { say '::',Backtrace.new.[3].subname,' ',@a }
 
-    submethod BUILD(:%!p, :@!e, :$!cp = 'player_1', :%!tr, :%!ac, :@!r, :$!verbose, :$!n) {
+    submethod BUILD(:%!p, :@!e, :$!cp = 'player_1', :%!tr, :%!ac, :@!r, :$!verbose=1, :$!n) {
         %!p<stock> //= posse(stock-hash()); 
         $!dice     //= Farm::Sim::Dice.instance;
         # say "::GAME (game) = $!verbose";
