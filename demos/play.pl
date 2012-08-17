@@ -1,3 +1,25 @@
+#
+# an alternate test harness for AH games; largey equivalent to carl's 
+# original "farm.pl" script, except for the command-line usage, which
+# now goes like this:
+#
+#  perl6 -Ilib demos/play.pl  ai <m> <n> <names>
+#
+# Where 
+#
+#   <m> refers to the number of contests to be run 
+#   <n> sets an upper bound on the number of total of player 
+#       rounds to be run; and
+#   <names> are the names of from 2-6 individual strategy class
+#       to run, i.e. classes under the namespace Farm::AI 
+#
+# Examples:
+#
+#  perl6 -Ilib demos/play.pl  ai 1 100 Naive Naive Naive 
+#
+#
+
+#
 use v6;
 use Farm::Sim::Game; 
 use Farm::Sim::Util::Load;
@@ -9,8 +31,10 @@ multi MAIN("simple", $n)  {
 }
 
 multi MAIN("ai", $m, $n, *@names) {
-    die "Usage: $*PROGRAM_NAME ai <m> <n> <2..6 players>"
-        unless (my $k = +@names) ~~ 2..6;
+    die 
+        "Usage: $*PROGRAM_NAME ai <m> <n> <2..6 players>\n" ~
+        "(Please see header comments for usage description)." 
+        unless (my $k = +@names) ~~ 2..6 && $m > 0;
     # say "::MAIN names = [{@names}]";
     for "Farm::AI::" <<~<< @names -> $module {
         require_strict($module)
