@@ -9,10 +9,11 @@ sub test-seq($initial, @rolls, $expected)  {
     my $g;
     my $posse = posse($initial);
     my $rolls = ~@rolls;
+    my $verbose = 0;
     $g = Farm::Sim::Game.new(
         p => { "player_1" => $posse },
         r => @rolls, 
-        # debug => 1
+        :$verbose
     ).play;
     my $result = $g.posse("player_1");
     ok $result eq $expected, "$initial ~ <$rolls> -> $expected ? [$result]";
@@ -23,8 +24,9 @@ sub test-seq($initial, @rolls, $expected)  {
 #
 {
     my $g;
-    lives_ok { $g = Farm::Sim::Game.simple( k => 1) }; 
-    lives_ok { $g.play(3) }; 
+    lives_ok { $g = Farm::Sim::Game.simple( k => 2, n => 3, verbose => 0) }; 
+    lives_ok { $g.play() }; 
+    # XXX do some stats checks here
 }
 
 
