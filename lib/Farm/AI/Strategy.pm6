@@ -22,12 +22,12 @@ class Farm::AI::Strategy {
     method current { self.posse($!player) }
     method who     { $!player }
 
-    has $!verbose;
-    method trace(*@a)  { self.emit(@a) if $!verbose > 1 }
-    method debug(*@a)  { self.emit(@a) if $!verbose > 2 }
+    has $!loud;
+    method trace(*@a)  { self.emit(@a) if $!loud > 1 }
+    method debug(*@a)  { self.emit(@a) if $!loud > 2 }
     method emit(*@a)   { say '::', Backtrace.new.[3].subname, "[$!player] ", @a } 
 
-    submethod BUILD(:$!verbose=0, :%!p, :$!player) { }
+    submethod BUILD(:$!loud=0, :%!p, :$!player) { }
 
 
     #
@@ -44,7 +44,7 @@ class Farm::AI::Strategy {
     }
 
     method trade(%p, @e) {
-        # say "::AI verbose = $!verbose";
+        # say "::AI loud = $!loud";
         # say "::AI player = $!player";
         self.update(%p, @e);
         # say "::AI p = ", %p;

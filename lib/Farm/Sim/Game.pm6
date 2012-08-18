@@ -21,16 +21,16 @@ class Farm::Sim::Game  {
     has $!t1; 
     has $!winner;
 
-    has $!verbose;
-    method info( *@a)  {       say @a  if $!verbose > 0 }
-    method trace(*@a)  { self.emit(@a) if $!verbose > 1 }
-    method debug(*@a)  { self.emit(@a) if $!verbose > 2 }
+    has $!loud;
+    method info( *@a)  {       say @a  if $!loud > 0 }
+    method trace(*@a)  { self.emit(@a) if $!loud > 1 }
+    method debug(*@a)  { self.emit(@a) if $!loud > 2 }
     method emit( *@a)  { say '::',Backtrace.new.[3].subname,' ',@a }
 
-    submethod BUILD(:%!p, :@!e, :$!cp = 'player_1', :%!tr, :%!ac, :@!r, :$!verbose=1, :$!n) {
+    submethod BUILD(:%!p, :@!e, :$!cp = 'player_1', :%!tr, :%!ac, :@!r, :$!loud=1, :$!n) {
         %!p<stock> //= posse(stock-hash()); 
         $!dice     //= Farm::Sim::Dice.instance;
-        # say "::GAME (game) = $!verbose";
+        # say "::GAME (game) = $!loud";
     }
 
     method reset  {
@@ -50,17 +50,17 @@ class Farm::Sim::Game  {
     #
 
     # creates an empty game on $n players 
-    method simple (:$k, :$n, :$verbose )  {
+    method simple (:$k, :$n, :$loud )  {
         my %p = hash map { ; "player_$_" => posse({}) }, 1..$k;
-        self.new(p => %p, :$n, :$verbose)
+        self.new(p => %p, :$n, :$loud)
     }
 
     # creates a standard contest game on the specified player list 
     # XXX should perhaps check integrity of tr, ac hashes before blindly 
     # passig on to the instance constructor.
-    method contest (:@players, :%tr, :%ac, :$n, :$verbose )  {
+    method contest (:@players, :%tr, :%ac, :$n, :$loud )  {
         my %p = hash map { ; $_ => posse({}) }, @players; 
-        self.new(p => %p, :%tr, :%ac, :$n, :$verbose)
+        self.new(p => %p, :%tr, :%ac, :$n, :$loud)
     }
 
 
@@ -89,7 +89,7 @@ class Farm::Sim::Game  {
         $!t0 = now;
         $!t1 = Nil; 
         $!i = $!j = 0;
-        # say "::GAME verbose = $!verbose, n = $!n";
+        # say "::GAME loud = $!loud, n = $!n";
         self.trace("..");
         while (1)  {
             self.play-round;
@@ -183,7 +183,7 @@ class Farm::Sim::Game  {
             my $now = self.posse($!cp);
             my $ij = format-counts($!i,$!j);
             self.info("SWAP $ij $!cp ↦",.<with>,": $selling => $buying" ~ $remark ~ " » $now");
-            # say "::GAME verbose = $!verbose";
+            # say "::GAME loud = $!loud";
         }
     }
 
