@@ -1,4 +1,4 @@
-OLe v6;
+use v6;
 use Farm::Sim::Util;
 use Farm::Sim::Posse;
 use Farm::Sim::Dice;
