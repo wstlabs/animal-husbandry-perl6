@@ -67,6 +67,9 @@ class Farm::Sim::Game  {
     method nump    { +%!p.keys - 1 }
     method players { %!p.keys.grep({ $_ ne 'stock' }).sort }
     method posse (Str $name)  { %!p{$name}.clone if %!p.exists($name) }
+    method current { self.posse($!cp) }
+
+
     method table { hash map -> $k,$v { $k => $v.Str      }, %!p.kv }
     method p     { hash map -> $k,$v { $k => $v.longhash }, %!p.kv }
     method elapsed { ($!t1-$!t0).Real }
@@ -355,10 +358,6 @@ class Farm::Sim::Game  {
         }.reverse
     }
 
-    # 0: 1,0
-    # 1: 2,0
-    # 2: 3,1
-    # 3: 4,1
     method incr {
         $!cp = "player_1" unless %!p.exists(++$!cp);
         (++$!i % self.nump) ?? $!j !! ++$!j
@@ -366,7 +365,7 @@ class Farm::Sim::Game  {
 
     method someone-won( --> Bool ) { 
         self.trace("..");
-        if ( so %!p{$!cp}{all <r s p c h>} )  { 
+        if (self.current.wins)  {
             $!t1 = now;
             $!winner = $!cp;
             return True
@@ -386,4 +385,5 @@ class Farm::Sim::Game  {
 
 =begin END
 ⚤ "»» ..";
+        if ( so %!p{$!cp}{all <r s p c h>} )  { 
 

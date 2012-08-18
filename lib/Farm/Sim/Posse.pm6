@@ -92,6 +92,8 @@ does  Farm::Sim::Posse::Role::Stringy  {
     #
     method base  { grep {  self.exists($_) }, @frisky.reverse } 
     method need  { grep { !self.exists($_) }, @frisky.reverse }
+    method wins  { so self{all @frisky} } 
+ 
 
     # returns a 5-element "signature" of the keybag height over the
     # ordered list of breeding symbols, i.e. <hcpsr>.  used e.g. for
