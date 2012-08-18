@@ -154,6 +154,7 @@ class Farm::Sim::Game  {
     method effect-trade  {
         self.debug("cp = $!cp"); 
         if (%!tr{$!cp} // -> %, @ {;})(self.p, @!e) -> $_ {
+            my $was = self.posse($!cp);
             self.trace("$!cp => ", $_); 
             sub fail(%trade, $reason) { self.reject(%trade, $reason) };
             self.trace("type = ", .<type>);
@@ -183,10 +184,14 @@ class Farm::Sim::Game  {
             my $remark = $truncated ⊂ $buying ?? " (truncated => $truncated)" !! ""; 
             self.transfer( $!cp, .<with>, $selling   );
             self.transfer( .<with>, $!cp, $truncated );
+
             my $now = self.posse($!cp);
             my $ij = format-counts($!i,$!j);
-            self.info("SWAP $ij $!cp ↦",.<with>,": $selling => $buying" ~ $remark ~ " » $now");
-            # say "::GAME loud = $!loud";
+            my $WAS   = rjust 12, ~$was;
+            my $SELL  = rjust  9, ~$selling;
+            my $BUY   = ljust  8, ~$buying;
+            my $with  = rjust  10,  .<with>; 
+            self.info("SWAP $ij $!cp $WAS ↣ $with : $SELL = $BUY » $now " ~ $remark);
         }
     }
 
@@ -304,12 +309,22 @@ class Farm::Sim::Game  {
         my %m = self.inspect-roll;
         self.debug("meta = {%m.perl}");
         my $ij = format-counts($!i,$!j);
-        my $loss = rjust  9, '-'~(%m<puts>//'');
-        my $gain = ljust  7,      %m<gets>~'+';
-        my $WAS  = rjust 10, ~$was;
-        self.info("ROLL $ij $!cp $WAS ~ %m<roll> -> $loss,$gain » $now");
+        my $roll = ljust 10, loud-roll(%m<roll>);
+        my $loss = rjust  9, sign-puts(%m<puts>);
+        my $gain = ljust  8, sign-gets(%m<gets>);
+        my $WAS  = rjust 12, ~$was;
+        self.info("ROLL $ij $!cp $WAS ~ $roll : $loss ∘ $gain » $now");
     }
-    #    my $puts = (defined %m<puts>) ?? "-%m<puts>" !! "";
+    sub loud-roll($r)  {
+        $r eq     'fw'   ?? "$r!!" !!
+        $r ~~  m/<[fw]>/ ?? "$r!"  !! 
+        $r
+    }
+    # let roll tallies always be signed, to 
+    # distinguish them from trades 
+    sub sign-gets($x)  {     ($x//'∅')~'+' }
+    sub sign-puts($x)  { '-'~($x//'∅')     }
+
 
     method inspect-roll {
         self.debug("e.Int = ", @!e.Int);
@@ -394,5 +409,4 @@ class Farm::Sim::Game  {
 
 =begin END
 ⚤ "»» ..";
-        if ( so %!p{$!cp}{all <r s p c h>} )  { 
 
