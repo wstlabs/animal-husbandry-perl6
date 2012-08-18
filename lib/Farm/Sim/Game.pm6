@@ -45,8 +45,6 @@ class Farm::Sim::Game  {
         self
     }
 
-
-
     #
     # static (factory-like) instance generators 
     #
@@ -66,8 +64,9 @@ class Farm::Sim::Game  {
     }
 
 
+    method nump    { +%!p.keys - 1 }
+    method players { %!p.keys.grep({ $_ ne 'stock' }).sort }
     method posse (Str $name)  { %!p{$name}.clone if %!p.exists($name) }
-    method players { %!p.keys.sort }
     method table { hash map -> $k,$v { $k => $v.Str      }, %!p.kv }
     method p     { hash map -> $k,$v { $k => $v.longhash }, %!p.kv }
     method elapsed { ($!t1-$!t0).Real }
@@ -81,6 +80,9 @@ class Farm::Sim::Game  {
     }
     # XXX currently this hash comes out a bit garbled around the vicintiy 
     # of the undefined $!m variable.  what's up with that?
+    # XXX also, we keep getting "this type cannot unbox to a native number"
+    # on $t1-$t0, no matter how many times we try to cast it to something
+    # sensible.
 
 
     multi method play()  {
@@ -96,7 +98,7 @@ class Farm::Sim::Game  {
                 self.celebrate;
                 last
             }  else  {
-                self.incr
+                self.incr;
             }
             last if defined($!m) && $!i >= $!m;
             last if defined($!n) && $!j >= $!n;
@@ -360,7 +362,7 @@ class Farm::Sim::Game  {
     # 3: 4,1
     method incr {
         $!cp = "player_1" unless %!p.exists(++$!cp);
-        (++$!i % +self.players) ?? $!j !! ++$!j
+        (++$!i % self.nump) ?? $!j !! ++$!j
     }
 
     method someone-won( --> Bool ) { 
