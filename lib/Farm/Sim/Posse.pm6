@@ -193,6 +193,10 @@ multi sub posse($arg)  is export {
 sub posse-from-long(%h) is export { posse(long2short(%h)) }
 
 
+sub compare-dogful(Farm::Sim::Posse $x, Farm::Sim::Posse $y)  { 
+    $x{'D'} <=> $y{'D'} || $x{'d'} <=> $y{'d'}
+}
+
 
 #
 # A boolean relation which basically says "if we subtract $y from $x, then the

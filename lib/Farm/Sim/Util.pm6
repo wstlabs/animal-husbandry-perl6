@@ -115,6 +115,7 @@ multi sub worth (Str $x    --> Int) is export {
 
 =begin END
 
+ ‹‹d›› 
  ‹d› 
  ‹D› 
 
