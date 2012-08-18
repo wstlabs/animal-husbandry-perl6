@@ -35,9 +35,8 @@ constant %T = {
         d2s4 d2s3r6 d2s2r12 d2sr18 d2r24 
         ds5 ds4r6 ds3r12 ds2r18 dsr24 dr30 
         s6 s5r6 s4r12 s3r18 s2r24 sr30 r36 >], 
-     # omit h, D
+     # omit h, D2
      72 => [<  
-        D2 
         Dc 
         Dp3 
         Dp2d2 Dp2dr6 Dp2ds Dp2r12 Dp2s2 Dp2sr6 
