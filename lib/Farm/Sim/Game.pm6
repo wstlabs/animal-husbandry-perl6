@@ -304,9 +304,12 @@ class Farm::Sim::Game  {
         my %m = self.inspect-roll;
         self.debug("meta = {%m.perl}");
         my $ij = format-counts($!i,$!j);
-        my $eaten = (defined %m<puts>) ?? "-%m<puts>" !! "";
-        self.info("ROLL $ij %m<player> $was ~ %m<roll> -> +%m<gets> $eaten » $now");
+        my $loss = rjust  9, '-'~(%m<puts>//'');
+        my $gain = ljust  7,      %m<gets>~'+';
+        my $WAS  = rjust 10, ~$was;
+        self.info("ROLL $ij $!cp $WAS ~ %m<roll> -> $loss,$gain » $now");
     }
+    #    my $puts = (defined %m<puts>) ?? "-%m<puts>" !! "";
 
     method inspect-roll {
         self.debug("e.Int = ", @!e.Int);
@@ -378,8 +381,14 @@ class Farm::Sim::Game  {
     # fixed-width-ish.  3-char defaults for $!i, $!j should be fine for the values 
     # we're dealing with.
     # XXX btw, so where -is- the perlform manpage for perl 6, anyway?
-    sub right-justify(Int $k, Any $s --> Str) { (' 'x($k-$s.chars)~$s) }
-    sub format-counts($i,$j) { right-justify(3,$i) ~ " " ~ right-justify(3,$j) }
+    sub rjust(Int $k, Any $s --> Str) {
+        $s.chars <= $k ??     (' 'x($k-$s.chars)~$s) !! $s.substr($s.chars-$k-1,$k) 
+    }
+    sub ljust(Int $k, Any $s --> Str) {
+        $s.chars <= $k ??  $s~(' 'x($k-$s.chars))    !! $s.substr(0,$k) 
+    }
+
+    sub format-counts($i,$j) { rjust(3,$i)~" "~rjust(3,$j) }
     
 };
 
