@@ -30,9 +30,13 @@ class Farm::AI::Bogus  {
             type => "trade", with => "stock",
             selling => { sheep => 2 }, buying  => { rabbit => 6 },
         },
+        # player needs to have at least 'sr6', and the stock 'sd' in order for 
+        # this condition to be triggered, of course.  most likely you'll get 
+        # "Not enough CP animals", at least until the game has matured a bit. 
         many-to-many => {
             type => "trade", with => "stock",
-            selling => { sheep => 1, rabbit => 6, pig => 2 }, buying  => { cow => 1 },
+            selling => { sheep => 1, rabbit => 6 }, 
+            buying  => { sheep => 1, small_dog => 1 },
         },
         null-trade => {
             type => "trade", with => "stock",
@@ -41,9 +45,7 @@ class Farm::AI::Bogus  {
     };
 
     method trade(%p, @e) {
-        say "::trade[$.player] .."; 
         my ($name,%t) = %!junk.roll.kv;
-        say "::trade[$.player] $name => ",%t;
         return %t;
     }
 
@@ -54,6 +56,8 @@ class Farm::AI::Bogus  {
 }
 
 =begin END
+
+        say "::trade[$.player] $name => ",%t;
 
 
 
