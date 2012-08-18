@@ -34,9 +34,11 @@
 #
 # A little more detail as to the inner workings is provided below the END block, BTW.
 #
-use Farm::Sim::Util;
 use Farm::AI::Strategy;
 use Farm::AI::Search;
+use Farm::Sim::Util;
+use Farm::Sim::Posse;
+use Farm::Sim::Posse::Fly;
 use Keybag::Ops;
 
 class Farm::AI::Naive
@@ -47,11 +49,19 @@ is    Farm::AI::Strategy  {
         %trade ?? { with => 'stock', %trade } !! Nil
     }
 
+    method preserve ($remark ,$P,@t)  {
+        self.trace("$remark before $P ⊳ ",@t," ?");
+        @t = grep { fly($_) ⊲ $P }, @t; 
+        self.trace("$remark after  $P ⊳ ",@t);
+        @t
+    }
+
     method find-stock-trade  {
         my $S     = self.posse('stock');
         my $P     = self.current;
         if ((my $x = $P.wish) ∈ $S)  {
             my @t = find-admissible-trades($P,$x);
+            @t = self.preserve("wish $x",$P,@t)         if @t;
             return { buying => $x, selling => @t.pick } if @t
         }  
         for avail-dogs($S,$P) -> $x  {
@@ -59,7 +69,8 @@ is    Farm::AI::Strategy  {
             return { buying => $x, selling => @t.pick } if @t
         }
         for $P.gimme -> $x {
-            my @t = find-admissible-trades($P,$x).grep({!m/[dD]/});
+            my @t = find-admissible-trades($P,$x).grep({!m/<[dD]>/});
+            @t = self.preserve("give $x",$P,@t)         if @t;
             return { buying => $x, selling => @t.pick } if @t
         }
         return Nil;
