@@ -59,15 +59,18 @@ is    Farm::AI::Strategy  {
     method find-stock-trade  {
         my $S     = self.posse('stock');
         my $P     = self.current;
+        self.trace("now = $P"); 
         if ((my $x = $P.wish) ∈ $S)  {
             my @t = find-admissible-trades($P,$x);
             @t = self.preserve("wish $x",$P,@t)         if @t;
             return { buying => $x, selling => @t.pick } if @t
         }  
+        self.trace("doggy = ", avail-dogs($S,$P)); 
         for avail-dogs($S,$P) -> $x  {
             my @t = find-admissible-trades($P,$x);
             return { buying => $x, selling => @t.pick } if @t
         }
+        self.trace("gimme = ", $P.gimme);
         for $P.gimme -> $x {
             my @t = find-admissible-trades($P,$x).grep({!m/<[dD]>/});
             @t = self.preserve("give $x",$P,@t)         if @t;
