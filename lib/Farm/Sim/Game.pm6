@@ -1,4 +1,4 @@
-use v6;
+OLe v6;
 use Farm::Sim::Util;
 use Farm::Sim::Posse;
 use Farm::Sim::Dice;
@@ -91,7 +91,6 @@ class Farm::Sim::Game  {
         $!i = $!j = 0;
         # say "::GAME verbose = $!verbose, n = $!n";
         self.trace("..");
-        self.trace("r = ", @!r);
         while (1)  {
             self.play-round;
             if (self.someone-won)  {
@@ -102,7 +101,7 @@ class Farm::Sim::Game  {
             }
             last if defined($!m) && $!i >= $!m;
             last if defined($!n) && $!j >= $!n;
-            last if @!r.Int > 0  && $!j >  @!r;
+            last if +@!r         && $!i >= +@!r;
         }
         $!t1 //= now;
         return self

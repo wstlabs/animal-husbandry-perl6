@@ -5,6 +5,12 @@ use Farm::Sim::Posse;
 use Test;
 plan *;
 
+#
+# a series of simple, "single-roll roundtrip" tests whereby we
+# instantiate an actual game packed with a single dice roll, ane  
+# evaluate the round-trip result.
+#
+
 sub test-seq($initial, @rolls, $expected)  {
     my $g;
     my $posse = posse($initial);
@@ -12,7 +18,7 @@ sub test-seq($initial, @rolls, $expected)  {
     my $verbose = 0;
     $g = Farm::Sim::Game.new(
         p => { "player_1" => $posse },
-        r => @rolls, 
+        r => @rolls,
         :$verbose
     ).play;
     my $result = $g.posse("player_1");
@@ -86,8 +92,4 @@ sub test-seq($initial, @rolls, $expected)  {
 
 
 =begin END
-
-some tests cases:
-sr6 ~ fw
-sr2 ~ sw -> +s -sr2 » s
 
