@@ -1,6 +1,5 @@
 use Farm::Sim::Util;
 use Farm::Sim::Posse;
-use Farm::Sim::Posse::Fly;
 use Farm::AI::Search::Data;
 use KeyBag::Ops;
 
@@ -37,10 +36,14 @@ sub table-counts is export {
 # happening here.
 #
 sub find-admissible-trades(Farm::Sim::Posse $P, Str $x) is export {
-    my $t = downward-equiv-to($x);
+    my $t = downward-equiv-to(canonify($x));
     my @a = @$t;
     my @b = grep { $P ⊇ fly($_) }, @a;
     return @b; 
+}
+# we can't trade for a single rabbit; we need to ask for an r6.
+sub canonify($x) { 
+    $x eq 'r' ?? 'r6' !! $x
 }
 
 

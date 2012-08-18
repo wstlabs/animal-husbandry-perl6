@@ -38,7 +38,6 @@ use Farm::AI::Strategy;
 use Farm::AI::Search;
 use Farm::Sim::Util;
 use Farm::Sim::Posse;
-use Farm::Sim::Posse::Fly;
 use Keybag::Ops;
 
 class Farm::AI::Naive
