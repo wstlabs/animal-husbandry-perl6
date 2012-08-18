@@ -388,7 +388,7 @@ class Farm::Sim::Game  {
     }
 
     method someone-won( --> Bool ) { 
-        self.trace("..");
+        self.debug("..");
         if (self.current.wins)  {
             $!t1 = now;
             $!winner = $!cp;
