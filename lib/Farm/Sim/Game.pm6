@@ -180,20 +180,22 @@ class Farm::Sim::Game  {
             return .&fail("Other player declined trade") unless
                 (%!ac{.<with>} // -> %,@,$ {True})(self.p,@!e,$!cp);
 
-            my $truncated = $op ∩ $buying;
-            my $remark = $truncated ⊂ $buying ?? " (truncated => $truncated)" !! ""; 
+            my $remark = (my $truncated = $buying ∩ $op) ⊂ $buying ?? 
+                "  [$buying ↪ $truncated] (truncated)" 
+            !! ""; 
             self.transfer( $!cp, .<with>, $selling   );
             self.transfer( .<with>, $!cp, $truncated );
 
-            my $now = self.posse($!cp);
-            my $ij = format-counts($!i,$!j);
+            my $now   = self.posse($!cp);
+            my $ij    = format-counts($!i,$!j);
             my $WAS   = rjust 12, ~$was;
             my $SELL  = rjust  9, ~$selling;
             my $BUY   = ljust  8, ~$buying;
-            my $with  = rjust  10,  .<with>; 
-            self.info("SWAP $ij $!cp $WAS ↣ $with : $SELL = $BUY » $now " ~ $remark);
+            my $with  = rjust 10, ~.<with>; 
+            self.info("SWAP $ij $!cp $WAS ⇢ $with : $SELL = $BUY » $now" ~ $remark);
         }
     }
+
 
     #
     # note that we process the [w] and [f] rolls in the same order as in 
@@ -274,9 +276,13 @@ class Farm::Sim::Game  {
     # the guts of &fail, aka &fail_trade in .effect-trade 
     method reject(%trade, $reason) {
         my %i = trade2info(%trade);
+        my $was  = self.posse($!cp);
         my $ij = format-counts($!i,$!j);
-        my $op = %i<op> // '-unknown-'; 
-        self.info("FAIL $ij $!cp ↦ $op : %i<sell> <=> %i<buy> : $reason");
+        my $with  = rjust 10, ~(%i<op>//'-undef-'); 
+        my $WAS   = rjust 12, ~$was;
+        my $SELL  = rjust  9, ~%i<sell>;
+        my $BUY   = ljust  8, ~%i<buy>;
+        self.info("FAIL $ij $!cp $WAS ⇢ $with : $SELL = $BUY : $reason");
         self.publish: { 
             :type<failed>, 
             :$reason, 
@@ -397,7 +403,7 @@ class Farm::Sim::Game  {
     # we're dealing with.
     # XXX btw, so where -is- the perlform manpage for perl 6, anyway?
     sub rjust(Int $k, Any $s --> Str) {
-        $s.chars <= $k ??     (' 'x($k-$s.chars)~$s) !! $s.substr($s.chars-$k-1,$k) 
+        $s.chars <= $k ??     (' 'x($k-$s.chars)~$s) !! $s.substr($s.chars-$k,$k) 
     }
     sub ljust(Int $k, Any $s --> Str) {
         $s.chars <= $k ??  $s~(' 'x($k-$s.chars))    !! $s.substr(0,$k) 
@@ -409,4 +415,7 @@ class Farm::Sim::Game  {
 
 =begin END
 ⚤ "»» ..";
+
+        self.info("FAIL $ij $!cp $WAS ↦ $with : %i<sell> <=> %i<buy> : $reason");
+      # self.info("SWAP $ij $!cp $WAS ↣ $with : $SELL = $BUY » $now " ~ $remark);
 
