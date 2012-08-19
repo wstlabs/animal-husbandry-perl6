@@ -64,10 +64,9 @@ Finally, in our generic "hill-climbing step", in which we ask our Posse (via the
 ```
 
 ### Anomolies ###
-
 The strategy has some weird corner cases where it can behave sub-optimally if you aren't very careful about how you do your selections of equivalent trades.  One of these concerns the phenomenon of inadvertent cyclical trades:  e.g. ```{ s => r6 }``` on one round, and then ```{ r6 => s }``` on the very next round.  I first tried enabling the latter step an optimization, only to discover that it quite often would cycle between those two trades, and avoid lookng for higher-ranking animals for several rounds.  So for the time being, the fix is simply to disable the latter half of the loop, and the performance seems to revert back to it's normal, barely-efficient state. 
 
-Another odd thing that emerged from initial tests of the strategy was its poor performance in 2-player contest.  It's suspected that in this configuration, the strategy is actually too conservative, i.e. hoarding too many dogs and forgoing breeding, which (paradoxically) leads to a dearth in bidding resources once the dogs it has are inevitably eaten, so it can't resupply with new ones.
+Another odd thing that emerged from initial runs of the strategy was its poor performance in 2-player contest.  It's suspected that in this configuration, the strategy is actually too conservative, i.e. hoarding too many dogs and forgoing breeding, which (paradoxically) leads to a dearth in bidding resources once the dogs it has are inevitably eaten, so it can't resupply with new ones.
 
 ## Usage ##
 
