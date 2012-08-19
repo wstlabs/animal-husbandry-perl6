@@ -29,7 +29,7 @@ is    Farm::AI::Strategy  {
         }  
         for avail-dogs($S,$P) -> $x  {
             my @t = find-admissible-trades($P,$x).sort: { $^a ‹d› $^b };
-            return { buying => $x, selling => @t.shift } if @t
+            return { buying => $x, selling => @t[0]    } if @t
         }
         for $P.gimme -> $x {
             my @t = find-admissible-trades($P,$x).grep: { !m/<[dD]>/ };
@@ -43,27 +43,4 @@ is    Farm::AI::Strategy  {
     } 
 
 }
-
-=begin END
-
-
-    sub find-admissible-trades(Farm::Sim::Posse $P, Str $x) is export {
-        my $t = downward-equiv-to($x);
-        grep { $P ⊇ fly($_) }, @$t
-    }
-
-
-    method preserve ($remark,$P,@t)  {
-        self.trace("$remark before $P ⊳ ",@t," ?");
-        @t = grep { fly($_) ⊲ $P }, @t; 
-        self.trace("$remark after  $P ⊳ ",@t);
-        @t
-    }
-
-    method dogsort($remark,@t)  {
-        self.trace("$remark before ",@t," ?");
-        @t = @t.sort: { $^a ‹d› $^b };
-        self.trace("$remark after  ",@t);
-        @t
-    }
 
