@@ -21,5 +21,27 @@ Basically what the strategy amounts to is the following:
 * Finally, we oppose all incoming trades (and initiate no trades with outside players).  The cases where cross-player trades seem to make sense are comparatively few and rare -- for the simple reason that in a perfect information game, the other players aren't likely to grant any trades with us that will (drastically) improve our own position.  
 
 The sole obvious exception to the general prohibition against cross-player trades would seem to be "mercy trades", whereby we sell small dogs to other players in order to purchase animals we need to increase our diversity, but which aren't available from the stock (assuming we have a large enough surplus of small dogs ourselves).  These might be worth exploring at some point; however for right now, I just wanted to come up with a strategy that seems generally stable, while being simple to understand, and to code concisely such that the main loop fits in 10 or 15 lines of code, at the most. 
+## Usage ##
+
+Once you've cloned the dist, sample usage (from the top dir of the dist) goes like this -- in this example, for a 2-player game of the Naive strategy against itself:
+
+```
+    perl6 -Ilib demos/play.pl ai 1 Naive Naive 
+```
+
+The ```1``` is simply to specify that you want one and only one contest to be run.  It's also possible to specify an upper limit on the number of rounds to be played, via the ```--n``` flag: 
+
+```
+    perl6 -Ilib demos/play.pl ai 1 Naive Naive 
+```
+
+### Prerequisites ###
+
+This distribution has one external dependency; the class ```KeyBag::Deco```, which is a patched, or "decorated" extension of the core ```KeyBag``` class providing certain functionality which seems not quite finished in both Rakudo and Niecza at the moment -- including, most importantly, working Unicode operators.  ```KeyBag::Deco``` can be found over here: 
+
+https://github.com/wstlabs/keybag-extras-p6
+
+
+
 
 
