@@ -126,7 +126,7 @@ constant %D = {
 # first we provide this lookup function in costly, non-memoized form.  
 #
 sub downward-equiv-raw(Str $x) is export { 
-    $x eq 'r6' ?? [  <d s>   ]                           !! 
+    $x eq 'r'  ?? [          ]                           !! # explicitly disabled for now
     $x eq 's'  ?? [  <d r6>  ]                           !! 
     $x eq 'p'  ?? [  <d2 ds s2 dr6 sr6 r12> ]            !!
     $x eq 'c'  ?? [  'D',  %T{36}.list ]                 !!
@@ -149,10 +149,18 @@ sub downward-equiv-to(Str $x) is export {
 }
 
 # ie, valid arg tests to the function above, should we need them.
-my constant @terms = < r6 s p c h  d d2 d3 d4  D D2 >;
+my constant @terms = < r s p c h  d d2 d3 d4  D D2 >;
 sub canon-search-terms is export { @terms }
 
 
 =begin END
 
+
+    #
+    # note that adding this term up in the raw lookup function
+    # leads to "strang loops" in our lookup strategy -- i.e. cycles
+    # where we traid r6 => s and then s => r6!
+    #
+    #
+    # $x eq 'r6' ?? [  <d s>   ]                           !! 
 

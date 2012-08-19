@@ -36,11 +36,15 @@ sub table-counts is export {
 # happening here.
 #
 sub find-admissible-trades(Farm::Sim::Posse $P, Str $x) is export {
-    my $t = downward-equiv-to(canonify($x));
+    my $t = downward-equiv-to($x);
     my @a = @$t;
     my @b = grep { $P ⊇ fly($_) }, @a;
     return @b; 
 }
+#
+# XXX disabled for now, due to weird side effects (i.e. cyclical 
+# trading behavior).
+#
 # we can't trade for a single rabbit; we need to ask for an r6.
 sub canonify($x) { 
     $x eq 'r' ?? 'r6' !! $x
