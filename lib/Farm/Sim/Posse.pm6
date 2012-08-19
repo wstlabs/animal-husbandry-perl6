@@ -196,12 +196,12 @@ sub posse-from-long(%h) is export { posse(long2short(%h)) }
 # sorts posses according to their "dog measure."  generally useful only
 # when evaluating 'D' trades, which are believed to be always immediately 
 # desirable, but ideally at the expense of as few small dogs as possible.
-multi sub compare-dogful(Farm::Sim::Posse $x, Farm::Sim::Posse $y) is export  { 
+multi sub compare-dogful(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Order) is export  { 
     $x{'D'} <=> $y{'D'} || $x{'d'} <=> $y{'d'}
 }
-multi sub compare-dogful(Farm::Sim::Posse $x, Str $y             ) is export  { compare-dogful(     $x,fly($y)) }
-multi sub compare-dogful(             Str $x, Farm::Sim::Posse $y) is export  { compare-dogful(fly($x),$y     ) }
-multi sub compare-dogful(             Str $x, Str $y             ) is export  { compare-dogful(fly($x),fly($y)) }
+multi sub compare-dogful(Farm::Sim::Posse $x, Str $y              --> Order) is export  { compare-dogful(     $x,fly($y)) }
+multi sub compare-dogful(             Str $x, Farm::Sim::Posse $y --> Order) is export  { compare-dogful(fly($x),$y     ) }
+multi sub compare-dogful(             Str $x, Str $y              --> Order) is export  { compare-dogful(fly($x),fly($y)) }
 
 
 #
@@ -282,6 +282,11 @@ sub fly-stats is export { n => %F.keys.Int }
 multi sub infix:<⊳>(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool) is export {  subtracts-diversely($x,$y) }
 multi sub infix:<⊲>(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool) is export {  subtracts-diversely($y,$x) }
 
+# compares tuples againsrt their "dogful measure".  sorting over this op brings 
+# dogless tuples to the front, and dog-heavy tuples to the back of the list.
+multi sub infix:<‹d›>(Any $x,Any $y --> Order) is export { compare-dogful($x,$y) }
+
+
 
 #
 # And then the magical breeding operator, ⚤ , which provdes the number
@@ -298,6 +303,8 @@ multi sub infix:<⊲>(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool) is expo
 multi sub infix:<⚤>(Farm::Sim::Posse $x, Any $y --> Farm::Sim::Posse)  is export {  $x.breed($y) }
 
 
+
+
 =begin END
 
    $X ⊲ $Y
@@ -312,4 +319,6 @@ multi sub compare-dogful(Farm::Sim::Posse $x, Farm::Sim::Posse $y) is export  {
     say "::dogful $x <=> $y ? $stat";
     $stat
 }
+# multi sub infix:[‹d›](Str $x,Str $y --> Order)  is export {  compare-dogful($x,$y) }
+# multi sub infix:[‹d›](Str $x,Str $y --> Order)  is export {  compare-dogful($x,$y) }
 
