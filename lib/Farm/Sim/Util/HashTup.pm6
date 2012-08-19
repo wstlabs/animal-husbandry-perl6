@@ -124,27 +124,3 @@ sub compare-weighted-tuples( %x, %y, @t is copy ) is export  {
 
 =begin END
 
-                # my $stat = $j <=> $k;
-                # $stat eqv Order::Same ?? 
-                #    compare-weighted-tuples(%x,%y,@t)
-                # !! 
-                #     $stat
-
-multi sub stringify(%h, @s) is export  {
-    # say "::stringify(2): h = ", %h;
-    # say "::stringify(2): s = ", @s; 
-    my @t = map -> $x {
-        my $k = %h{$x};
-        next unless %h.exists($x);
-        # say "x = [$x] =>  k = ", $k;
-        # say "x = [$x] => xk = ", "$x$k"; 
-        #  say "x = [$x] =>  x = ", $x; 
-        # say "x = [$x] => 'x = ", "$x";
-        $k > 0 ??
-            $k > 1 ?? "$x$k" !! $x
-        !! ()
-    }, @s;
-    # say "::stringify(2): t = {@t.perl}";
-    # say "::stringify(2): t = ", @t; 
-    return @t ?? @t.join('') !! '∅'
-}

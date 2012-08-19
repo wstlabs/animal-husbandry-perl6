@@ -1,14 +1,13 @@
 #
-# A naive hill climbing strategy.  Doesn't try to do anything fancy; 
+# A naive hill climbing strategy.  Doesn't pretend to do anything fancy; 
 # at each step it just tries the most obvious thing that could reach the 
-# winning state, without making any obviously missteps.  
+# winning state, without making any obvious missteps.  
 #
 # For a more detailed description, see the README at the top of this 
 # distribution.
 #
 use Farm::AI::Strategy;
 use Farm::AI::Search;
-use Farm::Sim::Util;
 use Farm::Sim::Posse;
 use Keybag::Ops;
 
@@ -21,8 +20,8 @@ is    Farm::AI::Strategy  {
     }
 
     method find-stock-trade  {
-        my $S     = self.posse('stock');
-        my $P     = self.current;
+        my $S = self.posse('stock');
+        my $P = self.current;
         if ((my $x = $P.wish) ∈ $S)  {
             my @t = find-admissible-trades($P,$x).grep: { $_ ⊲ $P }; 
             return { buying => $x, selling => @t.pick  } if @t

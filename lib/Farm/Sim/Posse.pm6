@@ -306,26 +306,5 @@ multi sub infix:<‹d›>(Any $x,Any $y --> Order) is export { compare-dogful($x
 multi sub infix:<⚤>(Farm::Sim::Posse $x, Any $y --> Farm::Sim::Posse)  is export {  $x.breed($y) }
 
 
-
-
 =begin END
-
-multi sub infix:<⊳>(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool) is export {  subtracts-diversely($x,$y) }
-multi sub infix:<⊲>(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool) is export {  subtracts-diversely($y,$x) }
-
-
-   $X ⊲ $Y
-   $X ⊳ $Y
-     ⊲ ⊳
-     ‹d›
-
-multi sub compare-dogful(Farm::Sim::Posse $x, Farm::Sim::Posse $y) is export  { 
-    my $stat = 
-    $x{'D'} <=> $y{'D'} || $x{'d'} <=> $y{'d'}
-    ;
-    say "::dogful $x <=> $y ? $stat";
-    $stat
-}
-# multi sub infix:[‹d›](Str $x,Str $y --> Order)  is export {  compare-dogful($x,$y) }
-# multi sub infix:[‹d›](Str $x,Str $y --> Order)  is export {  compare-dogful($x,$y) }
 

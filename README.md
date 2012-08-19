@@ -10,8 +10,11 @@ What's provided in this repo are the following:
 * Finally, under ```Farm::AI```, a couple of mock (test) strategies, as well as one primitive (but viable) strategy, ```Farm::AI::Naive```, which we'll describe below.
 
 ## The Naive Strategy ##
-
-As the name implies, a simple naive hill climbing strategy.  It doesn't do anything that a human player wouldn't think of after playing the game a few times -- i.e. make incremental moves to improve its position, without making any obvious mistakes -- albeit aided by fast combinatorial searching. 
+As a submission to the contest itself, this repro provides a class implementing what we'll call the Naive strategy: 
+```
+    lib/Farm/AI/Naive.pm6 
+```
+As the name implies, it's basically just a simple hill-climbing strategy, and pretty much emulates the behavior of a human player after playing the game a few times, having learned from a few mistakes.  It doesn't aim to do anything besides make incremental moves to improve its position at each step, without making any obvious mistakes -- albeit aided by fast combinatorial searching. 
 
 In that sense, it's really just a "minimum viable strategy" which is simple enough so that we can convince ourself that it works, and which we can use as a benchmark against more viable strategies in the future.
 
@@ -26,13 +29,11 @@ The sole obvious exception to the general prohibition against cross-player trade
 That's about it.  Again, there are still quite a few gaps in the strategy, and many optimizations are possible.  
 
 ### Performance ###
-
 Not so hot!  In the 2-player case (playing against itself) it's rather poor in fact -- I don't know what the median termination time T is, but it seems to be perhaps above 150 rounds.  Things are a bit better in the 3-player case, with a median T around 80 rounds; I haven't yet done any metrics on contests with 4 or more players.
 
 Oh, and the simulation is also quite slow, but mostly because Rakudo is still quite slow.  Even so, most of the latency apparently happens at startup.  And inasmuch as the search algorithms sometimes involve rather expensive operations (e.g. inflating lists of KeyBags from lists of strings), this doesn't seem to add much to the overall running time.  But expect something like 2-5 minutes for each contest, depending on the number of players, how hungry the wolves and foxes are, etc.
 
-### Details ###
-
+### Implementation ###
 Most of how the algorithm work should be straightforward enough from grepping for where subs are definied and rewinding the steps back through the framework, but a few parts of the main block of the Naive strategy class are perhaps worth explaining up front. 
 
 For example, in each of the three main branches of the ```find-stock-trades()``` method there are calls to this function, defined over in ```Farm::AI::Search```:
@@ -47,19 +48,19 @@ The ```downward-equiv-to()``` sub, in term, is basically a primitive which says,
 
 The next step after that involves the curious '⊲' operator:
 ```
-        .grep { $_ ⊲ $P }
+    .grep { $_ ⊲ $P }
 ```
 This is a boolean relation which basically translates to mean "fits diversely under" (from left to right), or more strictly speaking, "the animal set on the left (LHS) would subtract from the animal set on the right (RHS) in such away that the RHS maintains diveristy."  This ends up being a crucial step that prevetns us from engaging in counterproductive trades -- e.g. where we would sacrifice pigs or cows to obtain a horse.
 
 The second main branch in the loop is the "looting" step, where we basically attempt to grab as many dogs from the Stock that it has available.  There's just one caveat -- while we'd gladly trade small dogs for larger ones (if strictly necessary), we'd prefer to sacrifice as few as possible.  So we need to sort the set of admissible trades for "dogfulness", via the magical '‹d›' operator:
 ```
-        .sort: { $^a ‹d› $^b };
+    .sort: { $^a ‹d› $^b };
 ```
 As with the '⊲' operator, filtering with this criterion ends up (in some cases) de-prioritizing many trades where we'd be throwing out two or three small dogs to get a larger one, when we really should be throwing out rabbits and sheep. 
 
 Finally, in our generic "hill-climbing step", in which we ask our Posse (via the ```.gimme()``` method) what animals it needs to increase diversity (that we haven't yet queried for via the "wish" step up at the top), we also need to make sure we aren't releasing any dogs at all back to the Stock (big or small).  This is accomplished by a straightforward, string-based grep on the returned list.
 ```
-        .grep: { !m/<[dD]>/ };
+    .grep: { !m/<[dD]>/ };
 ```
 
 ### Anomolies ###
@@ -70,27 +71,32 @@ Another odd thing that emerged from initial tests of the strategy was its poor p
 
 ## Usage ##
 
-The strategy is of course designed do be fully compatible with the original ```farm.pl``` script from the programming challenge, so it will run under that script in the usual way. 
+The strategy is of course designed do be fully compatible with the original ```farm.pl``` script from the programming challenge, so it will run under that script in the usual way:
+
+    perl6 farm.pl ai Naive Naive Naive 
 
 As to running the native game harness:  Once you've cloned the dist, sample usage (from the top dir of the dist) goes like this -- in this example, for a 2-player game of the Naive strategy against itself:
-
 ```
     perl6 -Ilib demos/play.pl ai 1 Naive Naive 
 ```
-
 The ```1``` is simply to specify that you want one and only one contest to be run.  It's also possible to specify an upper limit on the number of rounds to be played, via the ```--n``` flag; and to suppress output, you can set loudness to zero:
-
 ```
     perl6 -Ilib demos/play.pl --loud=0 --n=100 ai 1 Naive Naive Naive 
 ```
-
 There are also some unit tests under the ```t/``` dir which are fairly well maintained.
 
 ### Prerequisites ###
-
 This distribution has one external dependency; the class ```KeyBag::Deco```, which is a patched, or "decorated" extension of the core ```KeyBag``` class providing certain functionality which seems not quite finished in both Rakudo and Niecza at the moment -- including, most importantly, working Unicode operators.  ```KeyBag::Deco``` can be found over here: 
 
 https://github.com/wstlabs/keybag-extras-p6
+
+## License ##
+
+This code is distributed under the Artistic License, and may be used or modified under the same terms as the Perl language itself.
+
+## Acknowledgements ##
+
+Significant portions of the ```Game``` harness include refactored code from Carl's original script, ```farm.pl```.  The correspondences and modifications should be fairly obvious.
 
 
 

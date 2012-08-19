@@ -85,21 +85,3 @@ multi sub stringify-keybag(@X)  {
 
 =begin END
 
-#
-# long-winded form of mul-poly, for debugging. 
-#
-
-sub mul-poly-long (@p, @q) is export {
-    my @P = inflate(@p); 
-    my @Q = inflate(@q); 
-    # say "mul-poly p => ", stringify-keybag(@P); 
-    # say "mul-qoly q => ", stringify-keybag(@Q); 
-    my @S = @P X⊎ @Q;
-    # say "mul-poly s => ", stringify-keybag(@S);
-    my @s = deflate(@S);
-    return @s; 
-}
-
-
-
-

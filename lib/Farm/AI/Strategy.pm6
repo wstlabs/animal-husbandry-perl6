@@ -7,7 +7,6 @@
 # a parameter which gets dipatched at construction.
 #
 #
-use Farm::AI::Strategy::Util;
 use Farm::Sim::Posse;
 use Farm::Sim::Util;
 
@@ -29,6 +28,11 @@ class Farm::AI::Strategy {
 
     submethod BUILD(:$!loud=0, :%!p, :$!player) { }
 
+    sub inflate-posse-hash(%p) is export {
+        hash map -> $k,$v {
+            $k => posse-from-long($v)
+        }, %p.kv
+    }
 
     #
     # expands a hash returned by .find-trade(), i.e. from one of  the form

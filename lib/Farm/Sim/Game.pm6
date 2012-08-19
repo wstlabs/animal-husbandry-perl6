@@ -416,6 +416,4 @@ class Farm::Sim::Game  {
 =begin END
 ⚤ "»» ..";
 
-        self.info("FAIL $ij $!cp $WAS ↦ $with : %i<sell> <=> %i<buy> : $reason");
-      # self.info("SWAP $ij $!cp $WAS ↣ $with : $SELL = $BUY » $now " ~ $remark);
 
