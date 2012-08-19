@@ -14,13 +14,13 @@ As a submission to the contest itself, this repro provides a class implementing 
 ```
     lib/Farm/AI/Naive.pm6 
 ```
-As the name implies, it's basically just a simple hill-climbing strategy, and pretty much emulates the common-sense intution of a human player after having been exposed to a few sets of the game, and having learned from a few mistakes.  It doesn't aim to do anything besides make incremental moves to improve its position at each step, without making any obvious mistakes -- albeit aided by fast combinatorial searching. 
+As the name implies, it's basically just a simple hill-climbing strategy, and pretty much emulates the common-sense intution of a human player after having been exposed to a few sets of the game, and having learned from a few mistakes.  It doesn't aim to do anything besides make incremental moves to improve its position at each step, while avoiding obvious missteps -- albeit aided by fast combinatorial searching. 
 
 In that sense, it's really just a "minimum viable strategy" which is simple enough so that we can convince ourself that it works, and which we can use as a benchmark against more viable strategies in the future.
 
 So here's how it works:
 * At the beginning of each trading round, if there's an admissible game-ending trade with the Stock, then (obviously) execute it.
-* "Always buy insurance".  Given the high frequency of fox and wolf die rolls, it basically always seems advisable to buy whatever dogs are available for sale by the stock.  Not only do surplus dogs hedge against potential runs of bad die rolls, they also deprive other players or protection.  So in our next step, we try to "loot" the Stock of as many dogs (first big dogs, then small dogs) as possible. 
+* "Always buy insurance".  Given the high frequency of fox and wolf die rolls, it basically always seems advisable to buy whatever dogs are available for sale by the stock.  Not only do surplus dogs hedge against potential runs of bad die rolls, they also deprive other players of protection.  So in our next step, we try to "loot" the Stock of as many dogs (first big dogs, then small dogs) as possible. 
 * Otherwise, we attempt to incrementally improve the diversity of our position.  To do this, we enumerate a list of small animals we need to increase
  our diversity (provided by the ```.gimme()``` method on the ```Posse``` object), and simply search for trades which provide these animals (from the Stock) -- and, importantly, also don't sacrifice any "insurance" (_i.e._ big or small dogs).  The selection from here is far from perfect -- there's a whole combinatorial class of trades (called "upward trades") which we haven't bothered to code up yet, and so aren't executing.  But the point is that it's pretty much guaranteed to (almost always) bump us up towards the winning state at each move, if at all possible.
 * Finally, we oppose all incoming trades (and initiate no trades with outside players).  The cases where cross-player trades seem to make sense are comparatively few and rare -- for the simple reason that in a perfect information game, the other players aren't likely to grant us any trades with us that will (drastically) improve our own position.
@@ -44,7 +44,7 @@ For example, in each of the three main branches of the ```find-stock-trades()```
         grep { $P ⊇ $_ }, @$t
     }
 ```
-The ```downward-equiv-to()``` sub, in term, is basically a primitive which says, "Given a canonical search term ```$x```, find me all tuples (_i.e._ potential trades) of equivalent or lower rank."  The function is memoized, so it returns a ```Capture``` rather than a freshly-generated ```List``` instance, which is then passed throught the ```grep``` to restrict that list to trades which are in fact contained in the player's ```Posse``` (_i.e._ a KeyBag representing the set of its animals).
+The ```downward-equiv-to()``` sub, in term, is basically a primitive which says, "Given a canonical search term ```$x```, find me all tuples (_i.e._ potential trades) of equivalent or lower rank."  The function is memoized, so it returns a ```Capture``` rather than a freshly-generated ```Array``` instance, which is then passed throught the ```grep``` to restrict that list to trades which are in fact contained in the player's ```Posse``` (_i.e._ a KeyBag representing the set of its animals).
 
 The next step after that involves the curious '⊲' operator:
 ```
