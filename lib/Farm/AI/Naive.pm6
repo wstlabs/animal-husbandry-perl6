@@ -48,12 +48,21 @@ is    Farm::AI::Strategy  {
         %trade ?? { with => 'stock', %trade } !! Nil
     }
 
-    method preserve ($remark ,$P,@t)  {
+    method preserve ($remark,$P,@t)  {
         self.trace("$remark before $P ⊳ ",@t," ?");
         @t = grep { fly($_) ⊲ $P }, @t; 
         self.trace("$remark after  $P ⊳ ",@t);
         @t
     }
+
+    method dogsort($remark,@t)  {
+        self.trace("$remark before ",@t," ?");
+        @t = @t.sort: { $^a ‹d› $^b };
+        self.trace("$remark after  ",@t);
+        @t
+    }
+
+    
 
     method find-stock-trade  {
         my $S     = self.posse('stock');
@@ -67,7 +76,8 @@ is    Farm::AI::Strategy  {
         self.trace("doggy = ", avail-dogs($S,$P)); 
         for avail-dogs($S,$P) -> $x  {
             my @t = find-admissible-trades($P,$x);
-            return { buying => $x, selling => @t.pick } if @t
+            @t = self.dogsort("doggy $x",@t)             if @t;
+            return { buying => $x, selling => @t.shift } if @t
         }
         self.trace("gimme = ", $P.gimme);
         for $P.gimme -> $x {
