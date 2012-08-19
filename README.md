@@ -71,9 +71,9 @@ Another odd thing that emerged from initial runs of the strategy was its poor pe
 ## Usage ##
 
 The strategy is of course designed do be fully compatible with the original ```farm.pl``` script from the programming challenge, so it will run under that script in the usual way:
-
+```
     perl6 farm.pl ai Naive Naive Naive 
-
+```
 As to running the native game harness:  Once you've cloned the dist, sample usage (from the top dir of the dist) goes like this -- in this example, for a 2-player game of the Naive strategy against itself:
 ```
     perl6 -Ilib demos/play.pl ai 1 Naive Naive 
