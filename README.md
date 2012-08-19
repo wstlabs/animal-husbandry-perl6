@@ -1,11 +1,11 @@
 Simulation tools for the dice game  _Animal Husbandry_ (Polish: _Hodowla zwierzątek_) invented by the mathematician [Karol Borsuk](https://en.wikipedia.org/wiki/Karol_Borsuk) and published at his own expense during the Warsaw Uprising in 1943.  
 
-The game has a curious history; a brief synopsis is provided on the [Wikipedia entry](https://en.wikipedia.org/wiki/Animal_Husbandry_(game).  For a technical description of the game, please see Carl's original announcement of the Perl 6 programming challenge: 
+The game has a curious history; a brief synopsis is provided on the [Wikipedia entry](https://en.wikipedia.org/wiki/Animal_Husbandry_(game)].  For a technical description of the game, please see Carl's original announcement of the Perl 6 programming challenge: 
   
 https://github.com/masak/farm
 
 What's provided in this repo are the following:
-* A framework for simulation tools (under the namespace ```Farm::Sim```), including a front-end game harness script ```demos\play.pl``` that's largely compatible with Carl's original ```farm.pl``` script, except for slightly different command-line usage, and the option (actually enabled by default; but silencable via ```--loud=1```) to provide "ASCII-art" status tracing.
+* A framework for simulation tools (under the namespace ```Farm::Sim```), including a front-end game harness script ```demos\play.pl``` that's largely compatible with Carl's original ```farm.pl``` script, except for slightly different command-line usage, and the option (actually enabled by default; but silencable via ```--loud=1```) to provide fixed-width, "ASCII-art" status tracing (or perhaps not so fixed-width or artistic looking, depending on what terminal you're using -- but in mine it looks fine).
 * A set of utility classes providing functionality for simple combinatorial searching of what we'll call "admissible" trades (described below).  Thes are under the namespaces ```Farm::AI::Search```, supported by additional helper modules under the namespace ```Farm::AI::Util```.
 * Finally, under ```Farm::AI```, a couple of mock (test) strategies, as well as one primitive (but viable) strategy, ```Farm::AI::Naive```, which we'll describe below.
 
@@ -14,7 +14,7 @@ As a submission to the contest itself, this repro provides a class implementing 
 ```
     lib/Farm/AI/Naive.pm6 
 ```
-As the name implies, it's basically just a simple hill-climbing strategy, and pretty much emulates the behavior of a human player after playing the game a few times, having learned from a few mistakes.  It doesn't aim to do anything besides make incremental moves to improve its position at each step, without making any obvious mistakes -- albeit aided by fast combinatorial searching. 
+As the name implies, it's basically just a simple hill-climbing strategy, and pretty much emulates the common-sense intution of a human player after having been exposed to a few sets of the game, and having learned from a few mistakes.  It doesn't aim to do anything besides make incremental moves to improve its position at each step, without making any obvious mistakes -- albeit aided by fast combinatorial searching. 
 
 In that sense, it's really just a "minimum viable strategy" which is simple enough so that we can convince ourself that it works, and which we can use as a benchmark against more viable strategies in the future.
 
