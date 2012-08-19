@@ -216,13 +216,16 @@ multi sub compare-dogful(             Str $x, Str $y              --> Order) is 
 # The relation can be used as a filter to maintain conservative trading strategies.
 # See the unit test t/diversity.t for more some sample use cases. 
 #
-sub subtracts-diversely(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool) is export {
+multi sub subtracts-diversely(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool) is export {
     for ($x.radix Z=> $y.radix) -> $p {
         my ($m,$n) = $p.kv;
         return False if $m > 0 && $m-$n <= 0
     }
     return True
 }
+multi sub subtracts-diversely(Str $x, Farm::Sim::Posse $y --> Bool) is export { subtracts-diversely(  fly($x),$y       ) }
+multi sub subtracts-diversely(Farm::Sim::Posse $x, Str $y --> Bool) is export { subtracts-diversely(       $x,fly($y)  ) }
+multi sub subtracts-diversely(Str $x, Str $y --> Bool)              is export { subtracts-diversely(  fly($x),fly($y)  ) }
 
 #
 # a mechanism for flyweight memoization for posse instances.
@@ -279,8 +282,8 @@ sub fly-stats is export { n => %F.keys.Int }
 # 
 # respectively, for some value of "nice."
 #  
-multi sub infix:<⊳>(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool) is export {  subtracts-diversely($x,$y) }
-multi sub infix:<⊲>(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool) is export {  subtracts-diversely($y,$x) }
+multi sub infix:<⊳>(Any $x, Any $y --> Bool) is export {  subtracts-diversely($x,$y) }
+multi sub infix:<⊲>(Any $x, Any $y --> Bool) is export {  subtracts-diversely($y,$x) }
 
 # compares tuples againsrt their "dogful measure".  sorting over this op brings 
 # dogless tuples to the front, and dog-heavy tuples to the back of the list.
@@ -306,6 +309,10 @@ multi sub infix:<⚤>(Farm::Sim::Posse $x, Any $y --> Farm::Sim::Posse)  is expo
 
 
 =begin END
+
+multi sub infix:<⊳>(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool) is export {  subtracts-diversely($x,$y) }
+multi sub infix:<⊲>(Farm::Sim::Posse $x, Farm::Sim::Posse $y --> Bool) is export {  subtracts-diversely($y,$x) }
+
 
    $X ⊲ $Y
    $X ⊳ $Y
