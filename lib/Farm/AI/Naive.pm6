@@ -1,10 +1,10 @@
 #
-# A naive hill climbing strategy.  Doesn't try to do anything fancy -
-# just tries the most obvoius thing that could reach the winning state,
-# without making any obvious mistakes. 
+# A naive hill climbing strategy.  Doesn't try to do anything fancy;
+# at each step it just tries the most obvius thing that could reach the 
+# winning state, without making any obvious mistakes. 
 #
-# For a more detailed description, please see the REAMDE at the top of
-# this distribution.
+# For a more detailed description, see the README at the top of this 
+# distribution.
 #
 use Farm::AI::Strategy;
 use Farm::AI::Search;
