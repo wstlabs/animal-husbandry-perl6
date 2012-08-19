@@ -21,6 +21,35 @@ Basically what the strategy amounts to is the following:
 * Finally, we oppose all incoming trades (and initiate no trades with outside players).  The cases where cross-player trades seem to make sense are comparatively few and rare -- for the simple reason that in a perfect information game, the other players aren't likely to grant any trades with us that will (drastically) improve our own position.  
 
 The sole obvious exception to the general prohibition against cross-player trades would seem to be "mercy trades", whereby we sell small dogs to other players in order to purchase animals we need to increase our diversity, but which aren't available from the stock (assuming we have a large enough surplus of small dogs ourselves).  These might be worth exploring at some point; however for right now, I just wanted to come up with a strategy that seems generally stable, while being simple to understand, and to code concisely such that the main loop fits in 10 or 15 lines of code, at the most. 
+### Details ###
+
+Most of how the algorithm work should be straightforward enough from grepping for where subs are definied and rewinding the steps back through the framework, but a few parts of the main block of the Naive strategy class are perhaps worth explaining up front. 
+
+For example, in each of the three main branches of the ```find-stock-trades()``` method there are calls to this function, defined over in ```Farm::AI::Search```:
+
+    sub find-admissible-trades(Farm::Sim::Posse $P, Str $x) is export {
+        my $t = downward-equiv-to($x);
+        grep { $P ⊇ fly($_) }, @$t
+    }
+
+...
+
+    method preserve ($remark,$P,@t)  {
+        self.trace("$remark before $P ⊳ ",@t," ?");
+        @t = grep { fly($_) ⊲ $P }, @t;
+        self.trace("$remark after  $P ⊳ ",@t);
+        @t
+    }
+
+...
+
+    method dogsort($remark,@t)  {
+        self.trace("$remark before ",@t," ?");
+        @t = @t.sort: { $^a ‹d› $^b };
+        self.trace("$remark after  ",@t);
+        @t
+    }
+
 ## Usage ##
 
 Once you've cloned the dist, sample usage (from the top dir of the dist) goes like this -- in this example, for a 2-player game of the Naive strategy against itself:
