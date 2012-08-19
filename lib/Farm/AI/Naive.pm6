@@ -1,7 +1,7 @@
 #
-# A naive hill climbing strategy.  Doesn't try to do anything fancy;
-# at each step it just tries the most obvius thing that could reach the 
-# winning state, without making any obvious mistakes. 
+# A naive hill climbing strategy.  Doesn't try to do anything fancy; 
+# at each step it just tries the most obvious thing that could reach the 
+# winning state, without making any obviously missteps.  
 #
 # For a more detailed description, see the README at the top of this 
 # distribution.

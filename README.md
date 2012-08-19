@@ -27,9 +27,9 @@ That's about it.  Again, there are still quite a few gaps in the strategy, and m
 
 ### Performance ###
 
-Not so hot!  In the 2-player case (playing against itself) it's rather poor in fact -- I don't know what the median termination time T is, but it seems to be perhaps above 150 rounds.  Things are a bit better in the 3-player case, with a median T around 90 rounds; I haven't yet done any metrics on contests with 4 or more players.
+Not so hot!  In the 2-player case (playing against itself) it's rather poor in fact -- I don't know what the median termination time T is, but it seems to be perhaps above 150 rounds.  Things are a bit better in the 3-player case, with a median T around 80 rounds; I haven't yet done any metrics on contests with 4 or more players.
 
-Oh, and the simulation is also quite slow, but mostly because Rakudo is still quite slow.  Even so, most of the latency apparently happens at startup.  And inasmuch as the search algorithms sometimes involve rather expensive operations (e.g. inflating lists of KeyBags from lists of strings), this doesn't seem to add much to the overall running time. 
+Oh, and the simulation is also quite slow, but mostly because Rakudo is still quite slow.  Even so, most of the latency apparently happens at startup.  And inasmuch as the search algorithms sometimes involve rather expensive operations (e.g. inflating lists of KeyBags from lists of strings), this doesn't seem to add much to the overall running time.  But expect something like 2-5 minutes for each contest, depending on the number of players, how hungry the wolves and foxes are, etc.
 
 ### Details ###
 
@@ -64,11 +64,15 @@ Finally, in our generic "hill-climbing step", in which we ask our Posse (via the
 
 ### Anomolies ###
 
-The strategy has some weird corner cases where it can behave sub-optimally if you aren't very careful about how you do your selections of equivalent trades.  One of these concerns the phenomenon of inadvertent cyclical trades:  e.g. ```{ s => r6 }``` on one round, and then ```{ r6 => s }``` on the very next round.  I first tried enabling the latter step an optimization, only to discover that it quite often would cycle between those two trades, and never look for higher-ranking animals.  So for the time being, the fix is simply to disable the latter half of the loop, and the performance seems to revert back to it's normal, lackadaisical / barely-efficient state. 
+The strategy has some weird corner cases where it can behave sub-optimally if you aren't very careful about how you do your selections of equivalent trades.  One of these concerns the phenomenon of inadvertent cyclical trades:  e.g. ```{ s => r6 }``` on one round, and then ```{ r6 => s }``` on the very next round.  I first tried enabling the latter step an optimization, only to discover that it quite often would cycle between those two trades, and avoid lookng for higher-ranking animals for several rounds.  So for the time being, the fix is simply to disable the latter half of the loop, and the performance seems to revert back to it's normal, barely-efficient state. 
+
+Another odd thing that emerged from initial tests of the strategy was its poor performance in 2-player contest.  It's suspected that in this configuration, the strategy is actually too conservative, i.e. hoarding too many dogs and forgoing breeding, which (paradoxically) leads to a dearth in bidding resources once the dogs it has are inevitably eaten, so it can't resupply with new ones.
 
 ## Usage ##
 
-Once you've cloned the dist, sample usage (from the top dir of the dist) goes like this -- in this example, for a 2-player game of the Naive strategy against itself:
+The strategy is of course designed do be fully compatible with the original ```farm.pl``` script from the programming challenge, so it will run under that script in the usual way. 
+
+As to running the native game harness:  Once you've cloned the dist, sample usage (from the top dir of the dist) goes like this -- in this example, for a 2-player game of the Naive strategy against itself:
 
 ```
     perl6 -Ilib demos/play.pl ai 1 Naive Naive 

@@ -44,15 +44,16 @@ class Farm::AI::Strategy {
     }
 
     method trade(%p, @e) {
-        # say "::AI loud = $!loud";
-        # say "::AI player = $!player";
         self.update(%p, @e);
-        # say "::AI p = ", %p;
         my %trade = self.find-trade; 
-        # say ":: x = ", expand(%trade);
         return { type => 'trade', expand(%trade) } if %trade; 
     }
 
+    # XXX actually, since we're currently not attempting to process 
+    # cross-player trades, we haven't completed the interface on this 
+    # part yet.  But basically it needs to fish through the recent event 
+    # history to find the most recent %trade, and pass that nicely to
+    # our native handler, .eval-trade().
     method accept(%p, @e, $who) {
         self.trace("p = ", {%p});
         self.update(%p, @e);
