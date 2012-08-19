@@ -8,7 +8,7 @@ use Farm::Sim::Util;
 use Farm::Sim::Posse;
 use Keybag::Ops;
 
-class Farm::AI::Naive
+class Farm::AI::Loud
 is    Farm::AI::Strategy  {
 
     method find-trade  {
