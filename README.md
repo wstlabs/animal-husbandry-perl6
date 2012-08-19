@@ -20,12 +20,12 @@ In that sense, it's really just a "minimum viable strategy" which is simple enou
 
 So here's how it works:
 * At the beginning of each trading round, if there's an admissible game-ending trade with the Stock, then (obviously) execute it.
-* "Always buy insurance".  Given the high frequency of fox and wolf die rolls, it basically always seems advisable to buy whatever dogs are available for sale by the stock.  Not only do surplus dogs hedge against potential runs of bad die rolls, they also deprive other players of protection.  So in our next step, we try to "loot" the Stock of as many dogs (first big dogs, then small dogs) as possible. 
+* "Always buy insurance".  Given the high frequency of fox and wolf die rolls, it basically always seems advisable to buy whatever dogs are available for sale by the Stock.  Not only do surplus dogs hedge against potential runs of bad die rolls, they also deprive other players of protection.  So in our next step, we try to "loot" the Stock of as many dogs (first big dogs, then small dogs) as possible. 
 * Otherwise, we attempt to incrementally improve the diversity of our position.  To do this, we enumerate a list of small animals we need to increase
  our diversity (provided by the ```.gimme()``` method on the ```Posse``` object), and simply search for trades which provide these animals (from the Stock) -- and, importantly, also don't sacrifice any "insurance" (_i.e._ big or small dogs).  The selection from here is far from perfect -- there's a whole combinatorial class of trades (called "upward trades") which we haven't bothered to code up yet, and so aren't executing.  But the point is that it's pretty much guaranteed to (almost always) bump us up towards the winning state at each move, if at all possible.
 * Finally, we oppose all incoming trades (and initiate no trades with outside players).  The cases where cross-player trades seem to make sense are comparatively few and rare -- for the simple reason that in a perfect information game, the other players aren't likely to grant us any trades with us that will (drastically) improve our own position.
 
-One exception to the general prohibition against cross-player trades would seem to be "mercy trades", whereby we sell small dogs to other players in order to purchase animals we need to increase our diversity, but which aren't available from the stock (assuming we have a large enough surplus of small dogs ourselves).  These might be worth exploring at some point; however for right now, I just wanted to come up with a strategy that seems generally stable, while being simple to understand, and to code concisely such that the main loop fits in 10 or 15 lines of code, at the most. 
+One exception to the general prohibition against cross-player trades would seem to be "mercy trades", whereby we sell small dogs to other players in order to purchase animals we need to increase our diversity, but which aren't available from the Stock (assuming we have a large enough surplus of small dogs ourselves).  These might be worth exploring at some point; however for right now, I just wanted to come up with a strategy that seems generally stable, while being simple to understand, and to code concisely such that the main loop fits in 10 or 15 lines of code, at the most. 
 That's about it.  Again, there are still quite a few gaps in the strategy, and many optimizations are possible.  
 
 ### Performance ###
@@ -90,9 +90,7 @@ This distribution has one external dependency; the class ```KeyBag::Deco```, whi
 https://github.com/wstlabs/keybag-extras-p6
 
 ### Bugs ###
-This is my first attempt at coding in Perl 6, so it's more than likely that I'm doing things in ways that are un-idiomatic, if not plainly wrong.  So any and all feedback is welcomed. 
-
-In any case, it should be noted that this code has been run under the 2012.05 version of Rakudo only, and has not yet been run under any version of Niecza.  
+This is my first attempt at coding in Perl 6, so it's more than likely that I'm doing things in ways that are un-idiomatic, if not plainly wrong.  So any and all feedback is welcomed.  In any case, it should be noted that this code has been run under the 2012.05 version of Rakudo only, and has not yet been run under any version of Niecza.  
 
 ## License ##
 
