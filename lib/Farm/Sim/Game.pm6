@@ -4,7 +4,12 @@ use Farm::Sim::Posse;
 use Farm::Sim::Dice;
 use KeyBag::Ops;
 
-
+#
+# refactored form of the Game class from the original farm.pl, but 
+# with certain modifications, e.g. for status tracing at optional 
+# levels of detail; the ability to run multi-player contests 
+# iteratively, etc.
+#
 class Farm::Sim::Game  {
     has %!p;         # players (and stock): hash of hashes of animals
     has $!dice;      # combined fox-wolf die object
@@ -69,7 +74,6 @@ class Farm::Sim::Game  {
     method posse (Str $name)  { %!p{$name}.clone if %!p.exists($name) }
     method current { self.posse($!cp) }
 
-
     method table { hash map -> $k,$v { $k => $v.Str      }, %!p.kv }
     method p     { hash map -> $k,$v { $k => $v.longhash }, %!p.kv }
     method elapsed { ($!t1-$!t0).Real }
@@ -87,12 +91,10 @@ class Farm::Sim::Game  {
     # on $t1-$t0, no matter how many times we try to cast it to something
     # sensible.
 
-
     multi method play()  {
         $!t0 = now;
         $!t1 = Nil; 
         $!i = $!j = 0;
-        # say "::GAME loud = $!loud, n = $!n";
         self.trace("..");
         while (1)  {
             self.play-round;
@@ -118,11 +120,7 @@ class Farm::Sim::Game  {
 
     method do-trade  {
         self.debug("..");
-        # my $was   = self.posse($!cp);
-        # self.debug("was $was");
         self.effect-trade;
-        # my $now   = self.posse($!cp);
-        # self.debug("now $now");
         return self
     }
 
@@ -214,7 +212,6 @@ class Farm::Sim::Game  {
         given $roll {
             when /[w]/ { 
                 my $posse = self.posse($!cp);
-                self.debug("posse = $posse");
                 if ('D' ∈ $posse)  {
                     self.transfer( $!cp, 'stock', 'D' )
                 }
@@ -225,7 +222,6 @@ class Farm::Sim::Game  {
             }
             when /[f]/ { 
                 my $posse = self.posse($!cp);
-                self.debug("posse = $posse");
                 if ('d' ∈ $posse)  {
                     self.transfer( $!cp, 'stock', 'd' )
                 }
@@ -237,12 +233,8 @@ class Farm::Sim::Game  {
             default  {
                 my $stock = self.posse('stock'); 
                 my $posse = self.posse($!cp);
-                self.debug("posse = $posse");
-                self.debug("stock = $stock");
                 my $desired = $posse ⚤ $roll;
-                self.debug("desired = $desired");
                 my $allowed = $desired ∩ $stock;
-                self.debug("allowed = $allowed"); 
                 self.transfer( 'stock', $!cp, $allowed )
             }
         }
