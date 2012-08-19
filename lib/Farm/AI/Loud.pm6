@@ -39,7 +39,7 @@ is    Farm::AI::Strategy  {
             @t = self.preserve("wish $x",$P,@t)         if @t;
             return { buying => $x, selling => @t.pick } if @t
         }  
-        self.trace("doggy = ", avail-dogs($S,$P)); 
+        self.trace("avail = ", avail-dogs($S,$P)); 
         for avail-dogs($S,$P) -> $x  {
             my @t = find-admissible-trades($P,$x);
             @t = self.dogsort("doggy $x",@t)             if @t;
