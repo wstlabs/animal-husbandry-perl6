@@ -285,10 +285,10 @@ sub fly-stats is export { n => %F.keys.Int }
 multi sub infix:<⊳>(Any $x, Any $y --> Bool) is export {  subtracts-diversely($x,$y) }
 multi sub infix:<⊲>(Any $x, Any $y --> Bool) is export {  subtracts-diversely($y,$x) }
 
+
 # compares tuples againsrt their "dogful measure".  sorting over this op brings 
 # dogless tuples to the front, and dog-heavy tuples to the back of the list.
 multi sub infix:<‹d›>(Any $x,Any $y --> Order) is export { compare-dogful($x,$y) }
-
 
 
 #
