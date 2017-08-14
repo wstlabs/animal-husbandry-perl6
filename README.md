@@ -8,9 +8,9 @@ For a technical description of the game, please see Carl's original announcement
   
   https://github.com/masak/farm
 
-## TL/DR / Conclusion ##
+## TL;DR / Conclusion ##
 
-The project shows that game does have at least one reasonably optimal strategy, which we'll call the "Naive Strategy" as described below.  But not only does it take many rounds (100+) to get to a winning state on average, it seems (though has not been proven) that *any* strategy would probably take a similarly high number of rounds, simply to the probabilities and payout proportions in Borsuk's original game.  This may be why most commercially successful versions -- like *Superfarmer* -- have made key alterations to make the expected resolution happen much sooner (in 20-40 rounds); but at the cost of making the game rather more boring, unfortunately. 
+We can show that the game does have at least one reasonably optimal strategy -- which doesn't guarantee victory, but which performs much better than a "blind" greedy algorithm -- which we'll call the "Naive Strategy", as described below.  But not only does it take many rounds (100+) to get to a winning state on average, it seems (though has not been proven) that *any* strategy would probably take a similarly high number of rounds, simply to the probabilities and payout proportions in Borsuk's original game.  This may be why most commercially successful versions -- like *Superfarmer* -- have made key alterations to make the expected resolution happen much sooner (in 20-40 rounds); but at the cost of making the game rather more boring, unfortunately. 
 
 ## Contents ##
 What's provided in this repo are the following:
