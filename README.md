@@ -8,6 +8,7 @@ For a technical description of the game, please see Carl's original announcement
   
   https://github.com/masak/farm
 
+## Contents ##
 What's provided in this repo are the following:
 * A framework for simulation tools (under the namespace ```Farm::Sim```), including a front-end game harness script ```demos\play.pl``` that's largely compatible with Carl's original ```farm.pl``` script, except for slightly different command-line usage, and the option (actually enabled by default; but silencable via ```--loud=1```) to provide fixed-width, "ASCII-art" status tracing (or perhaps not so fixed-width or artistic looking, depending on what terminal you're using -- but in mine it looks fine).
 * A set of utility classes providing functionality for simple combinatorial searching of what we'll call "admissible" trades (described below).  Thes are under the namespaces ```Farm::AI::Search```, supported by additional helper modules under the namespace ```Farm::AI::Util```.
