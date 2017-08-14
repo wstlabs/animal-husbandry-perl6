@@ -8,6 +8,8 @@ For a technical description of the game, please see Carl's original announcement
   
   https://github.com/masak/farm
 
+BTW the code was written in 2012, well before the official release of Perl 6.  I haven't been following Perl 6 since then, but I'm sure it's changed a fair bit since that time, and the code you'll find here will most likely break if run in an official-release P6 environment.  That said, it shouldn't be too far off, or too difficult to port to an official P6 release, either. 
+
 ## TL;DR / Conclusion ##
 
 We can show that the game does have at least one reasonably optimal strategy -- which doesn't guarantee victory, but which performs much better than a "blind" greedy algorithm -- which we'll call the "Naive Strategy", as described below.  But not only does it take many rounds (100+) to get to a winning state on average, it seems (though has not been proven) that *any* strategy would probably take a similarly high number of rounds, simply to the probabilities and payout proportions in Borsuk's original game.  This may be why most commercially successful versions -- like *Superfarmer* -- have made key alterations to make the expected resolution happen much sooner (in 20-40 rounds); but at the cost of making the game rather more boring, unfortunately. 
