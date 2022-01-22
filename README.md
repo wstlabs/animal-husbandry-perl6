@@ -1,26 +1,29 @@
-Simulation tools for the dice game  _Animal Husbandry_ (Polish: _Hodowla zwierzątek_) invented by the mathematician [Karol Borsuk](https://en.wikipedia.org/wiki/Karol_Borsuk) and published at his own expense during the Warsaw Uprising in 1943.  
+Simulation tools (and a simple working strategy) for the dice game  _Animal Husbandry_ (Polish: _Hodowla zwierzątek_) invented by the mathematician [Karol Borsuk](https://en.wikipedia.org/wiki/Karol_Borsuk) and published at his own expense during the Warsaw Uprising in 1943.  
 
 The game has a curious history; a brief synopsis is provided on the Wikipedia entry:
 
   https://en.wikipedia.org/wiki/Animal_Husbandry_(game)
 
-For a technical description of the game, please see Carl's original announcement of the Perl 6 programming challenge: 
-  
+The tools were written in that fine language, [Perl 6](https://en.wikipedia.org/wiki/Raku_(programming_language)) in response to a programming challenge by Carl Masak at [YAPC::Europe 2011](https://conferences.yapceurope.org/ye2011/).  In the challenge announcement you'll all find a succinct technical description of the game itself: 
+
   https://github.com/masak/farm
 
-BTW the code was written in 2012, well before the official release of Perl 6.  I haven't been following Perl 6 since then, but I'm sure it's changed a fair bit since that time, and the code you'll find here will most likely break if run in an official-release P6 environment.  That said, it shouldn't be too far off, or too difficult to port to an official P6 release, either. 
+The code was last touched in mid-2012, and Perl6/Raku has evolved quite substantially since then - so most likely the code will not run in any subsequent version of the language without substantial modification.  That said if you are interesed in Borsuk's game as such and in elementary approaches to strategy (at the time it was not yet properly analyzed in the literation, as far as I was able to tell) then it may be of interest to you.
 
-## TL;DR / Conclusion ##
+## The Strategy ##
+Rather than an "AI" (as per the challenge) we were able to derive a reasonably performant purely analytic stategy (that is, using our brains rather than ML).  By "reasonably performant" we mean "performs better than anything we had seen so far" which have basically been extremely elementary (pure-greedy) strategies.  
 
-We can show that the game does have at least one reasonably optimal strategy -- which doesn't guarantee victory, but which performs much better than a "blind" greedy algorithm -- which we'll call the "Naive Strategy", as described below.  But not only does it take many rounds (100+) to get to a winning state on average, it seems (though has not been proven) that *any* strategy would probably take a similarly high number of rounds, simply to the probabilities and payout proportions in Borsuk's original game.  This may be why most commercially successful versions -- like *Superfarmer* -- have made key alterations to make the expected resolution happen much sooner (in 20-40 rounds); but at the cost of making the game rather more boring, unfortunately. 
+The novel strategy is still pretty naive though, which is why we've chosen to call it the ```Naive``` strategy (while its competitor -- the elementary greedy strategy -- is referred to as the ```Boring``` strategy).  The reason we chose that name is that suffers from a major drawback:  while it is almost always successful against the ```Boring``` strategy, it still takes many rounds (100+ on average) to get to a winning state (a result we found to be rather disappointing at the time).
+
+To be more charitable to ourselves, this "slowness-to-converge" may in fact be an intrinsic property of the probabilities and payout proportions in Borsuk's original game - and indeed one of the main reasons it never took off commercial (apart from the historical circumstances).  It may also be why most commercially successful versions -- like *Superfarmer* -- have made key alterations to the core payout matrix, such that a winning state typically happens much sooner (in 20-40 rounds); howver at a significant cost in the game's "character" as (as it uses fewer animals, and there are fewer long-range decisions to make; and because the results seem to be tied more to luck than to strategy).
 
 ## Contents ##
-What's provided in this repo are the following:
+A quick tour of the key classes provided in this package:
 * A framework for simulation tools (under the namespace ```Farm::Sim```), including a front-end game harness script ```demos\play.pl``` that's largely compatible with Carl's original ```farm.pl``` script, except for slightly different command-line usage, and the option (actually enabled by default; but silencable via ```--loud=1```) to provide fixed-width, "ASCII-art" status tracing (or perhaps not so fixed-width or artistic looking, depending on what terminal you're using -- but in mine it looks fine).
 * A set of utility classes providing functionality for simple combinatorial searching of what we'll call "admissible" trades (described below).  Thes are under the namespaces ```Farm::AI::Search```, supported by additional helper modules under the namespace ```Farm::AI::Util```.
 * Finally, under ```Farm::AI```, a couple of mock (test) strategies, as well as one primitive (but viable) strategy, ```Farm::AI::Naive```, which we'll describe below.
 
-## The Naive Strategy ##
+### The Naive Strategy ###
 As a submission to the contest itself, this repro provides a class implementing what we'll call the Naive strategy: 
 ```
     lib/Farm/AI/Naive.pm6 
@@ -30,7 +33,7 @@ As the name implies, it's basically just a simple hill-climbing strategy, and pr
 In that sense, it's really just a "minimum viable strategy" which is simple enough so that we can convince ourself that it works, and which we can use as a benchmark against more viable strategies in the future.
 
 So here's how it works:
-* At the beginning of each trading round, if there's an admissible game-ending trade with the Stock, then (obviously) execute it.
+* At the beginning of each trading round, if there's an admissible game-ending trade with the Stock, then (obviously) we execute that move, and the game ends. 
 * "Always buy insurance".  Given the high frequency of fox and wolf die rolls, it basically always seems advisable to buy whatever dogs are available for sale by the Stock.  Not only do surplus dogs hedge against potential runs of bad die rolls, they also deprive other players of protection.  So in our next step, we try to "loot" the Stock of as many dogs (first big dogs, then small dogs) as possible. 
 * Otherwise, we attempt to incrementally improve the diversity of our position.  To do this, we enumerate a list of remaining animals we need to increase our diversity (provided by the ```.gimme()``` method on the ```Posse``` object), and simply search for trades which provide these animals (from the Stock) -- and, importantly, without sacrificing any "insurance" (_i.e._ big or small dogs).  The selection from here is far from perfect -- there's a whole combinatorial class of trades (called "upward trades") which we haven't bothered to code up yet, and so aren't executing.  But the point is that it's pretty much guaranteed to (almost always) bump us up towards the winning state at each move, if at all possible.
 * Finally, we oppose all incoming trades (and initiate no trades with outside players).  The cases where cross-player trades seem to make sense are comparatively few and rare -- for the simple reason that in a perfect information game, the other players aren't likely to grant us any trades with us that will noticeably improve our own position.
